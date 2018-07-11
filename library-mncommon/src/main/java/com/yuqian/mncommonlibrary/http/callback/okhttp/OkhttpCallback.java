@@ -5,8 +5,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 
-import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
-import com.yuqian.mncommonlibrary.http.callback.AbsStringCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
+import com.yuqian.mncommonlibrary.http.callback.AbsStringCallback;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
 
 import java.io.IOException;
@@ -25,20 +25,25 @@ import okhttp3.Response;
 public class OkhttpCallback implements Callback {
 
     private Handler mUITransHandler;
-    private BaseCallbackListener callbackListener;
+    private BaseCallback mCallbackListener;
 
     private OkhttpCallback() {
 
     }
 
-    public OkhttpCallback(BaseCallbackListener callbackListener) {
+    public OkhttpCallback(BaseCallback callbackListener) {
         this.mUITransHandler = new Handler(Looper.getMainLooper());
-        this.callbackListener = callbackListener;
-        if (this.callbackListener == null) {
+        this.mCallbackListener = callbackListener;
+        if (this.mCallbackListener == null) {
             throw new NullPointerException("网络请求回调监听器为空");
         }
         //开始执行
-        this.callbackListener.onStart();
+        mUITransHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mCallbackListener.onStart();
+            }
+        });
     }
 
     @Override
@@ -48,7 +53,7 @@ public class OkhttpCallback implements Callback {
             public void run() {
                 //取消请求
                 if (call.isCanceled()) {
-                    callbackListener.onFinish();
+                    mCallbackListener.onFinish();
                     return;
                 }
                 //处理错误信息
@@ -64,8 +69,8 @@ public class OkhttpCallback implements Callback {
                     //其他网络异常
                     errorMsg = HttpErrorConstants.ERR_NETEXCEPTION_ERROR;
                 }
-                callbackListener.onFailure(errorCode, errorMsg);
-                callbackListener.onFinish();
+                mCallbackListener.onFailure(errorCode, errorMsg);
+                mCallbackListener.onFinish();
             }
         });
     }
@@ -77,33 +82,33 @@ public class OkhttpCallback implements Callback {
             public void run() {
                 try {
                     if (200 == response.code()) {
-                        if (callbackListener instanceof OkhttpByteCallbackListener) {
+                        if (mCallbackListener instanceof AbsOkhttpByteCallback) {
                             //byte类型
                             final byte[] responseBytes = response.body().bytes();
                             if (responseBytes == null || responseBytes.length == 0) {
-                                callbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
+                                mCallbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
                                 return;
                             }
-                            ((OkhttpByteCallbackListener) callbackListener).onSuccess(responseBytes);
-                        } else if (callbackListener instanceof AbsStringCallbackListener) {
+                            ((AbsOkhttpByteCallback) mCallbackListener).onSuccess(responseBytes);
+                        } else if (mCallbackListener instanceof AbsStringCallback) {
                             //字符串类型
                             final String responseStr = response.body().string();
                             if (TextUtils.isEmpty(responseStr)) {
-                                callbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
+                                mCallbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
                                 return;
                             }
-                            ((AbsStringCallbackListener) callbackListener).onSuccess(responseStr);
+                            ((AbsStringCallback) mCallbackListener).onSuccess(responseStr);
                         }
                     } else {
                         //请求异常
-                        callbackListener.onFailure(response.code() + "", response.message());
+                        mCallbackListener.onFailure(response.code() + "", response.message());
                     }
                 } catch (Exception e) {
                     //发生异常
-                    callbackListener.onFailure(HttpErrorConstants.ERR_NETEXCEPTION_ERROR_CODE, HttpErrorConstants.ERR_NETEXCEPTION_ERROR);
+                    mCallbackListener.onFailure(HttpErrorConstants.ERR_NETEXCEPTION_ERROR_CODE, HttpErrorConstants.ERR_NETEXCEPTION_ERROR);
                 } finally {
                     //完成
-                    callbackListener.onFinish();
+                    mCallbackListener.onFinish();
                 }
             }
         });

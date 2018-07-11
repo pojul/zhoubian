@@ -7,7 +7,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 
-public abstract class AbsJsonCallBackListener<T> extends AbsStringCallbackListener {
+public abstract class AbsJsonCallBack<T> extends AbsStringCallback {
 
     public abstract void onSuccess(T body);
 

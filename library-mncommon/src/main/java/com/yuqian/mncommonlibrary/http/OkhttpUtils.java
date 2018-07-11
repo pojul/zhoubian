@@ -8,7 +8,7 @@ import com.google.gson.Gson;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 import com.yuqian.mncommonlibrary.MBaseManager;
 import com.yuqian.mncommonlibrary.http.callback.AbsProgressListener;
-import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.OkhttpCallback;
 import com.yuqian.mncommonlibrary.http.model.OkhttpRequestModel;
 
@@ -305,7 +305,7 @@ public class OkhttpUtils {
      *
      * @param callbackListener 自定义回调监听
      */
-    public void execute(BaseCallbackListener callbackListener) {
+    public void execute(BaseCallback callbackListener) {
         okhttpRequestModel.setCallbackListener(callbackListener);
         //开始请求
         sendRequest();
@@ -337,7 +337,7 @@ public class OkhttpUtils {
         //请求参数
         Map<String, String> paramsMap = okhttpRequestModel.getParamsMap();
         //回调监听
-        BaseCallbackListener callbackListener = okhttpRequestModel.getCallbackListener();
+        BaseCallback callbackListener = okhttpRequestModel.getCallbackListener();
         //Content-Type
         MediaType mediaType = okhttpRequestModel.getMediaType();
         //上传文件的路径

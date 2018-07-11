@@ -1,7 +1,7 @@
 package com.yuqian.mncommonlibrary.http.callback.okhttp;
 
 
-import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
 
 /**
  * <pre>
@@ -12,7 +12,7 @@ import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
  *     version: 1.0
  * </pre>
  */
-public abstract class OkhttpByteCallbackListener extends BaseCallbackListener {
+public abstract class AbsOkhttpByteCallback extends BaseCallback {
 
     public abstract void onSuccess(byte[] responseByte);
 

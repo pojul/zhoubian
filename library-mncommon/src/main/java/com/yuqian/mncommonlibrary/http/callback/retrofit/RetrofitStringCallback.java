@@ -1,7 +1,7 @@
 package com.yuqian.mncommonlibrary.http.callback.retrofit;
 
-import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
-import com.yuqian.mncommonlibrary.http.callback.AbsStringCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
+import com.yuqian.mncommonlibrary.http.callback.AbsStringCallback;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
 
 import java.net.ConnectException;
@@ -23,9 +23,9 @@ import retrofit2.Response;
  */
 public class RetrofitStringCallback implements Callback<String> {
 
-    private BaseCallbackListener callbackListener;
+    private BaseCallback callbackListener;
 
-    public RetrofitStringCallback(BaseCallbackListener callbackListener) {
+    public RetrofitStringCallback(BaseCallback callbackListener) {
         this.callbackListener = callbackListener;
         if (this.callbackListener == null) {
             throw new NullPointerException("网络请求回调监听器为空");
@@ -37,8 +37,8 @@ public class RetrofitStringCallback implements Callback<String> {
     public void onResponse(Call<String> call, Response<String> response) {
         if (response.code() == 200) {
             String body = response.body();
-            if (callbackListener instanceof AbsStringCallbackListener) {
-                ((AbsStringCallbackListener) callbackListener).onSuccess(body);
+            if (callbackListener instanceof AbsStringCallback) {
+                ((AbsStringCallback) callbackListener).onSuccess(body);
             }
         } else {
             callbackListener.onFailure(response.code() + "", response.errorBody().toString());

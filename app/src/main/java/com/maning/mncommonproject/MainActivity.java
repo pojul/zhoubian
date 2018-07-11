@@ -18,7 +18,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsProgressListener;
-import com.yuqian.mncommonlibrary.http.callback.AbsStringCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.AbsStringCallback;
 import com.yuqian.mncommonlibrary.refresh.CommonRefreshLayout;
 import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addParams("signature", signature)
                 .addParams("channelID", "MFJR")
                 .addParams("versionNum", AppUtils.getAppVersionName())
-                .execute(new AbsStringCallbackListener() {
+                .execute(new AbsStringCallback() {
                     @Override
                     public void onSuccess(String responseStr) {
                         Logger.i("onSuccess:" + responseStr);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .url(mPostUrl)
                 .addParams("channel", "android")
                 .addParams("versionNumbern", "1.2.0")
-                .execute(new AbsStringCallbackListener() {
+                .execute(new AbsStringCallback() {
                     @Override
                     public void onSuccess(String responseStr) {
                         Logger.i("onSuccess:" + responseStr);
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .with()
                 .get()
                 .url(mGetUrl)
-                .execute(new AbsStringCallbackListener() {
+                .execute(new AbsStringCallback() {
                     @Override
                     public void onSuccess(String responseStr) {
                         Logger.i("onSuccess:" + responseStr);

@@ -5,7 +5,7 @@ package com.yuqian.mncommonlibrary.http.callback;
  *  @author : maning
  *  @desc   : 父类回调监听
  */
-public abstract class BaseCallbackListener {
+public abstract class BaseCallback {
     /**
      * 请求开始
      */

@@ -5,7 +5,7 @@ import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
 
 import org.json.JSONObject;
 
-public abstract class AbsJSONObjectCallbackListener extends AbsStringCallbackListener {
+public abstract class AbsJSONObjectCallback extends AbsStringCallback {
 
     public abstract void onSuccess(JSONObject responseObj);
 

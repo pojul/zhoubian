@@ -2,7 +2,7 @@ package com.yuqian.mncommonlibrary.http.model;
 
 
 import com.yuqian.mncommonlibrary.http.callback.AbsProgressListener;
-import com.yuqian.mncommonlibrary.http.callback.BaseCallbackListener;
+import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class OkhttpRequestModel {
     /**
      * 自定义回调
      */
-    private BaseCallbackListener callbackListener;
+    private BaseCallback callbackListener;
     /**
      * 原始的回调
      */
@@ -106,11 +106,11 @@ public class OkhttpRequestModel {
         this.tag = tag;
     }
 
-    public BaseCallbackListener getCallbackListener() {
+    public BaseCallback getCallbackListener() {
         return callbackListener;
     }
 
-    public void setCallbackListener(BaseCallbackListener callbackListener) {
+    public void setCallbackListener(BaseCallback callbackListener) {
         this.callbackListener = callbackListener;
     }
 
