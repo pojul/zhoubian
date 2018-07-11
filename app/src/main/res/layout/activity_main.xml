@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.maning.mncommonproject.MainActivity">
+
+    <com.yuqian.mncommonlibrary.refresh.CommonRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <Button
+                    android:id="@+id/btn_net_get"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="get请求" />
+
+                <Button
+                    android:id="@+id/btn_net_post"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="post请求-Json" />
+
+                <Button
+                    android:id="@+id/btn_net_post_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="post请求-表单提交" />
+
+                <Button
+                    android:id="@+id/btn_net_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="文件上传" />
+
+                <Button
+                    android:id="@+id/btn_net_download"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="文件下载" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </com.yuqian.mncommonlibrary.refresh.CommonRefreshLayout>
+
+</LinearLayout>
