@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="11dp"
+        >
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@drawable/test_me"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            app:riv_tile_mode="clamp"
+            app:riv_corner_radius="17dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text="黑色幽默回复："
+            android:textColor="#080808"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2018-05-22   12:00"
+        android:textColor="#8e8e8e"
+        android:layout_marginRight="15dp"
+        android:gravity="right"
+        android:textSize="9sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="揭露内容揭露内容揭露内容揭露内容揭露内容揭露内容揭露内容揭
+揭露内容揭露内容......"
+        android:lineSpacingExtra="5dp"
+        android:textSize="12sp"
+        android:textColor="#080808"
+        android:layout_marginRight="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginTop="15dp"
+        />
+
+    <View
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        android:layout_marginTop="28dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginTop="8dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="删除"
+            android:textSize="13sp"
+            android:textColor="#d53c3c"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            />
+        
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:background="@drawable/view"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="编辑"
+            android:textSize="13sp"
+            android:textColor="#459dda"
+            android:gravity="center"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        />
+</LinearLayout>

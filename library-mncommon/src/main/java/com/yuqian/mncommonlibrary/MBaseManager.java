@@ -40,15 +40,15 @@ public class MBaseManager {
     public static void init(Application application, String LogTag, boolean isDebug) {
         sApplication = application;
         /*日志初始化*/
-        initLog(LogTag, isDebug);
+//        initLog(LogTag, isDebug);
         /*工具类初始化*/
         initCommonUtils();
         /*数据存储初始化*/
         initCache();
         /*崩溃日志监听*/
-        initCrashLog(isDebug);
+//        initCrashLog(isDebug);
         /*刷新初始化*/
-        initRefresh();
+//        initRefresh();
     }
 
     private static void initRefresh() {

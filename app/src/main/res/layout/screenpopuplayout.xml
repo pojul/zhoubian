@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#66000000">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:textSize="17sp"
+                android:text="距离"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/mt_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="10dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="7dp"
+                app:textPaddingBottom="7dp"
+                app:columnNum="4"
+                app:overspread="false" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:textSize="17sp"
+                android:text="时间"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/mt_create_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="10dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="7dp"
+                app:textPaddingBottom="7dp"
+                app:columnNum="4"
+                app:overspread="false" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:textSize="17sp"
+                android:text="身份"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/mt_identity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="10dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="7dp"
+                app:textPaddingBottom="7dp"
+                app:columnNum="4"
+                app:overspread="false" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:textSize="17sp"
+                android:text="地址"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/mt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="10dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="7dp"
+                app:textPaddingBottom="7dp"
+                app:columnNum="4"
+                app:overspread="false" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:textSize="17sp"
+                android:text="类别"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/mt_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="10dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="7dp"
+                app:textPaddingBottom="7dp"
+                app:columnNum="4"
+                app:overspread="false" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#f3f3f3"
+            />
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            >
+            <TextView
+                android:id="@+id/tv_resetting"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="重置"
+                android:textSize="15sp"
+                android:textColor="#d53c3c"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/tv_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="确定"
+                android:textSize="15sp"
+                android:textColor="#d53c3c"
+                android:layout_gravity="center_vertical"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

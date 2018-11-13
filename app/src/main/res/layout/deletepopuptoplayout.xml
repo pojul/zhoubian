@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#00000000">
+    <RelativeLayout
+        android:id="@+id/rl_dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        ></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_marginBottom="8dp"
+        android:layout_width="fill_parent"
+        android:layout_height="166dp"
+        android:background="@drawable/popwindow_top"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:id="@+id/not_interested"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textColor="#080808"
+                android:textSize="13sp"
+                android:text="不感兴趣"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/ripple_normal"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f3f3f3"
+                />
+
+            <TextView
+                android:id="@+id/tv_report"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textColor="#080808"
+                android:textSize="13sp"
+                android:text="举报"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/ripple_normal"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f3f3f3"
+                />
+
+            <TextView
+                android:id="@+id/pull_black"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textColor="#080808"
+                android:textSize="13sp"
+                android:text="拉黑作者"
+                android:gravity="center"
+                android:clickable="true"
+                android:background="@drawable/ripple_normal"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

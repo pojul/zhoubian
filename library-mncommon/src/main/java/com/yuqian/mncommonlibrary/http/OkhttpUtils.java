@@ -405,7 +405,7 @@ public class OkhttpUtils {
                     if (!TextUtils.isEmpty(path)) {
                         File file = new File(path);
                         String fileType = getMimeType(file.getName());
-                        builder.addFormDataPart("upload" + i, file.getName(), RequestBody.create(MediaType.parse(fileType), file));
+                        builder.addFormDataPart("file", file.getName(), RequestBody.create(MediaType.parse(fileType), file));
                     }
                 }
             }
@@ -510,7 +510,7 @@ public class OkhttpUtils {
      * @param params
      * @return
      */
-    protected String appendParams(String url, Map<String, String> params) {
+    public String appendParams(String url, Map<String, String> params) {
         if (url == null || params == null || params.isEmpty()) {
             return url;
         }

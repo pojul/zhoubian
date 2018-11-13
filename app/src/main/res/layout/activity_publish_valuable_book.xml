@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#fff"
+    >
+    <include layout="@layout/title_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#080808"
+                android:text="请选择宝典类别"
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                />
+
+            <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:id="@+id/main_rl"
+                android:layout_width="match_parent"
+                android:layout_marginTop="21dp"
+                android:layout_height="wrap_content"
+                app:textSize="12sp"
+                app:textLineMargin="11dp"
+                app:textWordMargin="12dp"
+                app:textColor="#080808"
+                app:textBackground="@drawable/fff_3_stroke_1bg"
+                app:textPaddingLeft="13dp"
+                app:textPaddingRight="13dp"
+                app:textPaddingTop="8dp"
+                app:textPaddingBottom="8dp"
+                app:columnNum="3"
+                app:overspread="false" />
+
+            <EditText
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:textColor="#080808"
+                android:textColorHint="#c4c4c4"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/fff_3_stroke_1bg"
+                android:hint="请输入自定义类别（选填）"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:maxLength="8"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="11dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="说明："
+                    android:textSize="12sp"
+                    android:textColor="#c4c4c4"
+                    android:lineSpacingExtra="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="您可自定义帖子类别，如周末兼职、二手手机等，限8个字以内。"
+                    android:textSize="12sp"
+                    android:textColor="#c4c4c4"
+                    android:lineSpacingExtra="5dp"
+                    />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f3f3f3"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#080808"
+                android:text="请输入帖子标题"
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                />
+
+            <EditText
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="11dp"
+                android:textColor="#080808"
+                android:textColorHint="#c4c4c4"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@drawable/fff_3_stroke_1bg"
+                android:hint="突出你需求或服务的重点（4-30字）"
+                android:textSize="12sp"
+                android:singleLine="true"
+                android:maxLength="30"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#080808"
+                android:text="请输入帖子详情"
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="14dp"
+                />
+
+            <EditText
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="11dp"
+                android:textColor="#080808"
+                android:textColorHint="#c4c4c4"
+                android:layout_width="match_parent"
+                android:layout_height="152dp"
+                android:background="@drawable/fff_3_stroke_1bg"
+                android:hint="您可在此详细描绘APP使用教程、心得或向大家传授您用好APP的成功经验，或向大家分享各种防骗防坑经验"
+                android:textSize="12sp"
+                android:maxLength="1500"
+                android:gravity="top|left"
+                android:padding="10dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:gravity="center"
+                android:text="确定发布"
+                android:textSize="18sp"
+                android:textColor="#fff"
+                android:layout_marginTop="35dp"
+                android:background="#d53c3c"
+                />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

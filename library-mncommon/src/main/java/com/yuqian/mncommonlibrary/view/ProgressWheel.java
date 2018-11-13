@@ -83,7 +83,7 @@ public class ProgressWheel extends View {
     public ProgressWheel(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.ProgressWheel));
+        parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.MNBaseProgressWheel));
 
         setAnimationEnabled();
     }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="35dp"
+    android:background="#fff"
+    >
+    <TextView
+        android:id="@+id/more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#298be6"
+        android:textSize="12sp"
+        android:text="更多"
+        android:gravity="center"
+        android:clickable="true"
+        android:background="@drawable/ripple_normal"
+        />
+</LinearLayout>

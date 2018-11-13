@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MNBaseProject.iml" filepath="$PROJECT_DIR$/MNBaseProject.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library-base/library-base.iml" filepath="$PROJECT_DIR$/library-base/library-base.iml" />
       <module fileurl="file://$PROJECT_DIR$/library-mncommon/library-mncommon.iml" filepath="$PROJECT_DIR$/library-mncommon/library-mncommon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zhoubian.iml" filepath="$PROJECT_DIR$/zhoubian.iml" />
     </modules>
   </component>
 </project>

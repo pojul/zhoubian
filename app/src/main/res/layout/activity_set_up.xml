@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#f7f7f7"
+    >
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:id="@+id/black_list_ll"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ripple_normal"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="#080808"
+            android:textSize="16sp"
+            android:text="黑名单"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        />
+
+    <LinearLayout
+        android:id="@+id/nvestment_cooperation_ll"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ripple_normal"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="#080808"
+            android:textSize="16sp"
+            android:text="招商合作"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        />
+
+    <LinearLayout
+        android:id="@+id/clear_cache_ll"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ripple_normal"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="#080808"
+            android:textSize="16sp"
+            android:text="清除缓存"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        />
+
+    <LinearLayout
+        android:id="@+id/check_update"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ripple_normal"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="#080808"
+            android:textSize="16sp"
+            android:text="检查更新"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/exit_login"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:orientation="horizontal"
+        android:background="@drawable/ripple_normal"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:textColor="#d53c3c"
+            android:textSize="16sp"
+            android:text="退出登录"
+            android:layout_marginLeft="16dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

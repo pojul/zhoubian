@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#dedede"/>
+
+    <TextView
+        android:id="@+id/next_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="下翻20条"
+        android:textSize="12sp"
+        android:textColor="@color/pressed_text_blue_yellow"
+        android:gravity="center"
+        android:background="#f7f7f7"
+        android:padding="11dp"
+        android:clickable="true"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#dedede"/>
+
+    <TextView
+        android:id="@+id/next_30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="下翻30条"
+        android:textSize="12sp"
+        android:textColor="@color/pressed_text_blue_yellow"
+        android:gravity="center"
+        android:background="#f7f7f7"
+        android:padding="11dp"
+        android:clickable="true"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#dedede"/>
+
+    <TextView
+        android:id="@+id/next_50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="下翻50条"
+        android:textSize="12sp"
+        android:textColor="@color/pressed_text_blue_yellow"
+        android:gravity="center"
+        android:background="#f7f7f7"
+        android:padding="11dp"
+        android:clickable="true"
+        />
+
+</LinearLayout>

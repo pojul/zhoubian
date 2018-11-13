@@ -1,1 +1,1 @@
-include ':app', ':library-mncommon'
+include ':app', ':library-mncommon', ':library-base'

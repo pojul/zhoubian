@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="64dp"
+        android:layout_marginTop="10dp"
+        >
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/head_url"
+            android:layout_width="37dp"
+            android:layout_height="37dp"
+            android:src="@drawable/test_me"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            app:riv_tile_mode="clamp"
+            app:riv_corner_radius="18.5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_marginLeft="12dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="周杰伦"
+            android:textColor="#000513"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/reply"
+            android:layout_width="45dp"
+            android:layout_height="19dp"
+            android:text="回复"
+            android:textSize="12sp"
+            android:textColor="@color/selected_text_blue_white"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_reply"
+            android:gravity="center"
+            android:clickable="true"
+            />
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="45dp"
+            android:layout_height="19dp"
+            android:text="删除"
+            android:textSize="12sp"
+            android:textColor="@color/selected_text_red_white"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/selector_reply_delete"
+            android:gravity="center"
+            android:layout_marginLeft="16dp"
+            android:clickable="true"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/body"
+        android:layout_marginTop="3dp"
+        android:layout_marginLeft="113dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="主人回复@周杰伦-2：对不起卖了"
+        android:textColor="#080808"
+        android:textSize="12sp"
+        />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#f3f3f3"
+        android:layout_marginTop="16dp"
+        />
+</LinearLayout>

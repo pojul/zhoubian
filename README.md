@@ -23,8 +23,6 @@
     api 'com.blankj:utilcode:1.10.0'
     /*日志*/
     api 'com.orhanobut:logger:2.1.1'
-    /*RcyclerView 分割线*/
-    api 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     /*动画*/
     api 'com.github.florent37:viewanimator:1.0.5'
     /* 数据存储 */
@@ -32,7 +30,7 @@
     /*事件处理*/
     api 'org.greenrobot:eventbus:3.1.1'
     /*Toast*/
-    api 'com.github.bboylin:UniversalToast:v1.0.8'
+    api 'com.github.bboylin:UniversalToast:v1.0.5'
     /*公用Dialog:ProgressDialog,stateDiaog*/
     api 'com.github.maning0303:MNProgressHUD:V1.1.0'
     /*崩溃日志监听-页面化*/

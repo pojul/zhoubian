@@ -18,7 +18,9 @@ import com.maning.mndialoglibrary.listeners.OnDialogDismissListener;
 public class LoadingDialog {
 
     public static void showLoading(Context context) {
-        MProgressDialog.showProgress(context);
+        if(!MProgressDialog.isShowing()){
+            MProgressDialog.showProgress(context);
+        }
     }
 
     public static void showLoading(Context context, String msg) {

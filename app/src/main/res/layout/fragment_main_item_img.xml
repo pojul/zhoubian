@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_ll"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="39dp"
+    android:background="#f7f7f7"
+    >
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="41dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="15dp"
+        android:layout_gravity="center_vertical"
+        android:textSize="11sp"
+        android:textColor="#fff"
+        android:gravity="center"
+        android:background="@drawable/f89ff_3bg"
+        />
+
+    <TextView
+        android:id="@+id/downturn_num"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:text="点击下翻20条"
+        android:textSize="12sp"
+        android:textColor="@color/pressed_text_blue_yellow"
+        android:gravity="center"
+        android:clickable="true"
+        />
+
+    <ImageView
+        android:id="@+id/shutdown"
+        android:layout_width="39dp"
+        android:layout_height="39dp"
+        android:padding="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/selector_down"
+        android:clickable="true"
+        />
+</LinearLayout>
