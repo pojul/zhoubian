@@ -9,6 +9,7 @@ public class ChatMessage {
 
     private ECMessage message;
     private int messageType;
+    private long time;
 
     public ECMessage getMessage() {
         return message;
@@ -16,6 +17,10 @@ public class ChatMessage {
 
     public ChatMessage(ECMessage message) {
         this.message = message;
+    }
+
+    public ChatMessage(long time) {
+        this.time = time;
     }
 
     public void setMessage(ECMessage message) {
@@ -30,5 +35,9 @@ public class ChatMessage {
             return 0;
         }
         return 2;
+    }
+
+    public long getTime() {
+        return time;
     }
 }

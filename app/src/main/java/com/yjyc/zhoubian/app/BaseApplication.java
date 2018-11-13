@@ -80,6 +80,8 @@ public class BaseApplication extends Application {
 
     private BDLocation location;
 
+    private List<IReceiveMessage> IReceiveMessages = new ArrayList<>();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -152,6 +154,12 @@ public class BaseApplication extends Application {
             public void OnReceivedMessage(ECMessage ecMessage) {
                 toast("OnReceivedMessage");
                 LogUtil.e("OnReceivedMessage");
+                for (int i = 0; i < IReceiveMessages.size(); i++) {
+                    IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
+                    if(iReceiveMessage != null){
+                        iReceiveMessage.OnReceivedMessage(ecMessage);
+                    }
+                }
             }
 
             @Override
@@ -183,6 +191,12 @@ public class BaseApplication extends Application {
             public void onReceiveOfflineMessage(List<ECMessage> list) {
                 toast("onReceiveOfflineMessage");
                 LogUtil.e("onReceiveOfflineMessage");
+                for (int i = 0; i < IReceiveMessages.size(); i++) {
+                    IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
+                    if(iReceiveMessage != null){
+                        iReceiveMessage.onReceiveOfflineMessage(list);
+                    }
+                }
             }
 
             @Override
@@ -303,6 +317,27 @@ public class BaseApplication extends Application {
             e.printStackTrace();
         } finally {
         }
+    }
+
+    public void registerReceiveMessage(IReceiveMessage iReceiveMessage){
+        synchronized (IReceiveMessages){
+            if(iReceiveMessage != null){
+                IReceiveMessages.add(iReceiveMessage);
+            }
+        }
+    }
+
+    public void unRegisterReceiveMessage(IReceiveMessage iReceiveMessage){
+        synchronized (IReceiveMessages){
+            if(iReceiveMessage != null){
+                IReceiveMessages.remove(iReceiveMessage);
+            }
+        }
+    }
+
+    public interface IReceiveMessage{
+        void OnReceivedMessage(ECMessage ecMessage);
+        void onReceiveOfflineMessage(List<ECMessage> list);
     }
 
     public static Handler getHandler() {

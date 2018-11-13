@@ -53,7 +53,6 @@ public class BlackListActivity extends BaseActivity {
     private void init(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         blackListRv.setLayoutManager(layoutManager);
-        blackListRv.setAdapter(blackListAdapter);
         blackListAdapter = new BlackListAdapter(this, datas);
         blackListRv.setAdapter(blackListAdapter);
         reqBlackList();

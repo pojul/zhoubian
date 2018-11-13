@@ -20,7 +20,7 @@ android {
     signingConfigs {
         debug {
             keyAlias 'key0'
-            storeFile file('F:/project/zhoubian20181111/zhoubian20181111/zhoubian/zhoubian/debug.jks')
+            storeFile file('D:/gitpro/zhoubian/zhoubian/debug.jks')
             keyPassword '123456'
             storePassword '123456'
         }

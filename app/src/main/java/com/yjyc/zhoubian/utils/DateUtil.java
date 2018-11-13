@@ -1,6 +1,8 @@
 package com.yjyc.zhoubian.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class DateUtil {
 
@@ -19,5 +21,27 @@ public class DateUtil {
         }catch(Exception e){}
         return "";
     }
+
+    /**
+     * @param timill
+     * */
+    public static String converterDate(long timill){
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date dt = new Date(timill);
+        return sdf.format(dt);
+    }
+
+
+    public static String getTimemess(long timeMilli) {
+        long dsTimeMilli = System.currentTimeMillis() - timeMilli;
+        long l;
+        if (dsTimeMilli <= 24 * 60 * 60 * 1000) {
+            String hours = converterDate(timeMilli).split(" ")[1];
+            return hours.substring(0, (hours.length() - 3));
+        } else {
+            return converterDate(timeMilli);
+        }
+    }
+
 
 }
