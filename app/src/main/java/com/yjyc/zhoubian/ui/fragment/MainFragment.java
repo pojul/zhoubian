@@ -39,6 +39,7 @@ import com.yjyc.zhoubian.model.PostCateModel;
 import com.yjyc.zhoubian.model.SearchPostModel;
 import com.yjyc.zhoubian.model.SearchPosts;
 import com.yjyc.zhoubian.ui.activity.HobbySettingActivity;
+import com.yjyc.zhoubian.ui.activity.LocationSettingActivity;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
@@ -382,6 +383,11 @@ public class MainFragment extends Fragment{
     @OnClick(R.id.ll_search)
     public void ll_search(){
         startActivity(new Intent(getActivity(), SearchActivity.class));
+    }
+
+    @OnClick(R.id.ll_loc_set)
+    public void LocSet(){
+        startActivity(new Intent(getActivity(), LocationSettingActivity.class));
     }
 
     public interface OnItemClickListener{

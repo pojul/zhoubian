@@ -46,5 +46,10 @@ public class HttpUrl {
     public static final String BLACKLIST = BASE_URL + "index/Blacklist/blacklist";
     public static final String REMOVEBLACKLIST = BASE_URL + "index/Blacklist/removeBlacklist";
     public static final String EXPERIENCECATE = BASE_URL + "index/Experience/experienceCate";
+    public static final String USERPOSITION = BASE_URL + "index/User/userPosition";
+    public static final String GETUSERPOSITION = BASE_URL + "index/User/getUserPosition";
+    public static final String REMOVEPOSITION = BASE_URL + "index/User/removePosition";
+    public static final String OPENDEFAULTPOSITION = BASE_URL + "index/User/openDefaultPosition";
+    public static final String SHUTDEFAULTPOSITION = BASE_URL + "index/User/shutDefaultPosition";
 
 }

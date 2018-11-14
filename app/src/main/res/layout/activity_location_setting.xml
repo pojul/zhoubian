@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="系统会向你推送您的定位周围的信息，因为周围的信息跟你才最相关哦。"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            android:textSize="15sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="\u3000\u3000您未允许APP获取您的位置，为了良好的体验，请允许APP获取您的位置。（APP优先推送您定位附近信息）"
+            android:textColor="#454545"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="方法一: "
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="手机系统设置应用管理 → 应用程序管理\n → 周边信息 → 权限管理 → 获取定位 → 始终允许"
+            android:textColor="#454545"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="方法二: "
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="卸载后重装，使用时弹出【获取位置】，点允许"
+            android:textColor="#454545"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="15dp"
+        android:background="#f5f5f5" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="若您还想接收其他某些地点周围的信息，可以在下面自定义添加某些点哦，系统也会把这些点周围的信息推送给您。"
+        android:textColor="@color/red"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e0e0e0"
+        android:layout_marginTop="10dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <Button
+            android:id="@+id/loc_bt_a"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/selector_mess_send"
+            android:clickable="true"
+            android:text="地址A"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/loc_addr_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#454545"
+            android:textSize="13sp"
+            android:layout_marginLeft="15dp"
+            android:text="待获取"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/loc_bt_a"
+            android:maxWidth="120dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/clear_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:textColor="@color/selected_text_red_red"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/loc_switch_a"
+            android:layout_marginRight="20dp"
+            android:text="清除"
+            android:clickable="true"
+            android:visibility="gone"
+            />
+
+        <Switch
+            android:id="@+id/loc_switch_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e0e0e0"
+        android:layout_marginTop="12dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+        <Button
+            android:id="@+id/loc_bt_b"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
+            android:background="@drawable/selector_mess_send"
+            android:text="地址A"
+            android:textColor="@color/white"
+            android:clickable="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/loc_addr_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#454545"
+            android:textSize="13sp"
+            android:layout_marginLeft="15dp"
+            android:text="待获取"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/loc_bt_b"
+            android:maxWidth="120dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/clear_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:textColor="@color/selected_text_red_red"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/loc_switch_b"
+            android:layout_marginRight="20dp"
+            android:text="清除"
+            android:clickable="true"
+            android:visibility="gone"
+            />
+
+        <Switch
+            android:id="@+id/loc_switch_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e0e0e0"
+        android:layout_marginTop="12dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+        <Button
+            android:id="@+id/loc_bt_c"
+            android:layout_width="60dp"
+            android:layout_height="26dp"
+            android:background="@drawable/selector_mess_send"
+            android:text="地址C"
+            android:textColor="@color/white"
+            android:clickable="true"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/loc_addr_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#454545"
+            android:textSize="13sp"
+            android:layout_marginLeft="15dp"
+            android:text="待获取"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/loc_bt_c"
+            android:maxWidth="120dp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
+
+        <TextView
+            android:id="@+id/clear_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:textColor="@color/selected_text_red_red"
+            android:layout_centerHorizontal="true"
+            android:layout_toLeftOf="@+id/loc_switch_c"
+            android:layout_marginRight="20dp"
+            android:text="清除"
+            android:clickable="true"
+            android:visibility="gone"
+            />
+
+        <Switch
+            android:id="@+id/loc_switch_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:thumb="@drawable/thumb"
+            android:track="@drawable/track"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="2dp"/>
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#e0e0e0"
+        android:layout_marginTop="12dp"/>
+
+</LinearLayout>
