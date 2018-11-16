@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.BarUtils;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.model.ExperienceCate;
+import com.yjyc.zhoubian.model.ExperienceCateModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.PostCollection;
 import com.yjyc.zhoubian.model.PostCollectionModel;
@@ -37,6 +39,8 @@ public class PublishValuableBookActivity extends BaseActivity {
 
     private Context mContext;
     private static final int INIT = 3438;
+    private List<ExperienceCate> experienceCates;
+    private List<String> cateStrs = new ArrayList<>();
     //private List<>
 
     @Override
@@ -48,12 +52,12 @@ public class PublishValuableBookActivity extends BaseActivity {
 
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
         initTitleBar("发布宝典", v -> onBackPressed());
-        List<String> dataList = new ArrayList<String>();
+        /*List<String> dataList = new ArrayList<String>();
         dataList.add("APP使用教程");
         dataList.add("用好APP的成功经验");
         dataList.add("防骗防坑经验");
         dataList.add("如何去看杰伦演唱会");
-        main_rl.setTextViews(dataList);
+        main_rl.setTextViews(dataList);*/
 
         mHandler.sendEmptyMessageDelayed(INIT, 100);
     }
@@ -77,15 +81,22 @@ public class PublishValuableBookActivity extends BaseActivity {
         OkhttpUtils.with()
                 .get()
                 .url(HttpUrl.EXPERIENCECATE)
-                .execute(new AbsJsonCallBack<PostCollectionModel, PostCollection>() {
+                .execute(new AbsJsonCallBack<ExperienceCateModel, List<ExperienceCate>>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
+                        showToast(errorMsg);
                     }
 
                     @Override
-                    public void onSuccess(PostCollection body) {
+                    public void onSuccess(List<ExperienceCate> body) {
                         LoadingDialog.closeLoading();
+                        experienceCates = body;
+                        for (int i = 0; i < experienceCates.size(); i++) {
+                            ExperienceCate experienceCate = experienceCates.get(i);
+                            cateStrs.add(experienceCate.title);
+                        }
+                        main_rl.setTextViews(cateStrs);
                     }
                 });
     }

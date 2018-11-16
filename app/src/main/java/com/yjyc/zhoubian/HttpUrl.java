@@ -51,5 +51,12 @@ public class HttpUrl {
     public static final String REMOVEPOSITION = BASE_URL + "index/User/removePosition";
     public static final String OPENDEFAULTPOSITION = BASE_URL + "index/User/openDefaultPosition";
     public static final String SHUTDEFAULTPOSITION = BASE_URL + "index/User/shutDefaultPosition";
+    public static final String USERRECHARGE = BASE_URL + "index/Recharge/userRecharge";
+    public static final String GETRECHARGESETTING = BASE_URL + "index/Recharge/getRechargeSetting";
+    public static final String RECHARGELOG = BASE_URL + "index/Recharge/rechargeLog";
+    public static final String BINDWX = BASE_URL + "index/Withdraw/bindWx";
+    public static final String USERWXINFO = BASE_URL + "index/Withdraw/userWxInfo";
+    public static final String WITHDRAWAPPLY = BASE_URL + "index/Withdraw/withdrawApply";
+    public static final String WITHDRAWLOG = BASE_URL + "index/Withdraw/withdrawLog";
 
 }

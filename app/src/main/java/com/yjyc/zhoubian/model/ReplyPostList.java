@@ -7,6 +7,7 @@ public class ReplyPostList {
     public class ReplyPost{
         public int id;
         public int reply_user_id;
+        public int uid;
         public int article_id;
         public int pid;
         public String nickname;
@@ -18,9 +19,10 @@ public class ReplyPostList {
         public int _level;
         public String _html;
         public List<ReplyPost> _data;
-        public int oneLevelUid;
         public int oneLevelId;
-        public String oneLevelNickName;
+        public String reply_user_nickname;
+        public String reply_user_head_url;
+
     }
 
 }

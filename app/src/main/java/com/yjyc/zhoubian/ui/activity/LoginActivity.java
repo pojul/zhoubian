@@ -80,6 +80,12 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.tv_login)
     public void tv_login(){
+
+        /*testLogin();
+        if(true){
+            return;
+        }*/
+
         if(et_phone.getText().toString().length() != 11){
             ToastUtils.showShort("请输入11位手机号");
             return;
@@ -89,8 +95,22 @@ public class LoginActivity extends BaseActivity {
             ToastUtils.showShort("请输入6位短信验证码");
             return;
         }
-
         login();
+    }
+
+    private void testLogin() {
+        ToastUtils.showShort("登录成功");
+        Login loginModel = new Login();
+        loginModel.phone = "14787878579";
+        loginModel.uid = 23;
+        loginModel.token = "1d6b097181f024f899c3c59bf375e7b6";
+        UserInfo userInfo = new UserInfo();
+        userInfo.uid = 23;
+        Hawk.put("LoginModel", loginModel);
+        Hawk.put("userInfo", userInfo);
+
+        //BaseApplication.application.loginIm(loginModel);
+        finish();
     }
 
     private void login() {

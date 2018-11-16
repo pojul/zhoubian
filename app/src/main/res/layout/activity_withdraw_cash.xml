@@ -1,214 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="#f7f7f7"
-    >
-    <include layout="@layout/title_bar" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="47dp"
-        android:background="#fff"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:text="当前余额：500.00"
-        android:textSize="17sp"
-        android:textColor="#080808"
-        android:textStyle="bold"
-        />
+    android:background="#fff">
 
     <LinearLayout
-        android:layout_marginTop="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#fff"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="19dp"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:background="#f7f7f7"
+        android:layout_above="@id/withdraw_apply"
         >
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="1元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            />
+
+        <include
+            layout="@layout/title_bar" />
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="2元"
+            android:id="@+id/user_balance"
+            android:layout_width="match_parent"
+            android:layout_height="47dp"
+            android:background="#fff"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:text="当前余额：500.00"
             android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
+            android:textColor="#080808"
+            android:textStyle="bold"
             />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="5元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
-            />
-    </LinearLayout>
+        <com.yjyc.zhoubian.ui.view.pickmoney.PickMoneyView
+            android:id="@+id/pick_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:layout_marginTop="10dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+        </com.yjyc.zhoubian.ui.view.pickmoney.PickMoneyView>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="14dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#d53c3c"
+                android:text="注："
+                android:textSize="12sp"
+                />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#fff"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="11dp"
-        >
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="10元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="50元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
-            />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="直接提现至微信，1元、2元直接到账，无手续费。5-500元提现24小时审核通过后发放，提现系统将收购2%手续费"
+                android:textSize="12sp"
+                android:textColor="#5c5c5c"
+                android:lineSpacingExtra="5dp"
+                />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="100元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#fff"
-        android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="11dp"
-        android:paddingBottom="21dp"
-        >
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="500元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            />
-
-        <TextView
-            android:visibility="invisible"
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="50元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
-            />
-
-        <TextView
-            android:visibility="invisible"
-            android:layout_width="0dp"
-            android:layout_height="59dp"
-            android:layout_weight="1"
-            android:textColor="#212121"
-            android:text="100元"
-            android:textSize="17sp"
-            android:gravity="center"
-            android:background="@drawable/fff_3_stroke_1bg"
-            android:layout_marginLeft="9dp"
-            />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        >
-        <TextView
+            android:id="@+id/bind_wechat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#d53c3c"
-            android:text="注："
+            android:textColor="@color/selected_text_red_red"
+            android:text="@string/bind_wechat"
             android:textSize="12sp"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="直接提现至微信，1元、2元直接到账，无手续费。5-500元提现24小时审核通过后发放，提现系统将收购2%手续费"
-            android:textSize="12sp"
-            android:textColor="#5c5c5c"
-            android:lineSpacingExtra="5dp"
+            android:gravity="right"
+            android:layout_gravity="right"
+            android:padding="5dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="12dp"
+            android:clickable="true"
             />
     </LinearLayout>
 
     <TextView
+        android:id="@+id/withdraw_apply"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#d53c3c"
-        android:text="绑定/更换微信"
-        android:textSize="12sp"
-        android:gravity="right"
-        android:layout_marginTop="29dp"
-        android:layout_marginRight="15dp"
+        android:layout_height="43dp"
+        android:textColor="#fff"
+        android:text="申请提现"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:background="#d53c3c"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
         />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:textColor="#fff"
-            android:text="申请提现"
-            android:textSize="18sp"
-            android:gravity="center"
-            android:background="#d53c3c"
-            android:layout_alignParentBottom="true"
-            />
-    </RelativeLayout>
-</LinearLayout>
+
+</RelativeLayout>

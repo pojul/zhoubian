@@ -102,6 +102,7 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.MyVi
                         synchronized (datas){
                             datas.remove(position);
                             notifyItemRemoved(position);
+                            notifyItemRangeChanged(0, datas.size());
                         }
                     }
                 });

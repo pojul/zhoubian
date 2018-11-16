@@ -36,6 +36,7 @@ import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -215,7 +216,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holderOne.intervalTime.setText("");
         }
         Login login = Hawk.get("LoginModel");
-        if(login != null && login.uid == reply.reply_user_id){
+        if(login != null && login.uid == reply.uid){
             holderOne.delete.setVisibility(View.VISIBLE);
         }else{
             holderOne.delete.setVisibility(View.GONE);
@@ -229,7 +230,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             showReplyDialog(reply, position);
         });
         holderOne.delete.setOnClickListener(v->{
-            deleteReply(reply);
+            deleteReply(reply, position);
         });
     }
 
@@ -246,20 +247,22 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holderTwo.nickname.setText("佚名");
         }
         StringBuffer replyHeader = new StringBuffer();
-        if(postOwnId == reply.reply_user_id){
+        if(postOwnId == reply.uid){
             replyHeader.append("主人回复@");
         }else{
-            if(reply.nickname != null){
+            if(reply.nickname != null && !reply.nickname.isEmpty()){
                 replyHeader.append(reply.nickname + "回复@");
             }else{
-                replyHeader.append("回复@");
+                replyHeader.append("佚名回复@");
             }
         }
-        if(reply.oneLevelUid == reply.reply_user_id){
+        if(reply.uid == reply.reply_user_id){
             replyHeader.append("自己");
         }else{
-            if(reply.oneLevelNickName != null){
-                replyHeader.append(reply.oneLevelNickName);
+            if(reply.reply_user_nickname != null && !reply.reply_user_nickname.isEmpty()){
+                replyHeader.append(reply.reply_user_nickname);
+            }else{
+                replyHeader.append("佚名");
             }
         }
         replyHeader.append("：");
@@ -269,7 +272,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             holderTwo.body.setText("");
         }
         Login login = Hawk.get("LoginModel");
-        if(login != null && login.uid == reply.reply_user_id){
+        if(login != null && login.uid == reply.uid){
             holderTwo.delete.setVisibility(View.VISIBLE);
         }else{
             holderTwo.delete.setVisibility(View.GONE);
@@ -283,11 +286,11 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             showReplyDialog(reply, position);
         });
         holderTwo.delete.setOnClickListener(v->{
-            deleteReply(reply);
+            deleteReply(reply, position);
         });
     }
 
-    private void deleteReply(ReplyPostList.ReplyPost reply) {
+    private void deleteReply(ReplyPostList.ReplyPost reply, int position) {
         Login login = Hawk.get("LoginModel");
         if(login == null){
             return;
@@ -308,6 +311,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onSuccess(DeleteReply body) {
                         LoadingDialog.closeLoading();
+                        deleteData(reply, position);
                     }
                 });
     }
@@ -323,6 +327,12 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 mContext.startActivity(new Intent(mContext, LoginActivity.class));
                 return;
             }
+            int replyTableId = 0;
+            if(reply._level == 1){
+                replyTableId = reply.id;
+            }else{
+                replyTableId = reply.oneLevelId;
+            }
             Login login = Hawk.get("LoginModel");
             UserInfo userInfo = Hawk.get("userInfo");
             LoadingDialog.showLoading(mContext);
@@ -331,9 +341,10 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     .url(HttpUrl.REPLYPOST)
                     .addParams("uid", ("" + login.uid))
                     .addParams("token", login.token)
+                    .addParams("reply_uid", ("" + reply.uid))
                     .addParams("article_id", ("" + postId))
                     .addParams("body", str)
-                    .addParams("reply_table_id", ("" + reply.id))
+                    .addParams("reply_table_id", ("" + replyTableId))
                     .execute(new AbsJsonCallBack<ReplyPostModel, ReplyPost>(){
                         @Override
                         public void onFailure(String errorCode, String errorMsg) {
@@ -342,7 +353,6 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         }
                         @Override
                         public void onSuccess(ReplyPost body) {
-                            Toast.makeText(mContext, "success", Toast.LENGTH_SHORT).show();
                             LoadingDialog.closeLoading();
                             ReplyPostList.ReplyPost replyPost = new ReplyPostList().new ReplyPost();
                             replyPost._level = 2;
@@ -352,10 +362,15 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                             replyPost.head_url = userInfo.head_url_img;
                             replyPost.interval_time = "刚刚";
                             replyPost.article_id = postId;
-                            replyPost.reply_user_id = login.uid;
-                            reply.oneLevelUid = reply.reply_user_id;
-                            reply.oneLevelNickName = reply.nickname;
-                            reply.oneLevelId = reply.id;
+                            replyPost.uid = login.uid;
+                            if(reply._level == 1){
+                                replyPost.oneLevelId = reply.id;
+                            }else{
+                                replyPost.oneLevelId = reply.oneLevelId;
+                            }
+                            replyPost.reply_user_id = reply.uid;
+                            replyPost.reply_user_nickname = reply.nickname;
+                            replyPost.reply_user_head_url = reply.head_url;
                             addTwoLevelData(replyPost, position);
                         }
                     });
@@ -397,7 +412,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             oneLevelReply._level = 1;
             tempReplys.add(oneLevelReply);
             if(oneLevelReply._data != null){
-                addTwoLevelReply(tempReplys, oneLevelReply._data, oneLevelReply.reply_user_id, oneLevelReply.nickname, oneLevelReply.id);
+                addTwoLevelReply(tempReplys, oneLevelReply._data, oneLevelReply.id);
             }
         }
         synchronized (replys){
@@ -410,18 +425,12 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    private void addTwoLevelReply(List<ReplyPostList.ReplyPost> tempReplys, List<ReplyPostList.ReplyPost> datas,
-                                  int oneLevelUid, String oneLevelNickName, int oneLevelId) {
+    private void addTwoLevelReply(List<ReplyPostList.ReplyPost> tempReplys, List<ReplyPostList.ReplyPost> datas, int oneLevelId) {
         for (int i = 0; i < datas.size(); i++) {
             ReplyPostList.ReplyPost twoLevelReply = datas.get(i);
             twoLevelReply._level = 2;
-            twoLevelReply.oneLevelUid = oneLevelUid;
-            twoLevelReply.oneLevelNickName = oneLevelNickName;
             twoLevelReply.oneLevelId = oneLevelId;
             tempReplys.add(twoLevelReply);
-            if(twoLevelReply._data != null){
-                addTwoLevelReply(tempReplys, twoLevelReply._data, twoLevelReply.reply_user_id, twoLevelReply.nickname, twoLevelReply.id);
-            }
         }
     }
 
@@ -429,6 +438,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         synchronized (replys){
             replys.add(reply);
             notifyItemInserted(replys.size());
+            notifyItemRangeChanged(0, replys.size());
         }
     }
 
@@ -436,11 +446,36 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         synchronized (replys){
             replys.add((position + 1), replyPost);
             notifyItemInserted((position + 1));
+            notifyItemRangeChanged(0, replys.size());
         }
     }
 
-    public void deleteData(ReplyPostList.ReplyPost replyPost){
-
+    public void deleteData(ReplyPostList.ReplyPost replyPost, int position){
+        synchronized (replys) {
+            if (replyPost._level == 1) {
+                int oneLevelId = replyPost.id;
+                int startPosition = position;
+                List<ReplyPostList.ReplyPost> removeReplys = new ArrayList<>();
+                removeReplys.add(replys.get(position));
+                for (int i = startPosition; i < replys.size(); i++) {
+                    if(i == startPosition){
+                        continue;
+                    }
+                    ReplyPostList.ReplyPost tempPost = replys.get(i);
+                    if(tempPost._level == 1 || tempPost.oneLevelId != oneLevelId){
+                        break;
+                    }
+                    if(tempPost.oneLevelId == oneLevelId){
+                        removeReplys.add(tempPost);
+                    }
+                }
+                replys.removeAll(removeReplys);
+                notifyDataSetChanged();
+            } else {
+                replys.remove(position);
+                notifyDataSetChanged();
+            }
+        }
     }
 
 }

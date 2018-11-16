@@ -20,7 +20,7 @@ android {
     signingConfigs {
         debug {
             keyAlias 'key0'
-            storeFile file('F:/project/gitzhoubian/zhoubian/debug.jks')
+            storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
             keyPassword '123456'
             storePassword '123456'
         }
@@ -108,4 +108,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
     implementation files('libs/YTX_Android_IM_SDK_v5.4.1r.jar')
+    implementation files('libs/alipaySdk-20180601.jar')
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 }

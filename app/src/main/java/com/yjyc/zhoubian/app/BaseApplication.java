@@ -12,8 +12,11 @@ import com.baidu.location.BDLocation;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.orhanobut.hawk.Hawk;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
+import com.yjyc.zhoubian.utils.Constant;
 import com.yjyc.zhoubian.utils.SPUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
@@ -82,6 +85,8 @@ public class BaseApplication extends Application {
 
     private List<IReceiveMessage> IReceiveMessages = new ArrayList<>();
 
+    public static IWXAPI mWxApi;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -94,6 +99,15 @@ public class BaseApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         //初始化
         MBaseManager.init(this, "---logtag---", true);
+
+        registerToWX();
+    }
+
+    private void registerToWX() {
+        //第二个参数是指你应用在微信开放平台上的AppID
+        mWxApi = WXAPIFactory.createWXAPI(this, Constant.WEIXIN_APP_ID, false);
+        // 将该app注册到微信
+        mWxApi.registerApp(Constant.WEIXIN_APP_ID);
     }
 
     public void initImSDK(){

@@ -419,6 +419,7 @@ public class PostDetailsFragment extends BaseFragment {
                 .url(HttpUrl.REPLYPOST)
                 .addParams("uid", ("" + login.uid))
                 .addParams("token", login.token)
+                .addParams("reply_uid", ("" + postDetail.user_id))
                 .addParams("article_id", ("" + postDetail.id))
                 .addParams("body", str)
                 .addParams("reply_table_id", ("" + 0))
@@ -439,7 +440,7 @@ public class PostDetailsFragment extends BaseFragment {
                         replyPost.head_url = userInfo.head_url_img;
                         replyPost.interval_time = "刚刚";
                         replyPost.article_id = postDetail.id;
-                        replyPost.reply_user_id = login.uid;
+                        replyPost.uid = login.uid;
                         replyAdapter.addOneLevelData(replyPost);
                     }
                 });

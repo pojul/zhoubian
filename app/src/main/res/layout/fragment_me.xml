@@ -188,11 +188,12 @@
                     android:id="@+id/tv_detail"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="#010101"
                     android:textSize="15sp"
                     android:text="明细"
+                    android:clickable="true"
                     android:layout_gravity="center_vertical"
                     />
 
@@ -207,11 +208,12 @@
                     android:id="@+id/tv_recharge"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="#010101"
                     android:textSize="15sp"
                     android:text="充值"
+                    android:clickable="true"
                     android:layout_gravity="center_vertical"
                     />
 
@@ -226,11 +228,12 @@
                     android:id="@+id/tv_withdraw_cash"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="#010101"
                     android:textSize="15sp"
                     android:text="提现"
+                    android:clickable="true"
                     android:layout_gravity="center_vertical"
                     />
 

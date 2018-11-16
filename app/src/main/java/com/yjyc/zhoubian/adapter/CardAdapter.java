@@ -23,14 +23,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.logger.Logger;
-import com.squareup.haha.perflib.Main;
 import com.yjyc.zhoubian.HttpUrl;
-import com.yjyc.zhoubian.MainActivity;
 import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.model.Login;
-import com.yjyc.zhoubian.model.PostCate;
-import com.yjyc.zhoubian.model.PostCateModel;
 import com.yjyc.zhoubian.model.PullUserBlack;
 import com.yjyc.zhoubian.model.PullUserBlackModel;
 import com.yjyc.zhoubian.model.SearchPosts;
@@ -352,6 +348,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             synchronized (datas){
                 datas.remove(itemPosition == 0 ? 0 : itemPosition -  (1 + itemPosition/20));
                 notifyItemRemoved(itemPosition);
+                notifyItemRangeChanged(0, datas.size());
             }
             popWindow.dismiss();
         });
