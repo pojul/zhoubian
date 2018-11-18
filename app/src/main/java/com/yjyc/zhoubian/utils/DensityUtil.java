@@ -1,8 +1,6 @@
 package com.yjyc.zhoubian.utils;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.DisplayMetrics;
 
 public class DensityUtil {
 

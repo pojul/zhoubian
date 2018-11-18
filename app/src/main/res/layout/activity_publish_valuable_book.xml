@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#fff"
-    >
+    android:background="#fff">
     <include layout="@layout/title_bar" />
 
     <ScrollView
@@ -26,7 +27,22 @@
                 android:layout_marginTop="15dp"
                 />
 
+            <com.yjyc.zhoubian.ui.view.FlowTagView
+                android:visibility="gone"
+                android:id="@+id/cates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="15dp"
+                app:tag_height="27dp"
+                app:tag_horiz_padding="12dp"
+                app:tag_radio="2dp"
+                app:text_size="13sp"
+                />
+
             <net.masonliu.multipletextview.library.MultipleTextViewGroup
+                android:visibility="gone"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -153,6 +169,14 @@
                 android:padding="10dp"
                 />
 
+            <com.yjyc.zhoubian.ui.view.pickpicview.PickPicView
+                android:id="@+id/pick_pic_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp">
+            </com.yjyc.zhoubian.ui.view.pickpicview.PickPicView>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
@@ -160,9 +184,10 @@
                 android:text="确定发布"
                 android:textSize="18sp"
                 android:textColor="#fff"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="85dp"
                 android:background="#d53c3c"
                 />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

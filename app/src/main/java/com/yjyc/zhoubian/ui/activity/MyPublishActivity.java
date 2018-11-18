@@ -24,6 +24,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
@@ -85,15 +86,15 @@ public class MyPublishActivity extends BaseActivity {
     @BindView(R.id.refreshLayout)
     public RefreshLayout refreshLayout;
     private Context mContext;
-    private UserInfo body;
     RequestOptions options;
-    Login loginModel;
+    //Login loginModel;
     private MyPublishFragment myPublishFragment;
     public String uid;
     private MyEvaluationsFragment myEvaluationsFragment;
     private MyExposesFragment myExposesFragment;
     private MyEvaluationFragment myEvaluationFragment;
     private MyExposeFragment myExposeFragment;
+    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,12 @@ public class MyPublishActivity extends BaseActivity {
 
     private void initView() {
         uid = getIntent().getStringExtra("uid");
-        loginModel = Hawk.get("LoginModel");
+        if(uid == null || uid.isEmpty()){
+            showToast("数据错误");
+            finish();
+            return;
+        }
+        //loginModel = Hawk.get("LoginModel");
         options = new RequestOptions()
                 .centerCrop().error(R.drawable.head_url).placeholder(R.drawable.head_url);
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
@@ -119,26 +125,23 @@ public class MyPublishActivity extends BaseActivity {
             }
         });
 
-        if(Hawk.contains("userInfo")){
+        /*if(Hawk.contains("userInfo")){
             UserInfo userInfo = Hawk.get("userInfo");
             setView(userInfo);
-        }
+        }*/
     }
 
     private void userInfo() {
         OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.USERINFO)
-                .addParams("uid", loginModel.uid + "")
-                .addParams("token", loginModel.token)
+                .addParams("uid", uid)
                 .execute(new AbsJsonCallBack<UserInfoModel, UserInfo>() {
 
 
                     @Override
                     public void onSuccess(UserInfo body) {
-                        body.uid = loginModel.uid;
-                        Hawk.put("userInfo", body);
-                        MyPublishActivity.this.body = body;
+                        userInfo = body;
                         setView(body);
                     }
 
@@ -191,7 +194,7 @@ public class MyPublishActivity extends BaseActivity {
 
         tv_fans.setText("粉丝" + body.fans);
 
-        String phone = loginModel.phone;
+        String phone = userInfo.phone;
         tv_phone.setText("（" + phone.substring(0, 3)+ "****" + phone.substring(7, phone.length()) + "）");
     }
 
@@ -199,7 +202,7 @@ public class MyPublishActivity extends BaseActivity {
         // 创建一个集合,装填Fragment
         ArrayList<Fragment> fragments = new ArrayList<>();
         // 装填
-        myPublishFragment = new MyPublishFragment(this);
+        myPublishFragment = new MyPublishFragment(this, userInfo, uid);
         myEvaluationsFragment = new MyEvaluationsFragment(this);
         myExposesFragment = new MyExposesFragment(this);
         myEvaluationFragment = new MyEvaluationFragment(this);
@@ -222,12 +225,22 @@ public class MyPublishActivity extends BaseActivity {
         mTabLayout.addTab(mTabLayout.newTab());
         mTabLayout.setupWithViewPager(mViewPager);
 
-        mTabLayout.getTabAt(0).setText("我的\n发布");
-        mTabLayout.getTabAt(1).setText("我收到\n的评价");
-        mTabLayout.getTabAt(2).setText("我被别\n人揭露");
-        mTabLayout.getTabAt(3).setText("我给出\n的评价");
-        mTabLayout.getTabAt(4).setText("我揭露\n的别人");
-        mTabLayout.getTabAt(0).select();
+        Login login = Hawk.get("LoginModel");
+        if(login == null || !(login.uid + "").equals(uid)){
+            mTabLayout.getTabAt(0).setText("他的\n发布");
+            mTabLayout.getTabAt(1).setText("他收到\n的评价");
+            mTabLayout.getTabAt(2).setText("他被别\n人揭露");
+            mTabLayout.getTabAt(3).setText("他给出\n的评价");
+            mTabLayout.getTabAt(4).setText("他揭露\n的别人");
+            mTabLayout.getTabAt(0).select();
+        }else{
+            mTabLayout.getTabAt(0).setText("我的\n发布");
+            mTabLayout.getTabAt(1).setText("我收到\n的评价");
+            mTabLayout.getTabAt(2).setText("我被别\n人揭露");
+            mTabLayout.getTabAt(3).setText("我给出\n的评价");
+            mTabLayout.getTabAt(4).setText("我揭露\n的别人");
+            mTabLayout.getTabAt(0).select();
+        }
 
         mViewPager.setOffscreenPageLimit(4);
     }

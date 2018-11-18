@@ -48,6 +48,7 @@ import com.yjyc.zhoubian.model.ReplyPostModel;
 import com.yjyc.zhoubian.model.UserGroups;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
+import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
 import com.yjyc.zhoubian.utils.DateUtil;
@@ -358,7 +359,7 @@ public class PostDetailsFragment extends BaseFragment {
         replyAdapter.setPostId(postDetail.id, postDetail.user_id);
     }
 
-    @OnClick({R.id.follow, R.id.collect_rl, R.id.comment_rl, R.id.call, R.id.chat})
+    @OnClick({R.id.follow, R.id.collect_rl, R.id.comment_rl, R.id.call, R.id.chat, R.id.user_photo})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.follow:
@@ -400,6 +401,11 @@ public class PostDetailsFragment extends BaseFragment {
             case R.id.chat:
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
                 intent.putExtra("frindId", ("" + postDetail.user_id));
+                startActivity(intent);
+                break;
+            case R.id.user_photo:
+                intent = new Intent(getActivity(), MyPublishActivity.class);
+                intent.putExtra("uid", postDetail.user_id + "");
                 startActivity(intent);
                 break;
         }

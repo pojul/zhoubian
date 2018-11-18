@@ -59,6 +59,7 @@ public class WithdrawCashActivity extends BaseActivity {
 
     private Context mContext;
     private static final int INIT = 1254;
+    private static final int REFRESHMONEYS = 8457;
     private Login login;
     private List<Integer> prices = new ArrayList<>();
     public static UserWxInfo userWxInfo;
@@ -78,8 +79,9 @@ public class WithdrawCashActivity extends BaseActivity {
             finish();
             return;
         }
-        mHandler.sendEmptyMessageDelayed(INIT, 60);
-
+        initView();
+        /*mHandler.sendEmptyMessageDelayed(INIT, 10);
+        mHandler.sendEmptyMessageDelayed(REFRESHMONEYS, 100);*/
     }
 
     private void initView() {
@@ -91,6 +93,7 @@ public class WithdrawCashActivity extends BaseActivity {
         tv.setOnClickListener(view -> startActivity(new Intent(WithdrawCashActivity.this, WithdrawRecordActivity.class)));
         prices.add(1);prices.add(2);prices.add(5);prices.add(10);
         prices.add(50);prices.add(100);prices.add(500);
+        pickMoney.setVisibility(View.VISIBLE);
         pickMoney.setMoneys(Money.createMoneys(prices));
         getWxInfo();
         getPostMsg();
@@ -194,6 +197,10 @@ public class WithdrawCashActivity extends BaseActivity {
 
     }
 
+    private void refreshAdapter() {
+        pickMoney.refreshMoneys();
+    }
+
     private void bindWechat() {
         SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
@@ -221,6 +228,10 @@ public class WithdrawCashActivity extends BaseActivity {
                 case INIT:
                     activity.get().initView();
                     break;
+                case REFRESHMONEYS:
+                    activity.get().refreshAdapter();
+                    break;
+
             }
         }
     }

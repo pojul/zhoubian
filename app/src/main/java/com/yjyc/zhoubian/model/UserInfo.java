@@ -20,4 +20,5 @@ public class UserInfo implements Serializable{
     public String birthday;
     public int age;
     public String head_url;
+    public String phone;
 }

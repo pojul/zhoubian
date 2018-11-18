@@ -57,4 +57,10 @@ public class PickMoneyView extends LinearLayout {
         return adapter.getSelectedMoney();
     }
 
+    public void refreshMoneys(){
+        if(adapter != null){
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 }

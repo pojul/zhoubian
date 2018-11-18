@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_rl"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:clickable="true">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/pic"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/bg"
+        app:riv_oval="false"
+        android:scaleType="centerCrop"
+        app:riv_tile_mode="clamp"
+        app:riv_corner_radius_top_left="3dp"
+        app:riv_corner_radius_bottom_left="3dp"
+        app:riv_corner_radius_bottom_right="3dp"
+        app:riv_corner_radius_top_right="3dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="5dp"
+        />
+
+    <ImageView
+        android:id="@+id/pic_add"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:src="@drawable/selector_add_pic"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:textColor="#fff"
+        android:textSize="10sp"
+        android:text="主图"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/d53c3c_bottom_bg"
+        />
+
+    <ImageView
+        android:id="@+id/delete"
+        android:layout_width="27dp"
+        android:layout_height="17dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:src="@drawable/selector_delete_pic"
+        android:clickable="true"
+        />
+
+</RelativeLayout>

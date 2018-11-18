@@ -20,7 +20,8 @@ android {
     signingConfigs {
         debug {
             keyAlias 'key0'
-            storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
+            //storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
+            storeFile file('D:/gitPro/zhoubian/zhoubian/zhoubian.jks')
             keyPassword '123456'
             storePassword '123456'
         }
@@ -110,4 +111,5 @@ dependencies {
     implementation files('libs/YTX_Android_IM_SDK_v5.4.1r.jar')
     implementation files('libs/alipaySdk-20180601.jar')
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
 }

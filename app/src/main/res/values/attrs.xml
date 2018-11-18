@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="FlowTagView">
+        <attr name="text_size" format="dimension" />
+        <attr name="tag_height" format="dimension" />
+        <attr name="tag_horiz_padding" format="dimension" />
+        <attr name="tag_radio" format="dimension" />
+    </declare-styleable>
+
+</resources>

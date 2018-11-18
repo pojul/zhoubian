@@ -2,26 +2,23 @@ package com.yjyc.zhoubian.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.view.View;
 
+import android.view.View;
 import com.blankj.utilcode.util.BarUtils;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.model.ExperienceCate;
 import com.yjyc.zhoubian.model.ExperienceCateModel;
-import com.yjyc.zhoubian.model.Login;
-import com.yjyc.zhoubian.model.PostCollection;
-import com.yjyc.zhoubian.model.PostCollectionModel;
+import com.yjyc.zhoubian.ui.view.FlowTagView;
+import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
-
-import net.masonliu.multipletextview.library.MultipleTextViewGroup;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,14 +31,16 @@ import butterknife.ButterKnife;
  */
 
 public class PublishValuableBookActivity extends BaseActivity {
-    @BindView(R.id.main_rl)
-    public MultipleTextViewGroup main_rl;
+
+    @BindView(R.id.cates)
+    public FlowTagView cates;
+    @BindView(R.id.pick_pic_view)
+    public PickPicView pickPicView;
 
     private Context mContext;
     private static final int INIT = 3438;
     private List<ExperienceCate> experienceCates;
     private List<String> cateStrs = new ArrayList<>();
-    //private List<>
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +62,25 @@ public class PublishValuableBookActivity extends BaseActivity {
     }
 
     private void initView() {
+        /*cates.datas(cateStrs)
+                .listener((view, position) -> {
+                    //showShortToas("选中了:" + position);
+                }).commit();*/
+
+
         reqExperienceCate();
     }
 
     private void initData() {
-
+        if(cateStrs.size() > 0){
+            cates.setVisibility(View.VISIBLE);
+            cates.datas(cateStrs)
+                    .textColor(Color.parseColor("#343434"), Color.WHITE)
+                    .backgroundColor(Color.parseColor("#bbbbbb"), Color.parseColor("#d53c3c"))
+                    .listener((view, position) -> {
+                        //showShortToas("选中了:" + position);
+                    }).commit();
+        }
     }
 
     private void reqExperienceCate() {
@@ -96,9 +109,15 @@ public class PublishValuableBookActivity extends BaseActivity {
                             ExperienceCate experienceCate = experienceCates.get(i);
                             cateStrs.add(experienceCate.title);
                         }
-                        main_rl.setTextViews(cateStrs);
+                        initData();
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        pickPicView.onActivityResult(requestCode, resultCode, data);
     }
 
     private PublishValuableBookActivity.MyHandler mHandler = new PublishValuableBookActivity.MyHandler(this);

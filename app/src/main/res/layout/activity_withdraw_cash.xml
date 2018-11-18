@@ -30,6 +30,7 @@
             />
 
         <com.yjyc.zhoubian.ui.view.pickmoney.PickMoneyView
+            android:visibility="gone"
             android:id="@+id/pick_money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
