@@ -67,6 +67,7 @@ public class FlowTagView extends View {
     private int mTouchPosition;
 
     private OnTagSelectedListener listener;
+    private int selectMode = 1; //1: 单选中; 2: 多选中
 
     public FlowTagView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -238,16 +239,24 @@ public class FlowTagView extends View {
             Log.e("FlowTagView", "the position is illetal");
             throw new IllegalArgumentException("the position is illetal");
         }
-        tags.get(position).isSelected = !tags.get(position).isSelected;
-        /*for(int i = 0; i < tags.size(); i++){
-            //关闭其他选择
-
-            if(i != position){
-                tags.get(i).isSelected = false;
-            }else{
-                tags.get(i).isSelected = true;
+        if(selectMode == 1){
+            Tag tag = tags.get(position);
+            if (!tag.isSelected) {
+                for (int i = 0; i < tags.size(); i++) {
+                    //关闭其他选择
+                    if (i != position) {
+                        tags.get(i).isSelected = false;
+                    } else {
+                        tags.get(i).isSelected = true;
+                    }
+                }
+            } else {
+                tag.isSelected = false;
             }
-        }*/
+        } else {
+            tags.get(position).isSelected = !tags.get(position).isSelected;
+        }
+
         //触发监听器
         if (listener != null) {
             listener.onTagSelected(this, position);

@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:id="@+id/root_ll"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
 
     <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="上海合作组织青岛峰会举行 习近平主持会议并发表重要讲话"
@@ -22,26 +26,29 @@
         android:layout_marginTop="7dp"
         >
         <ImageView
+            android:id="@+id/iv1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="74dp"
-            android:background="@drawable/test"
+            android:scaleType="centerCrop"
             />
 
         <ImageView
+            android:id="@+id/iv2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="74dp"
-            android:background="@drawable/test"
+            android:scaleType="centerCrop"
             android:layout_marginLeft="3dp"
             />
 
         <ImageView
+            android:id="@+id/iv3"
             android:layout_marginLeft="3dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="74dp"
-            android:background="@drawable/test"
+            android:scaleType="centerCrop"
             />
 
     </LinearLayout>
@@ -56,6 +63,7 @@
         android:layout_marginTop="11dp"
         >
         <TextView
+            android:id="@+id/nick_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="等你下课"
@@ -65,6 +73,7 @@
             />
 
         <TextView
+            android:id="@+id/comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="555评论"
@@ -75,6 +84,7 @@
             />
 
         <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3分钟前"

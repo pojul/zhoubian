@@ -25,6 +25,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.R;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -138,6 +139,21 @@ public class PickPicAdapter extends RecyclerView.Adapter<PickPicAdapter.MyViewHo
     public void addDatas(List<LocalMedia> pics){
         synchronized (datas){
             datas.addAll(pics);
+            notifyDataSetChanged();
+        }
+    }
+
+    public List<String> getPics(){
+        List<String> pics = new ArrayList<>();
+        for (int i = 0; i < datas.size(); i++) {
+            pics.add(datas.get(i).getPath());
+        }
+        return pics;
+    }
+
+    public void clearData(){
+        synchronized (datas){
+            datas.clear();
             notifyDataSetChanged();
         }
     }

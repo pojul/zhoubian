@@ -63,6 +63,7 @@
                 app:overspread="false" />
 
             <EditText
+                android:id="@+id/custom_cate"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
@@ -126,6 +127,7 @@
                 />
 
             <EditText
+                android:id="@+id/title"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="11dp"
@@ -154,6 +156,7 @@
                 />
 
             <EditText
+                android:id="@+id/body"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="11dp"
@@ -178,6 +181,7 @@
             </com.yjyc.zhoubian.ui.view.pickpicview.PickPicView>
 
             <TextView
+                android:id="@+id/publish"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:gravity="center"
@@ -185,7 +189,8 @@
                 android:textSize="18sp"
                 android:textColor="#fff"
                 android:layout_marginTop="85dp"
-                android:background="#d53c3c"
+                android:background="@drawable/pressed_red_bt"
+                android:clickable="true"
                 />
 
         </LinearLayout>

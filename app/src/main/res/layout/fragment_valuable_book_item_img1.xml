@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:id="@+id/root_ll"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +18,7 @@
             android:orientation="vertical"
             >
             <TextView
+                android:id="@+id/text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="18dp"
@@ -64,10 +68,11 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/iv1"
             android:layout_width="113dp"
             android:layout_height="74dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/test"
+            android:scaleType="centerCrop"
             />
     </LinearLayout>
 
@@ -81,6 +86,7 @@
         android:layout_marginTop="8dp"
         >
         <TextView
+            android:id="@+id/nick_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="等你下课"
@@ -90,6 +96,7 @@
             />
 
         <TextView
+            android:id="@+id/comments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="555评论"
@@ -100,6 +107,7 @@
             />
 
         <TextView
+            android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3分钟前"

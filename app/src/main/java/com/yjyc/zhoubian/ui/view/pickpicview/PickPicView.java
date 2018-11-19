@@ -59,10 +59,12 @@ public class PickPicView extends RecyclerView{
     }
 
     public List<String> getPics(){
-        List<String> pics = new ArrayList<>();
-
-
+        List<String> pics = adapter.getPics();
         return pics;
+    }
+
+    public void clearData(){
+        adapter.clearData();
     }
 
 }

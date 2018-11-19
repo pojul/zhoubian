@@ -4,5 +4,5 @@ import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpResponse;
 
 import java.io.Serializable;
 
-public class ExperienceSaveModel extends HttpResponse<ExperienceSaveModel, ExperienceSave> implements Serializable {
+public class ExperienceDetailModel extends HttpResponse<ExperienceDetailModel, ExperienceDetail> implements Serializable {
 }

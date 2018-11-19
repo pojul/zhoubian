@@ -1078,46 +1078,42 @@ public class PublishFragment extends Fragment{
 
 
     public void post(final Map<String, Object> params, final String url) {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                HttpClient client = new DefaultHttpClient();
-                HttpPost httpPost = new HttpPost(url);
-                httpPost.addHeader("charset", HTTP.UTF_8);
-                httpPost.setHeader("Content-Type",
-                        "application/x-www-form-urlencoded; charset=utf-8");
-                HttpResponse response = null;
-                if (params != null && params.size() > 0) {
-                    List<NameValuePair> nameValuepairs = new ArrayList<NameValuePair>();
-                    for (String key : params.keySet()) {
-                        nameValuepairs.add(new BasicNameValuePair(key, (String) params
-                                .get(key)));
-                    }
-                    try {
-                        httpPost.setEntity(new UrlEncodedFormEntity(nameValuepairs,
-                                HTTP.UTF_8));
-                        response = client.execute(httpPost);
-                        String token = EntityUtils.toString(response.getEntity());
-                        jsonToObject(token);
-                        Logger.i(token);
-                    } catch (Exception e) {
-                        Logger.i(e.toString());
-                        ProgressDialog.dismiss();
-                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("编辑失败");
-                        e.printStackTrace();
-                    }
-                } else {
-                    try {
-                        response = client.execute(httpPost);
-                    } catch (ClientProtocolException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        new Thread(() -> {
+            HttpClient client = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(url);
+            httpPost.addHeader("charset", HTTP.UTF_8);
+            httpPost.setHeader("Content-Type",
+                    "application/x-www-form-urlencoded; charset=utf-8");
+            HttpResponse response = null;
+            if (params != null && params.size() > 0) {
+                List<NameValuePair> nameValuepairs = new ArrayList<NameValuePair>();
+                for (String key : params.keySet()) {
+                    nameValuepairs.add(new BasicNameValuePair(key, (String) params
+                            .get(key)));
                 }
-
+                try {
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuepairs,
+                            HTTP.UTF_8));
+                    response = client.execute(httpPost);
+                    String token = EntityUtils.toString(response.getEntity());
+                    jsonToObject(token);
+                    Logger.i(token);
+                } catch (Exception e) {
+                    Logger.i(e.toString());
+                    ProgressDialog.dismiss();
+                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("编辑失败");
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    response = client.execute(httpPost);
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+
         }).start();//这个start()方法不要忘记了
 
     }

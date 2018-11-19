@@ -58,7 +58,11 @@ public class HttpUrl {
     public static final String USERWXINFO = BASE_URL + "index/Withdraw/userWxInfo";
     public static final String WITHDRAWAPPLY = BASE_URL + "index/Withdraw/withdrawApply";
     public static final String WITHDRAWLOG = BASE_URL + "index/Withdraw/withdrawLog";
-
     public static final String EXPERIENCESAVE = BASE_URL + "index/Experience/save";
+    public static final String EXPERIENCELIST = BASE_URL + "index/Experience/index";
+    public static final String EXPERIENCEDETAIL = BASE_URL + "index/Experience/detail/";
+    public static final String REPLYEXPERIENCELIST = BASE_URL + "index/Reply/replyExperienceList";
+    public static final String REPLYEXPERIENCE = BASE_URL + "index/Reply/ReplyExperience";
+    public static final String DELETEEXPERIENCEREPLY = BASE_URL + "index/Reply/deleteReply";
 
 }
