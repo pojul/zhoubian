@@ -49,8 +49,6 @@ public class MyPublishFragment extends BaseFragment {
     private MyPublishActivity activity;
     @BindView(R.id.recyclerview)
     public RecyclerView recyclerview;
-    @BindView(R.id.chat)
-    TextView chat;
 
     Unbinder unbinder;
     public int page = 1;
@@ -86,16 +84,6 @@ public class MyPublishFragment extends BaseFragment {
         initViews();
         initDate();
         return view;
-    }
-
-    @OnClick(R.id.chat)
-    public void chat(){
-        if(uid == null || uid.isEmpty()){
-            return;
-        }
-        Intent intent = new Intent(getActivity(), ChatActivity.class);
-        intent.putExtra("frindId", ("" + uid));
-        startActivity(intent);
     }
 
     @Override
@@ -155,10 +143,8 @@ public class MyPublishFragment extends BaseFragment {
         Login login = Hawk.get("LoginModel");
         if(login == null || !(login.uid + "").equals(uid)){
             myAdapter = new MyAdapter(2);
-            chat.setVisibility(View.VISIBLE);
         }else{
             myAdapter = new MyAdapter(1);
-            chat.setVisibility(View.GONE);
         }
         options = new RequestOptions()
                 .centerCrop();

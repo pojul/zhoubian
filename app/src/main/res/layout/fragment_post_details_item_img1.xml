@@ -62,6 +62,16 @@
             android:layout_marginLeft="16dp"
             android:clickable="true"
             />
+
+        <ImageView
+            android:id="@+id/thumb_up"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:padding="5dp"
+            android:clickable="true"
+            android:src="@drawable/selector_thumb_up"/>
     </LinearLayout>
 
     <TextView

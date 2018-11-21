@@ -33,6 +33,7 @@
             android:textColor="#080808"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="11dp"
+            android:text="周杰伦"
             />
 
         <TextView
@@ -66,6 +67,7 @@
             android:textColor="#080808"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
+            android:text="黑色幽默"
             />
 
         <TextView
@@ -88,6 +90,7 @@
         android:layout_marginRight="15dp"
         android:gravity="right"
         android:textSize="9sp"
+        android:text="2018-09-09  12：14"
         />
 
     <TextView
@@ -100,6 +103,8 @@
         android:layout_marginRight="14dp"
         android:layout_marginLeft="14dp"
         android:layout_marginTop="13dp"
+        android:text="揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露
+揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露揭露"
         />
 
     <LinearLayout

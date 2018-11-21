@@ -43,5 +43,10 @@ public class DateUtil {
         }
     }
 
+    public static String getDate(){
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        java.util.Date dt = new Date(System.currentTimeMillis());
+        return sdf.format(dt);
+    }
 
 }

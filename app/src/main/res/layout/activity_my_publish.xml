@@ -6,14 +6,10 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:fitsSystemWindows="true"
+    android:id="@+id/root_ll"
     >
     <include layout="@layout/title_bar" />
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/refreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -214,10 +210,7 @@
                     app:tabTextAppearance="@style/TabLayoutTextStyle"
                     android:background="#fff"
                     >
-
                 </android.support.design.widget.TabLayout>
-
-
             </android.support.design.widget.AppBarLayout>
 
             <RelativeLayout
@@ -225,6 +218,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                    android:id="@+id/refreshLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/operate"
+                    >
                 <com.yjyc.zhoubian.ui.view.NoScrollViewPager2
                     android:id="@+id/tvviewpager"
                     android:layout_width="match_parent"
@@ -233,8 +233,20 @@
                     >
 
                 </com.yjyc.zhoubian.ui.view.NoScrollViewPager2>
+                </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+                <TextView
+                    android:id="@+id/operate"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_alignParentBottom="true"
+                    android:textColor="#ffffff"
+                    android:text="私聊"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:background="@drawable/pressed_red_bt"/>
             </RelativeLayout>
 
         </android.support.design.widget.CoordinatorLayout>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +17,10 @@ import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.model.DeleteReply;
 import com.yjyc.zhoubian.model.DeleteReplyModel;
+import com.yjyc.zhoubian.model.Like;
+import com.yjyc.zhoubian.model.LikeModel;
 import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.ReplyPost;
 import com.yjyc.zhoubian.model.ReplyPostList;
 import com.yjyc.zhoubian.model.ReplyPostModel;
@@ -82,6 +86,8 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView delete;
         @BindView(R.id.grab_red_package_msg)
         TextView grabRedPackageMsg;
+        @BindView(R.id.thumb_up)
+        ImageView thumb_up;
 
         public MyViewHolderOne(View itemView) {
             super(itemView);
@@ -101,6 +107,8 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         TextView reply;
         @BindView(R.id.delete)
         TextView delete;
+        @BindView(R.id.thumb_up)
+        ImageView thumb_up;
 
         public MyViewHolderTwo(View itemView) {
             super(itemView);
@@ -224,6 +232,17 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holderOne.delete.setOnClickListener(v->{
             deleteReply(reply, position);
         });
+        if(reply.is_like){
+            holderOne.thumb_up.setSelected(true);
+        }else{
+            holderOne.thumb_up.setSelected(false);
+        }
+        holderOne.thumb_up.setOnClickListener(v->{
+            if(reply.is_like){
+                return;
+            }
+            thumbupReply(reply, position);
+        });
     }
 
     private void bindTypeTwo(MyViewHolderTwo holderTwo, int position) {
@@ -280,6 +299,48 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         holderTwo.delete.setOnClickListener(v->{
             deleteReply(reply, position);
         });
+        if(reply.is_like){
+            holderTwo.thumb_up.setSelected(true);
+        }else{
+            holderTwo.thumb_up.setSelected(false);
+        }
+        holderTwo.thumb_up.setOnClickListener(v->{
+            if(reply.is_like){
+                return;
+            }
+            thumbupReply(reply, position);
+        });
+    }
+
+    private void thumbupReply(ReplyPostList.ReplyPost reply, int position) {
+        Login login = Hawk.get("LoginModel");
+        if(login == null){
+            Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
+            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+            return;
+        }
+        LoadingDialog.showLoading(mContext);
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.LIKE)
+                .addParams("uid", ("" + login.uid))
+                .addParams("token", login.token)
+                .addParams("id", ("" + reply.id))
+                .execute(new AbsJsonCallBack<LikeModel, Like>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(Like body) {
+                        LoadingDialog.closeLoading();
+                        reply.is_like = true;
+                        notifyItemChanged(position);
+                    }
+                });
+
     }
 
     private void deleteReply(ReplyPostList.ReplyPost reply, int position) {
@@ -312,7 +373,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         if(roolView == null || postId == -1){
             return;
         }
-        DialogUtil.getInstance().showCommentDialog(mContext, roolView, 2);
+        DialogUtil.getInstance().showCommentDialog(mContext, roolView, 2, null);
         DialogUtil.getInstance().setDialogClick(str -> {
             if(Hawk.get("LoginModel") == null){
                 Toast.makeText(mContext, "请先登陆", Toast.LENGTH_SHORT).show();

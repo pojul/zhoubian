@@ -173,7 +173,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
                 }
                 break;
             case R.id.comment_rl:
-                DialogUtil.getInstance().showCommentDialog(this, rootRl, 1);
+                DialogUtil.getInstance().showCommentDialog(this, rootRl, 1, null);
                 DialogUtil.getInstance().setDialogClick(str -> {
                     postComment(str);
                 });

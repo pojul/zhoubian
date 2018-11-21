@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
@@ -377,7 +378,7 @@ public class PostDetailsFragment extends BaseFragment {
                 }
                 break;
             case R.id.comment_rl:
-                DialogUtil.getInstance().showCommentDialog(getActivity(), rootRl, 1);
+                DialogUtil.getInstance().showCommentDialog(getActivity(), rootRl, 1, null);
                 DialogUtil.getInstance().setDialogClick(str -> {
                     postComment(str);
                 });

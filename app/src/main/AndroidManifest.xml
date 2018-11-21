@@ -116,7 +116,8 @@
         <activity
             android:name=".ui.activity.MyPublishActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".ui.activity.EditProfileActivity"
             android:screenOrientation="portrait"
@@ -237,7 +238,7 @@
         <activity
             android:name=".ui.activity.WithdrawRecordActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- 支付宝页面 -->
         <activity
@@ -250,7 +251,6 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
-
         <!-- 微信授权登陆页面 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -258,7 +258,11 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent" />
-
+        <!-- 微信支付 -->
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>

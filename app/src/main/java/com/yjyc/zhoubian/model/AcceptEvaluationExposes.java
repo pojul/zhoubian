@@ -24,5 +24,11 @@ public class AcceptEvaluationExposes {
         public String update_time;
         public UserInfo user_info;
         public UserInfo be_user_info;
+        public UserReply user_reply;
+    }
+    public class UserReply{
+        public int id;
+        public String create_time;
+        public String body;
     }
 }

@@ -22,7 +22,7 @@ public class ReplyPostList {
         public int oneLevelId;
         public String reply_user_nickname;
         public String reply_user_head_url;
-
+        public boolean is_like;
     }
 
 }

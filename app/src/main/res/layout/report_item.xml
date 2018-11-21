@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#fff"
     >
     <LinearLayout
@@ -12,6 +12,7 @@
         android:layout_marginRight="15dp"
         >
         <TextView
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content" 
@@ -22,10 +23,13 @@
             />
         
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/rb_false"
+            android:id="@+id/radio"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:padding="6dp"
+            android:src="@drawable/selector_rb"
             android:layout_gravity="center_vertical"
+            android:clickable="true"
             />
     </LinearLayout>
 

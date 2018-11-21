@@ -40,6 +40,7 @@
                 android:background="#fff"
                 >
                 <EditText
+                    android:id="@+id/body"
                     android:layout_width="match_parent"
                     android:layout_height="148dp"
                     android:background="@drawable/fff_3_stroke_1bg"
@@ -64,262 +65,26 @@
                 android:layout_marginLeft="15dp"
                 />
 
-            <LinearLayout
+            <com.yjyc.zhoubian.ui.view.pickpicview.PickPicView
+                android:id="@+id/pick_pic_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#fff"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="20dp"
+                android:padding="15dp"
+                android:background="#ffffff"
                 >
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:layout_centerInParent="true"
-                        >
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="75dp"
-                            android:src="@drawable/test_me"
-                            app:riv_oval="false"
-                            android:scaleType="centerCrop"
-                            app:riv_tile_mode="clamp"
-                            app:riv_corner_radius_top_left="3dp"
-                            app:riv_corner_radius_bottom_left="3dp"
-                            app:riv_corner_radius_bottom_right="3dp"
-                            app:riv_corner_radius_top_right="3dp"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginTop="5dp"
-                            />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:textColor="#fff"
-                            android:textSize="10sp"
-                            android:text="主图"
-                            android:gravity="center"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="4dp"
-                            android:background="@drawable/d53c3c_bottom_bg"
-                            />
-
-                        <ImageView
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
-                            android:background="@drawable/publish_delete"
-                            />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="75dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bfbfbf_3bg"
-                        android:visibility="gone"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_centerInParent="true"
-                            >
-                            <ImageView
-                                android:layout_width="19dp"
-                                android:layout_height="19dp"
-                                android:background="@drawable/add_pic"
-                                android:layout_gravity="center_horizontal"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="11dp"
-                                android:text="添加图片"
-                                android:textSize="10sp"
-                                android:textColor="#fff"
-                                android:layout_gravity="center_horizontal"
-                                />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone"
-                        >
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="75dp"
-                            android:src="@drawable/test_me"
-                            app:riv_oval="false"
-                            android:scaleType="centerCrop"
-                            app:riv_tile_mode="clamp"
-                            app:riv_corner_radius_top_left="3dp"
-                            app:riv_corner_radius_bottom_left="3dp"
-                            app:riv_corner_radius_bottom_right="3dp"
-                            app:riv_corner_radius_top_right="3dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="5dp"
-                            />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:textColor="#fff"
-                            android:textSize="10sp"
-                            android:text="主图"
-                            android:gravity="center"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="8dp"
-                            android:background="@drawable/d53c3c_bottom_bg"
-                            />
-
-                        <ImageView
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
-                            android:background="@drawable/publish_delete"
-                            />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="75dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bfbfbf_3bg"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_centerInParent="true"
-                            >
-                            <ImageView
-                                android:layout_width="19dp"
-                                android:layout_height="19dp"
-                                android:background="@drawable/add_pic"
-                                android:layout_gravity="center_horizontal"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="11dp"
-                                android:text="添加图片"
-                                android:textSize="10sp"
-                                android:textColor="#fff"
-                                android:layout_gravity="center_horizontal"
-                                />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_marginLeft="4dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:layout_centerInParent="true"
-                        android:visibility="gone"
-                        >
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="75dp"
-                            android:src="@drawable/test_me"
-                            app:riv_oval="false"
-                            android:scaleType="centerCrop"
-                            app:riv_tile_mode="clamp"
-                            app:riv_corner_radius_top_left="3dp"
-                            app:riv_corner_radius_bottom_left="3dp"
-                            app:riv_corner_radius_bottom_right="3dp"
-                            app:riv_corner_radius_top_right="3dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="5dp"
-                            />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="20dp"
-                            android:textColor="#fff"
-                            android:textSize="10sp"
-                            android:text="主图"
-                            android:gravity="center"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginLeft="8dp"
-                            android:background="@drawable/d53c3c_bottom_bg"
-                            />
-
-                        <ImageView
-                            android:layout_width="17dp"
-                            android:layout_height="17dp"
-                            android:background="@drawable/publish_delete"
-                            />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="75dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/bfbfbf_3bg"
-                        >
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_centerInParent="true"
-                            >
-                            <ImageView
-                                android:layout_width="19dp"
-                                android:layout_height="19dp"
-                                android:background="@drawable/add_pic"
-                                android:layout_gravity="center_horizontal"
-                                />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="11dp"
-                                android:text="添加图片"
-                                android:textSize="10sp"
-                                android:textColor="#fff"
-                                android:layout_gravity="center_horizontal"
-                                />
-                        </LinearLayout>
-
-                    </RelativeLayout>
-                </RelativeLayout>
-            </LinearLayout>
+            </com.yjyc.zhoubian.ui.view.pickpicview.PickPicView>
 
             <TextView
+                android:id="@+id/submit"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
                 android:textColor="#fff"
                 android:textSize="18sp"
                 android:text="提交"
                 android:gravity="center"
-                android:background="#d53c3c"
+                android:background="@drawable/pressed_red_bt"
                 android:layout_marginTop="37dp"
+                android:clickable="true"
                 />
         </LinearLayout>
     </ScrollView>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,6 +8,7 @@
     <include layout="@layout/title_bar" />
 
     <TextView
+        android:id="@+id/note"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:text="请输入评价内容"
@@ -24,6 +24,7 @@
         android:background="#fff"
         >
         <EditText
+            android:id="@+id/body"
             android:layout_width="match_parent"
             android:layout_height="148dp"
             android:textSize="11sp"
@@ -48,264 +49,17 @@
         android:textSize="14sp"
         />
 
-    <LinearLayout
+    <com.yjyc.zhoubian.ui.view.pickpicview.PickPicView
+        android:id="@+id/pick_pic_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingTop="11dp"
-        android:paddingLeft="11dp"
-        android:paddingRight="15dp"
+        android:overScrollMode="never"
+        android:paddingTop="15dp"
         android:paddingBottom="15dp"
-        android:background="#fff"
-        >
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/rl1"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                >
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/iv1"
-                    android:layout_width="match_parent"
-                    android:layout_height="75dp"
-                    android:src="@drawable/test_me"
-                    app:riv_oval="false"
-                    android:scaleType="centerCrop"
-                    app:riv_tile_mode="clamp"
-                    app:riv_corner_radius_top_left="3dp"
-                    app:riv_corner_radius_bottom_left="3dp"
-                    app:riv_corner_radius_bottom_right="3dp"
-                    app:riv_corner_radius_top_right="3dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginTop="5dp"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:textColor="#fff"
-                    android:textSize="10sp"
-                    android:text="主图"
-                    android:gravity="center"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="4dp"
-                    android:background="@drawable/d53c3c_bottom_bg"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_delete1"
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
-                    android:background="@drawable/publish_delete"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_add1"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bfbfbf_3bg"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerInParent="true"
-                    >
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:background="@drawable/add_pic"
-                        android:layout_gravity="center_horizontal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
-                        android:text="添加图片"
-                        android:textSize="10sp"
-                        android:textColor="#fff"
-                        android:layout_gravity="center_horizontal"
-                        />
-                </LinearLayout>
-
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginLeft="4dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/rl2"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                >
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/iv2"
-                    android:layout_width="match_parent"
-                    android:layout_height="75dp"
-                    android:src="@drawable/test_me"
-                    app:riv_oval="false"
-                    android:scaleType="centerCrop"
-                    app:riv_tile_mode="clamp"
-                    app:riv_corner_radius_top_left="3dp"
-                    app:riv_corner_radius_bottom_left="3dp"
-                    app:riv_corner_radius_bottom_right="3dp"
-                    app:riv_corner_radius_top_right="3dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="5dp"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:textColor="#fff"
-                    android:textSize="10sp"
-                    android:text="主图"
-                    android:gravity="center"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/d53c3c_bottom_bg"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_delete2"
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
-                    android:background="@drawable/publish_delete"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_add2"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bfbfbf_3bg"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerInParent="true"
-                    >
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:background="@drawable/add_pic"
-                        android:layout_gravity="center_horizontal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
-                        android:text="添加图片"
-                        android:textSize="10sp"
-                        android:textColor="#fff"
-                        android:layout_gravity="center_horizontal"
-                        />
-                </LinearLayout>
-
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_marginLeft="4dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:id="@+id/rl3"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:visibility="gone"
-                >
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/iv3"
-                    android:layout_width="match_parent"
-                    android:layout_height="75dp"
-                    android:src="@drawable/test_me"
-                    app:riv_oval="false"
-                    android:scaleType="centerCrop"
-                    app:riv_tile_mode="clamp"
-                    app:riv_corner_radius_top_left="3dp"
-                    app:riv_corner_radius_bottom_left="3dp"
-                    app:riv_corner_radius_bottom_right="3dp"
-                    app:riv_corner_radius_top_right="3dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="5dp"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:textColor="#fff"
-                    android:textSize="10sp"
-                    android:text="主图"
-                    android:gravity="center"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/d53c3c_bottom_bg"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_delete3"
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
-                    android:background="@drawable/publish_delete"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_add3"
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/bfbfbf_3bg"
-                >
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerInParent="true"
-                    >
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:background="@drawable/add_pic"
-                        android:layout_gravity="center_horizontal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
-                        android:text="添加图片"
-                        android:textSize="10sp"
-                        android:textColor="#fff"
-                        android:layout_gravity="center_horizontal"
-                        />
-                </LinearLayout>
-
-            </RelativeLayout>
-        </RelativeLayout>
-    </LinearLayout>
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:background="#ffffff">
+    </com.yjyc.zhoubian.ui.view.pickpicview.PickPicView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -313,14 +67,16 @@
         android:layout_weight="1"
         >
         <TextView
+            android:id="@+id/submit"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="35dp"
             android:textColor="#fff"
-            android:textSize="18sp"
+            android:textSize="17sp"
             android:text="提交"
-            android:background="@color/main_bg"
+            android:background="@drawable/pressed_red_bt"
             android:gravity="center"
+            android:clickable="true"
             />
     </RelativeLayout>
 </LinearLayout>

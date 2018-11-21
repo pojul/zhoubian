@@ -64,5 +64,12 @@ public class HttpUrl {
     public static final String REPLYEXPERIENCELIST = BASE_URL + "index/Reply/replyExperienceList";
     public static final String REPLYEXPERIENCE = BASE_URL + "index/Reply/ReplyExperience";
     public static final String DELETEEXPERIENCEREPLY = BASE_URL + "index/Reply/deleteReply";
+    public static final String LIKE = BASE_URL + "index/Reply/like";
+    public static final String POSTLIKE = BASE_URL + "index/ReplyPost/like";
+    public static final String EVALUATIONEXPOSE = BASE_URL + "index/EvaluationExpose/evaluationExpose";
+    public static final String REPLYEVALUATIONEXPOSE = BASE_URL + "index/ReplyEvaluationExpose/replyEvaluationExpose";
+    public static final String UPDATEVALUATIONEXPOSE = BASE_URL + "index/ReplyEvaluationExpose/updateEvaluationExpose";
+    public static final String DELETEVALUATIONEXPOSE = BASE_URL + "index/ReplyEvaluationExpose/deleteReply";
+    public static final String REPORTCATE = BASE_URL + "index/Report/reportCate";
 
 }

@@ -5,21 +5,38 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.blankj.utilcode.util.BarUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.orhanobut.hawk.Hawk;
 import com.yanzhenjie.permission.AndPermission;
+import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.model.EvaluationExpose;
+import com.yjyc.zhoubian.model.EvaluationExposeModel;
+import com.yjyc.zhoubian.model.ExperienceSave;
+import com.yjyc.zhoubian.model.ExperienceSaveModel;
+import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.LoginModel;
+import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
 import com.yjyc.zhoubian.utils.PermissionUtils;
+import com.yjyc.zhoubian.utils.UploadFileUtil;
+import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
+import com.yuqian.mncommonlibrary.http.OkhttpUtils;
+import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,36 +50,28 @@ import butterknife.OnClick;
  */
 
 public class EvaluateActivity extends BaseActivity {
-    @BindView(R.id.rl_add1)
-    RelativeLayout rl_add1;
 
-    @BindView(R.id.rl1)
-    RelativeLayout rl1;
+    @BindView(R.id.note)
+    TextView note;
+    @BindView(R.id.body)
+    EditText body;
+    @BindView(R.id.pick_pic_view)
+    PickPicView pickPicView;
+    @BindView(R.id.submit)
+    TextView submit;
 
-    @BindView(R.id.iv1)
-    RoundedImageView iv1;
-
-    @BindView(R.id.rl_add2)
-    RelativeLayout rl_add2;
-
-    @BindView(R.id.rl2)
-    RelativeLayout rl2;
-
-    @BindView(R.id.iv2)
-    RoundedImageView iv2;
-
-    @BindView(R.id.rl_add3)
-    RelativeLayout rl_add3;
-
-    @BindView(R.id.rl3)
-    RelativeLayout rl3;
-
-    @BindView(R.id.iv3)
-    RoundedImageView iv3;
-
+    private String evalauteEtHint = "说明：\n1.请客观阐述事实，对您的言论负责，若有辱骂侮辱，或证实滥刷评论，或证实与事实严重不符等，一律封号处理。" +
+            "\n2.为防评论泛滥，刷评论，每3天才能评论一次，且对每个人只能评论一次。" +
+            "\n3.若一个月不登录，则之前给出过的评论会自动消失。";
+    private String exposeEtHint = "说明：\n1.请客观阐述事实，对您的言论负责，若有辱骂侮辱，或证实滥刷评论，或证实与事实严重不符等，一律封号处理。" +
+            "\n2.为防止某些人到处抹黑别人，每30天只能揭露一次，且对每个人只能揭露一次。" +
+            "\n3.若一个月不登录，则之前给出过的评论会自动消失。";
     private Context mContext;
-    private List<LocalMedia> selectList = new ArrayList<>();
     private int tag;
+    private int cate_id; //类型，1评价，2揭露
+    private int mode = 1; //1:提交; 2: 修改
+    private Login login;
+    private String beExposedUid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,140 +79,107 @@ public class EvaluateActivity extends BaseActivity {
         setContentView(R.layout.activity_evaluate);
         mContext = this;
         ButterKnife.bind(this);
+
+        login = Hawk.get("LoginModel");
+        cate_id = getIntent().getIntExtra("cate_id", -1);
+        beExposedUid = getIntent().getStringExtra("beExposedUid");
+        if((cate_id != 1 && cate_id != 2) || login == null || beExposedUid == null){
+            showToast("数据错误");
+            finish();
+            return;
+        }
+
         initView();
     }
 
     private void initView() {
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
-        initTitleBar("评价", new View.OnClickListener() {
+        if(cate_id == 1){
+            initTitleBar("评价", v -> onBackPressed());
+        }else{
+            initTitleBar("揭露", v -> onBackPressed());
+            String noteStr = note.getText().toString().replace("评价", "揭露");
+            note.setText(noteStr);
+            body.setHint(exposeEtHint);
+        }
+    }
+
+    @OnClick(R.id.submit)
+    public void onclick(View view){
+        switch (view.getId()){
+            case R.id.submit:
+                submitEvaluationExpose();
+                break;
+        }
+    }
+
+    public void submitEvaluationExpose(){
+        if(body.getText().toString().isEmpty()){
+            showToast("内容不能为空");
+            return;
+        }
+        uploadPic();
+    }
+
+    private void uploadPic() {
+        List<String> pics = pickPicView.getPics();
+        LoadingDialog.showLoading(this);
+        new UploadFileUtil().uploadFiles(pics, this, new UploadFileUtil.UploadFileCallBack() {
             @Override
-            public void onClick(View v) {
-                onBackPressed();
+            public void finish(List<String> strs) {
+                LogUtil.e(new Gson().toJson(strs));
+                submitData(strs);
+            }
+
+            @Override
+            public void error(String msg) {
+                LoadingDialog.closeLoading();
+                showToast(msg);
             }
         });
     }
 
-    @OnClick(R.id.rl_add1)
-    public void rl_add1(){
-        tag = 1;
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete1)
-    public void iv_delete1(){
-        rl1.setVisibility(View.GONE);
-        rl_add1.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.rl_add2)
-    public void rl_add2(){
-        tag = 2;
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete2)
-    public void iv_delete2(){
-        rl2.setVisibility(View.GONE);
-        rl_add2.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.rl_add3)
-    public void rl_add3(){
-        tag = 3;
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete3)
-    public void iv_delete3(){
-        rl3.setVisibility(View.GONE);
-        rl_add3.setVisibility(View.VISIBLE);
-    }
-
-    private void selectPhoto() {
-        PermissionUtils.checkCameraPermission(this, new PermissionUtils.PermissionCallBack() {
-            @Override
-            public void onGranted() {
-                PictureSelector.create(EvaluateActivity.this)
-                        .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                        .maxSelectNum(1)// 最大图片选择数量 int
-                        .minSelectNum(1)// 最小选择数量 int
-                        .imageSpanCount(4)// 每行显示个数 int
-                        .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-                        .previewImage(true)// 是否可预览图片 true or false
-                        .isCamera(true)// 是否显示拍照按钮 true or false
-                        .selectionMedia(selectList)
-                        .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
-                        .sizeMultiplier(0.8f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
-                        .compress(true)// 是否压缩 true or false
-                        .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
-                        .minimumCompressSize(300)// 小于300kb的图片不压缩
-                        .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+    public String getUploadPics(List<String> pics){
+        StringBuffer picStrs = new StringBuffer();
+        for (int i = 0; i < pics.size(); i++) {
+            if(i != 0){
+                picStrs.append(",");
             }
+            picStrs.append(pics.get(i));
+        }
+        return picStrs.toString();
+    }
 
-            @Override
-            public void onDenied() {
-                new MaterialDialog.Builder(mContext)
-                        .title("提示")
-                        .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改相机和存储权限允许访问")
-                        .positiveText("去设置")
-                        .negativeText("取消")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                AndPermission.permissionSetting(EvaluateActivity.this)
-                                        .execute();
-                            }
-                        })
-                        .show();
-            }
-        });
+    private void submitData(List<String> pics) {
+        String picStrs = getUploadPics(pics);
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.EVALUATIONEXPOSE)
+                .addParams("uid", login.uid + "")
+                .addParams("token", (login.token + ""))
+                .addParams("cate_id", (cate_id + ""))
+                .addParams("be_exposed_user_id", ("" + beExposedUid))
+                .addParams("body", body.getText().toString())
+                .addParams("pic", picStrs)
+                .execute(new AbsJsonCallBack<EvaluationExposeModel, EvaluationExpose>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        showToast(errorMsg);
+                    }
+                    @Override
+                    public void onSuccess(EvaluationExpose body) {
+                        LoadingDialog.closeLoading();
+                        showToast("提交成功");
+                        finish();
+                    }
+                });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case PictureConfig.CHOOSE_REQUEST:
-                    // 图片选择结果回调
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    LocalMedia localMedia = selectList.get(0);
-                    String picUrl;
-                    RequestOptions options = new RequestOptions()
-                            .centerCrop();
-                    if (localMedia.isCompressed()) {
-                        picUrl = localMedia.getCompressPath();
-                    } else {
-                        picUrl = localMedia.getPath();
-                    }
-                    switch (tag){
-                        case 1:
-                            rl1.setVisibility(View.VISIBLE);
-                            rl_add1.setVisibility(View.GONE);
-                            Glide.with(context)
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv1);
-                            break;
-                        case 2:
-                            rl2.setVisibility(View.VISIBLE);
-                            rl_add2.setVisibility(View.GONE);
-                            Glide.with(context)
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv2);
-                            break;
-                        case 3:
-                            rl3.setVisibility(View.VISIBLE);
-                            rl_add3.setVisibility(View.GONE);
-                            Glide.with(context)
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv3);
-                            break;
-                    }
-                    break;
-            }
-        }
+        pickPicView.onActivityResult(requestCode, resultCode, data);
     }
+
 }

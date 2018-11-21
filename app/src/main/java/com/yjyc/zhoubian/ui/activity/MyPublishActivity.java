@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
@@ -39,6 +40,7 @@ import com.yjyc.zhoubian.ui.fragment.MyPublishFragment;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import com.yuqian.mncommonlibrary.refresh.header.MaterialHeader;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,38 +55,34 @@ import butterknife.OnClick;
  */
 
 public class MyPublishActivity extends BaseActivity {
+
     @BindView(R.id.tvviewpager)
     public ViewPager mViewPager ;
-
     @BindView(R.id.tvtablayout)
     public TabLayout mTabLayout;
-
     @BindView(R.id.iv_headUrl)
     RoundedImageView iv_headUrl;
-
     @BindView(R.id.tv_nickname)
     TextView tv_nickname;
-
     @BindView(R.id.tv_sex)
     TextView tv_sex;
-
     @BindView(R.id.tv_follow)
     TextView tv_follow;
-
     @BindView(R.id.tv_fans)
     TextView tv_fans;
-
     @BindView(R.id.tv_cty)
     TextView tv_cty;
-
     @BindView(R.id.tv_phone)
     TextView tv_phone;
-
     @BindView(R.id.tv_sign)
     TextView tv_sign;
-
     @BindView(R.id.refreshLayout)
     public RefreshLayout refreshLayout;
+    @BindView(R.id.operate)
+    TextView operate;
+    @BindView(R.id.root_ll)
+    public LinearLayout root_ll;
+
     private Context mContext;
     RequestOptions options;
     //Login loginModel;
@@ -118,13 +116,13 @@ public class MyPublishActivity extends BaseActivity {
         options = new RequestOptions()
                 .centerCrop().error(R.drawable.head_url).placeholder(R.drawable.head_url);
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
-        initTitleBar("个人中心", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-
+        initTitleBar("个人中心", v -> onBackPressed());
+        Login login = Hawk.get("LoginModel");
+        if(login == null || (login.uid + "").equals(uid)){
+            operate.setVisibility(View.GONE);
+        }else{
+            operate.setVisibility(View.VISIBLE);
+        }
         /*if(Hawk.contains("userInfo")){
             UserInfo userInfo = Hawk.get("userInfo");
             setView(userInfo);
@@ -243,6 +241,72 @@ public class MyPublishActivity extends BaseActivity {
         }
 
         mViewPager.setOffscreenPageLimit(4);
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Login login = Hawk.get("LoginModel");
+                if(login == null || (login.uid + "").equals(uid)){
+                    operate.setVisibility(View.GONE);
+                }else{
+                    switch (position){
+                        case 0:
+                            operate.setVisibility(View.VISIBLE);
+                            operate.setText("私聊");
+                            break;
+                        case 1:
+                            operate.setVisibility(View.VISIBLE);
+                            operate.setText("评价");
+                            break;
+                        case 2:
+                            operate.setVisibility(View.VISIBLE);
+                            operate.setText("揭露");
+                            break;
+                        case 3:
+                            operate.setVisibility(View.GONE);
+                            break;
+                        case 4:
+                            operate.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+    }
+
+    @OnClick(R.id.operate)
+    public void onclick(){
+        if(uid == null || uid.isEmpty()){
+            return;
+        }
+        switch (mViewPager.getCurrentItem()){
+            case 0:
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra("frindId", ("" + uid));
+                startActivity(intent);
+                break;
+            case 1:
+                intent = new Intent(this, EvaluateActivity.class);
+                intent.putExtra("cate_id", 1);
+                intent.putExtra("beExposedUid", uid);
+                startActivity(intent);
+                break;
+            case 2:
+                intent = new Intent(this, EvaluateActivity.class);
+                intent.putExtra("cate_id", 2);
+                intent.putExtra("beExposedUid", uid);
+                startActivity(intent);
+                break;
+        }
     }
 
     public class MyPagerAdapter extends FragmentStatePagerAdapter {
@@ -299,76 +363,73 @@ public class MyPublishActivity extends BaseActivity {
 
             }
         });
-        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
-            @Override
-            public void onLoadmore(RefreshLayout refreshlayout) {
-                switch (mViewPager.getCurrentItem()){
-                    case 0:
-                        if(myPublishFragment.body != null){
-                            if(myPublishFragment.body.hasNextPages){
-                                myPublishFragment.page++;
-                                myPublishFragment.userPostList();
-                            }else {
-                                refreshLayout.finishLoadmore();
-                                ToastUtils.showShort("没有更多");
-                            }
+        refreshLayout.setOnLoadmoreListener(refreshlayout -> {
+            switch (mViewPager.getCurrentItem()){
+                case 0:
+                    if(myPublishFragment.body != null){
+                        if(myPublishFragment.body.hasNextPages){
+                            myPublishFragment.page++;
+                            myPublishFragment.userPostList();
                         }else {
                             refreshLayout.finishLoadmore();
+                            ToastUtils.showShort("没有更多");
                         }
-                        break;
-                    case 1:
-                        if(myEvaluationsFragment.body != null){
-                            if(myEvaluationsFragment.body.hasNextPages){
-                                myEvaluationsFragment.page++;
-                                myEvaluationsFragment.acceptEvaluationExpose();
-                            }else {
-                                refreshLayout.finishLoadmore();
-                                ToastUtils.showShort("没有更多");
-                            }
+                    }else {
+                        refreshLayout.finishLoadmore();
+                    }
+                    break;
+                case 1:
+                    if(myEvaluationsFragment.body != null){
+                        if(myEvaluationsFragment.body.hasNextPages){
+                            myEvaluationsFragment.page++;
+                            myEvaluationsFragment.acceptEvaluationExpose();
                         }else {
                             refreshLayout.finishLoadmore();
+                            ToastUtils.showShort("没有更多");
                         }
-                        break;
-                    case 2:
-                        if(myExposesFragment.body != null){
-                            if(myExposesFragment.body.hasNextPages){
-                                myExposesFragment.page++;
-                                myExposesFragment.acceptEvaluationExpose();
-                            }else {
-                                refreshLayout.finishLoadmore();
-                                ToastUtils.showShort("没有更多");
-                            }
+                    }else {
+                        refreshLayout.finishLoadmore();
+                    }
+                    break;
+                case 2:
+                    if(myExposesFragment.body != null){
+                        if(myExposesFragment.body.hasNextPages){
+                            myExposesFragment.page++;
+                            myExposesFragment.acceptEvaluationExpose();
                         }else {
                             refreshLayout.finishLoadmore();
+                            ToastUtils.showShort("没有更多");
                         }
-                        break;
-                    case 3:
-                        if(myEvaluationFragment.body != null){
-                            if(myEvaluationFragment.body.hasNextPages){
-                                myEvaluationFragment.page++;
-                                myEvaluationFragment.giveEvaluationExpose();
-                            }else {
-                                refreshLayout.finishLoadmore();
-                                ToastUtils.showShort("没有更多");
-                            }
+                    }else {
+                        refreshLayout.finishLoadmore();
+                    }
+                    break;
+                case 3:
+                    if(myEvaluationFragment.body != null){
+                        if(myEvaluationFragment.body.hasNextPages){
+                            myEvaluationFragment.page++;
+                            myEvaluationFragment.giveEvaluationExpose();
                         }else {
                             refreshLayout.finishLoadmore();
+                            ToastUtils.showShort("没有更多");
                         }
-                        break;
-                    case 4:
-                        if(myExposeFragment.body != null){
-                            if(myExposeFragment.body.hasNextPages){
-                                myExposeFragment.page++;
-                                myExposeFragment.giveEvaluationExpose();
-                            }else {
-                                refreshLayout.finishLoadmore();
-                                ToastUtils.showShort("没有更多");
-                            }
+                    }else {
+                        refreshLayout.finishLoadmore();
+                    }
+                    break;
+                case 4:
+                    if(myExposeFragment.body != null){
+                        if(myExposeFragment.body.hasNextPages){
+                            myExposeFragment.page++;
+                            myExposeFragment.giveEvaluationExpose();
                         }else {
                             refreshLayout.finishLoadmore();
+                            ToastUtils.showShort("没有更多");
                         }
-                        break;
-                }
+                    }else {
+                        refreshLayout.finishLoadmore();
+                    }
+                    break;
             }
         });
     }

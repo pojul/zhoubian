@@ -36,7 +36,7 @@ public class DialogUtil {
      * @param view
      * @param type 1: 留言 2: 回复
      * */
-    public void showCommentDialog(Context context, View view, int type) {
+    public void showCommentDialog(Context context, View view, int type, String raw) {
         View popView = LayoutInflater.from(context).inflate(R.layout.dialog_comment, null);
         PopupWindow subReplyPop = new PopupWindow(popView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         subReplyPop.setBackgroundDrawable(new BitmapDrawable());
@@ -45,12 +45,16 @@ public class DialogUtil {
         subReplyPop.setOutsideTouchable(false);
         subReplyPop.showAtLocation(view, Gravity.BOTTOM, 0, 0);
         EditText subReplyText = popView.findViewById(R.id.subreply_text);
+        if(raw != null && !raw.isEmpty()){
+            subReplyText.setText(raw);
+        }
         String hint;
         if(type == 1){
             hint = "评论";
         }else{
             hint = "回复";
         }
+        subReplyText.setHint(hint);
         String finalHint = hint;
         popView.findViewById(R.id.ok).setOnClickListener(v -> {
             if (subReplyText.getText().toString().isEmpty()) {
