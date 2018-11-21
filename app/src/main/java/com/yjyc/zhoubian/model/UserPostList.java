@@ -22,5 +22,6 @@ public class UserPostList {
         public String time;
         public List<String> pic;
         public int view;
+        public int refresh_number;
     }
 }

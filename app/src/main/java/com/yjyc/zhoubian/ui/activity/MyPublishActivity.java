@@ -26,7 +26,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
+import com.yjyc.zhoubian.model.CheckEvaluationExpose;
+import com.yjyc.zhoubian.model.CheckEvaluationExposeModel;
 import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
@@ -93,6 +96,7 @@ public class MyPublishActivity extends BaseActivity {
     private MyEvaluationFragment myEvaluationFragment;
     private MyExposeFragment myExposeFragment;
     private UserInfo userInfo;
+    private CheckEvaluationExpose checkEvaluationExpose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,10 +127,34 @@ public class MyPublishActivity extends BaseActivity {
         }else{
             operate.setVisibility(View.VISIBLE);
         }
+        checkEvaluationExpose();
         /*if(Hawk.contains("userInfo")){
             UserInfo userInfo = Hawk.get("userInfo");
             setView(userInfo);
         }*/
+    }
+
+    public void checkEvaluationExpose(){
+        Login login = Hawk.get("LoginModel");
+        if(login == null || (login.uid + "").equals(uid)){
+            return;
+        }
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.CHECKEVALUATIONEXPOSE)
+                .addParams("uid", (login.uid + ""))
+                .addParams("token", (login.token + ""))
+                .addParams("be_exposed_user_id", (uid + ""))
+                .execute(new AbsJsonCallBack<CheckEvaluationExposeModel, CheckEvaluationExpose>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+
+                    }
+                    @Override
+                    public void onSuccess(CheckEvaluationExpose body) {
+                        checkEvaluationExpose = body;
+                    }
+                });
     }
 
     private void userInfo() {
@@ -288,6 +316,11 @@ public class MyPublishActivity extends BaseActivity {
         if(uid == null || uid.isEmpty()){
             return;
         }
+        Login login = Hawk.get("LoginModel");
+        if(login == null || (login.uid + "").equals(uid)){
+            showToast("请先登录");
+            return;
+        }
         switch (mViewPager.getCurrentItem()){
             case 0:
                 Intent intent = new Intent(this, ChatActivity.class);
@@ -295,12 +328,26 @@ public class MyPublishActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case 1:
+                if(checkEvaluationExpose == null){
+                    return;
+                }
+                if(checkEvaluationExpose.check_evaluation.status == 0){
+                    showToast(checkEvaluationExpose.check_evaluation.message);
+                    return;
+                }
                 intent = new Intent(this, EvaluateActivity.class);
                 intent.putExtra("cate_id", 1);
                 intent.putExtra("beExposedUid", uid);
                 startActivity(intent);
                 break;
             case 2:
+                if(checkEvaluationExpose == null){
+                    return;
+                }
+                if(checkEvaluationExpose.check_expose.status == 0){
+                    showToast(checkEvaluationExpose.check_expose.message);
+                    return;
+                }
                 intent = new Intent(this, EvaluateActivity.class);
                 intent.putExtra("cate_id", 2);
                 intent.putExtra("beExposedUid", uid);

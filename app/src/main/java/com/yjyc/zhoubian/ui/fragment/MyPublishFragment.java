@@ -21,12 +21,16 @@ import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserPostList;
 import com.yjyc.zhoubian.model.UserPostListModel;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
+import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 
@@ -197,6 +201,7 @@ public class MyPublishFragment extends BaseFragment {
             TextView tv_delete;
             View v1;
             LinearLayout operate_ll;
+            TextView refresh;
             public MyViewHolderOne(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -209,6 +214,7 @@ public class MyPublishFragment extends BaseFragment {
                 tv_delete = itemView.findViewById(R.id.tv_delete);
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
+                refresh = itemView.findViewById(R.id.refresh);
             }
         }
 
@@ -225,6 +231,7 @@ public class MyPublishFragment extends BaseFragment {
             TextView tv_delete;
             View v1;
             LinearLayout operate_ll;
+            TextView refresh;
             public MyViewHolderTwo(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -238,6 +245,7 @@ public class MyPublishFragment extends BaseFragment {
                 tv_delete = itemView.findViewById(R.id.tv_delete);
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
+                refresh = itemView.findViewById(R.id.refresh);
             }
         }
 
@@ -255,6 +263,7 @@ public class MyPublishFragment extends BaseFragment {
             TextView tv_delete;
             View v1;
             LinearLayout operate_ll;
+            TextView refresh;
             public MyViewHolderThree(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -270,6 +279,7 @@ public class MyPublishFragment extends BaseFragment {
                 tv_delete = itemView.findViewById(R.id.tv_delete);
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
+                refresh = itemView.findViewById(R.id.refresh);
             }
         }
 
@@ -344,10 +354,6 @@ public class MyPublishFragment extends BaseFragment {
                 holderOne.tv_title.setText(up.title);
             }
 
-//            if(!StringUtils.isEmpty(up.price)){
-//                holderOne.tv_price.setText(up.price);
-//            }
-
             if(!StringUtils.isEmpty(up.user_name)){
                 holderOne.tv_user_name.setText(up.user_name);
             }
@@ -374,6 +380,9 @@ public class MyPublishFragment extends BaseFragment {
                     deletePost(up.id, position);
                 }
             });
+            holderOne.refresh.setOnClickListener(v->{
+                refreshPost(up, position);
+            });
         }
 
         private void bindTypeTwo(MyViewHolderTwo holderTwo, final int position) {
@@ -386,10 +395,6 @@ public class MyPublishFragment extends BaseFragment {
             if(!StringUtils.isEmpty(up.title)){
                 holderTwo.tv_title.setText(up.title);
             }
-
-//            if(!StringUtils.isEmpty(up.price)){
-//                holderTwo.tv_price.setText(up.price);
-//            }
 
             if(!StringUtils.isEmpty(up.user_name)){
                 holderTwo.tv_user_name.setText(up.user_name);
@@ -424,6 +429,9 @@ public class MyPublishFragment extends BaseFragment {
                     deletePost(up.id, position);
                 }
             });
+            holderTwo.refresh.setOnClickListener(v->{
+                refreshPost(up, position);
+            });
         }
 
         private void bindTypeThree(MyViewHolderThree holder, final int position) {  //在其中镶嵌一个RecyclerView
@@ -436,10 +444,6 @@ public class MyPublishFragment extends BaseFragment {
             if(!StringUtils.isEmpty(up.title)){
                 holder.tv_title.setText(up.title);
             }
-
-//            if(!StringUtils.isEmpty(up.price)){
-//                holder.tv_price.setText(up.price);
-//            }
 
             if(!StringUtils.isEmpty(up.user_name)){
                 holder.tv_user_name.setText(up.user_name);
@@ -488,6 +492,9 @@ public class MyPublishFragment extends BaseFragment {
                     deletePost(up.id, position);
                 }
             });
+            holder.refresh.setOnClickListener(v->{
+                refreshPost(up, position);
+            });
         }
 
         @Override
@@ -512,6 +519,39 @@ public class MyPublishFragment extends BaseFragment {
         }
     }
 
+    private void refreshPost(UserPostList.UserPost up, int position) {
+        Login login = Hawk.get("LoginModel");
+        if(login == null || !(login.uid + "").equals(uid)){
+            return;
+        }
+        if(up.refresh_number <= 0){
+            showShortToats("单个帖子最多只能刷新5次");
+            return;
+        }
+        LoadingDialog.showLoading(getActivity());
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.REFRESHPOST)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token)
+                .addParams("post_id", up.id + "")
+                .execute(new AbsJsonCallBack<EmptyEntityModel, EmptyEntity>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        showShortToats(errorMsg);
+                    }
+
+                    @Override
+                    public void onSuccess(EmptyEntity body) {
+                        LoadingDialog.closeLoading();
+                        up.refresh_number = up.refresh_number - 1;
+                        showShortToats("刷新成功");
+                    }
+                });
+
+    }
+
     private void deletePost(int id, final int position) {
         Login login = Hawk.get("LoginModel");
         if(login == null || !(login.uid + "").equals(uid)){
@@ -524,8 +564,6 @@ public class MyPublishFragment extends BaseFragment {
                 .addParams("token", login.token)
                 .addParams("id", id + "")
                 .execute(new AbsJsonCallBack<UserPostListModel, UserPostList>() {
-
-
                     @Override
                     public void onSuccess(UserPostList body) {
                         mList.remove(position);

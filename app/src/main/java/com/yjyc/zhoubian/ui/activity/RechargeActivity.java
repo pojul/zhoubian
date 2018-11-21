@@ -18,14 +18,19 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.blankj.utilcode.util.BarUtils;
 import com.orhanobut.hawk.Hawk;
+import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.model.AliRecharge;
 import com.yjyc.zhoubian.model.AliRechargeModel;
 import com.yjyc.zhoubian.model.GetRechargeSetting;
 import com.yjyc.zhoubian.model.GetRechargeSettingModel;
 import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.WXRecharge;
+import com.yjyc.zhoubian.model.WXRechargeModel;
 import com.yjyc.zhoubian.pay.alipay.PayResult;
+import com.yjyc.zhoubian.utils.MD5Util;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
@@ -33,8 +38,12 @@ import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -247,6 +256,7 @@ public class RechargeActivity extends BaseActivity {
             showToast("请选择充值金额");
             return;
         }
+        LoadingDialog.showLoading(this);
         OkhttpUtils okhttpUtils = OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.USERRECHARGE)
@@ -274,9 +284,74 @@ public class RechargeActivity extends BaseActivity {
             });
         }else{
             okhttpUtils.addParams("pay_type", ("" + 1));
-            showToast("暂未接入微信支付");
+            okhttpUtils.execute(new AbsJsonCallBack<WXRechargeModel, WXRecharge>() {
+                @Override
+                public void onFailure(String errorCode, String errorMsg) {
+                    LoadingDialog.closeLoading();
+                    showToast(errorMsg);
+                }
+
+                @Override
+                public void onSuccess(WXRecharge body) {
+                    LoadingDialog.closeLoading();
+                    if(body == null){
+                        showToast("请求错误");
+                        return;
+                    }
+                    wxPay(body);
+                }
+            });
         }
 
+    }
+
+    private void wxPay(WXRecharge body) {
+        PayReq request = new PayReq();
+        request.appId = body.pay_result.appId;
+        request.partnerId = body.pay_result.partnerId;
+        request.prepayId= body.pay_result.prepayId.split("=")[1];
+        request.packageValue = "Sign=WXPay";
+        request.nonceStr= body.pay_result.nonceStr;
+        request.timeStamp= body.pay_result.timeStamp;
+        /*request.sign = body.pay_result.paySign;
+        request.signType = body.pay_result.signType;*/
+
+        // 把参数的值传进去SortedMap集合里面
+        SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
+        parameters.put("appid", body.pay_result.appId);
+        parameters.put("noncestr", body.pay_result.nonceStr);
+        parameters.put("package", "Sign=WXPay");
+        parameters.put("partnerid", body.pay_result.partnerId);
+        parameters.put("prepayid", body.pay_result.prepayId);
+        parameters.put("timestamp", body.pay_result.timeStamp);
+
+        String characterEncoding = "UTF-8";
+        String mySign = createSign(characterEncoding, parameters);
+        System.out.println("我的签名是：" + mySign);
+        request.sign = mySign;
+
+        BaseApplication.mWxApi.sendReq(request);
+    }
+
+    public static String createSign(String characterEncoding,
+                                    SortedMap<Object, Object> parameters) {
+        StringBuffer sb = new StringBuffer();
+        Set es = parameters.entrySet();// 所有参与传参的参数按照accsii排序（升序）
+        Iterator it = es.iterator();
+        while (it.hasNext()) {
+            @SuppressWarnings("rawtypes")
+            Map.Entry entry = (Map.Entry) it.next();
+            String k = (String) entry.getKey();
+            Object v = entry.getValue();
+            if (null != v && !"".equals(v) && !"sign".equals(k)
+                    && !"key".equals(k)) {
+                sb.append(k + "=" + v + "&");
+            }
+        }
+        sb.append("key=" + "50faef596bd1302f2970252ef170e04f"); //KEY是商户秘钥
+        String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding)
+                .toUpperCase();
+        return sign;
     }
 
     private double getRecharge() {

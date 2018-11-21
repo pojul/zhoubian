@@ -194,6 +194,7 @@
             />
 
         <TextView
+            android:id="@+id/refresh"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -201,6 +202,7 @@
             android:textColor="#4ec42d"
             android:text="刷新"
             android:textSize="13sp"
+            android:clickable="true"
             android:gravity="center"
             />
     </LinearLayout>

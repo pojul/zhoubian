@@ -12,18 +12,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.BarUtils;
+import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.adapter.ReportCateAdapter;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.ReportCate;
 import com.yjyc.zhoubian.model.ReportCateModel;
 import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
+import com.yjyc.zhoubian.utils.UploadFileUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +56,7 @@ public class ReportActivity extends BaseActivity {
     private ReportCateAdapter adapter;
     private List<ReportCate> cates = new ArrayList<>();
     private Login login;
+    private int report_uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,12 @@ public class ReportActivity extends BaseActivity {
         mContext = this;
         ButterKnife.bind(this);
         login = Hawk.get("LoginModel");
+        report_uid = getIntent().getIntExtra("report_uid", -1);
+        if(report_uid < 0){
+            showToast("数据错误");
+            finish();
+            return;
+        }
         if(login == null){
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -96,7 +108,59 @@ public class ReportActivity extends BaseActivity {
             showToast("请填写举报信息");
             return;
         }
+        LoadingDialog.showLoading(this);
+        List<String> pics = pickPicView.getPics();
+        new UploadFileUtil().uploadFiles(pics, this, new UploadFileUtil.UploadFileCallBack() {
+            @Override
+            public void finish(List<String> strs) {
+                LogUtil.e(new Gson().toJson(strs));
+                report(strs);
+            }
 
+            @Override
+            public void error(String msg) {
+                LoadingDialog.closeLoading();
+                showToast(msg);
+            }
+        });
+
+    }
+
+    public String getUploadPics(List<String> pics){
+        StringBuffer picStrs = new StringBuffer();
+        for (int i = 0; i < pics.size(); i++) {
+            if(i != 0){
+                picStrs.append(",");
+            }
+            picStrs.append(pics.get(i));
+        }
+        return picStrs.toString();
+    }
+
+    private void report(List<String> pics) {
+        String picStrs = getUploadPics(pics);
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.USERREPORT)
+                .addParams("uid", login.uid + "")
+                .addParams("token", (login.token + ""))
+                .addParams("report_uid", (report_uid + ""))
+                .addParams("report_cate_id", (adapter.getSelecterCate() + ""))
+                .addParams("pic", picStrs)
+                .addParams("body", body.getText().toString())
+                .execute(new AbsJsonCallBack<EmptyEntityModel, EmptyEntity>(){
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        showToast(errorMsg);
+                    }
+                    @Override
+                    public void onSuccess(EmptyEntity body) {
+                        LoadingDialog.closeLoading();
+                        showToast("举报成功");
+                        finish();
+                    }
+                });
     }
 
     private void reqCates() {

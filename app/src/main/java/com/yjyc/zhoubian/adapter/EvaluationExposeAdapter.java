@@ -104,6 +104,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void bindTypeOne(MyViewHolderOne holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
+        Login login = Hawk.get("LoginModel");
         if(evaluationExpose.user_info != null && evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
             Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
         }else{
@@ -133,7 +134,6 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if(evaluationExpose.user_reply == null || evaluationExpose.user_reply.body == null || evaluationExpose.user_reply.body.isEmpty()){
             holder.reply_ll.setVisibility(View.GONE);
-            Login login = Hawk.get("LoginModel");
             if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
                 holder.reply_bt.setVisibility(View.VISIBLE);
             }else{
@@ -142,6 +142,11 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.reply_ll.setVisibility(View.VISIBLE);
             holder.reply_bt.setVisibility(View.GONE);
+            if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
+                holder.operate_ll.setVisibility(View.VISIBLE);
+            }else{
+                holder.operate_ll.setVisibility(View.GONE);
+            }
             if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
                 Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
             }else{
@@ -169,6 +174,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void bindTypeTwo(MyViewHolderTwo holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
+        Login login = Hawk.get("LoginModel");
         if(evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
             Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
         }else{
@@ -198,7 +204,6 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if(evaluationExpose.user_reply == null || evaluationExpose.user_reply.body == null || evaluationExpose.user_reply.body.isEmpty()){
             holder.reply_ll.setVisibility(View.GONE);
-            Login login = Hawk.get("LoginModel");
             if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
                 holder.reply_bt.setVisibility(View.VISIBLE);
             }else{
@@ -207,6 +212,11 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.reply_ll.setVisibility(View.VISIBLE);
             holder.reply_bt.setVisibility(View.GONE);
+            if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
+                holder.operate_ll.setVisibility(View.VISIBLE);
+            }else{
+                holder.operate_ll.setVisibility(View.GONE);
+            }
             if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
                 Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
             }else{
@@ -235,6 +245,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void bindTypeThree(MyViewHolderThree holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
+        Login login = Hawk.get("LoginModel");
         if(evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
             Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
         }else{
@@ -264,7 +275,6 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         if(evaluationExpose.user_reply == null || evaluationExpose.user_reply.body == null || evaluationExpose.user_reply.body.isEmpty()){
             holder.reply_ll.setVisibility(View.GONE);
-            Login login = Hawk.get("LoginModel");
             if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
                 holder.reply_bt.setVisibility(View.VISIBLE);
             }else{
@@ -273,6 +283,11 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.reply_ll.setVisibility(View.VISIBLE);
             holder.reply_bt.setVisibility(View.GONE);
+            if(login != null && (login.uid + "").equals((evaluationExpose.be_exposed_user_id + ""))){
+                holder.operate_ll.setVisibility(View.VISIBLE);
+            }else{
+                holder.operate_ll.setVisibility(View.GONE);
+            }
             if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
                 Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
             }else{
@@ -451,6 +466,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         LinearLayout reply_ll;
         @BindView(R.id.reply_bt)
         TextView reply_bt;
+        @BindView(R.id.operate_ll)
+        LinearLayout operate_ll;
 
         public MyViewHolderOne(View itemView) {
             super(itemView);
@@ -492,6 +509,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         LinearLayout reply_ll;
         @BindView(R.id.reply_bt)
         TextView reply_bt;
+        @BindView(R.id.operate_ll)
+        LinearLayout operate_ll;
 
         public MyViewHolderTwo(View itemView) {
             super(itemView);
@@ -537,6 +556,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         LinearLayout reply_ll;
         @BindView(R.id.reply_bt)
         TextView reply_bt;
+        @BindView(R.id.operate_ll)
+        LinearLayout operate_ll;
 
         public MyViewHolderThree(View itemView) {
             super(itemView);

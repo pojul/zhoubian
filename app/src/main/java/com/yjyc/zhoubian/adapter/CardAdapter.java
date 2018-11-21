@@ -342,7 +342,12 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView pullBlack = contentView.findViewById(R.id.pull_black);
         tv_report.setOnClickListener(view -> {
             popWindow.dismiss();
-            mContext.startActivity(new Intent(mContext, ReportActivity.class));
+            SearchPosts.SearchPost post = getSearchPost(itemPosition);
+            if(post != null){
+                Intent intent = new Intent(mContext, ReportActivity.class);
+                intent.putExtra("report_uid", post.user_id);
+                mContext.startActivity(intent);
+            }
         });
         notInterested.setOnClickListener(v->{
             synchronized (datas){
@@ -592,6 +597,14 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return search.id;
         }
         return -1;
+    }
+
+    public SearchPosts.SearchPost getSearchPost(int position) {
+        if(position == 0 || (position % 20 == 1 && position != 1)){
+            return null;
+        }
+        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -  (1 + position/20));
+        return search;
     }
 
 }
