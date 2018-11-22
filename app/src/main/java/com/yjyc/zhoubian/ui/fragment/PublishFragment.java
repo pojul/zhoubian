@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -43,6 +44,8 @@ import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.event.BaiduEvent;
+import com.yjyc.zhoubian.model.ExperienceCate;
+import com.yjyc.zhoubian.model.ExperienceCateModel;
 import com.yjyc.zhoubian.model.GetPostMsg;
 import com.yjyc.zhoubian.model.GetPostMsgModel;
 import com.yjyc.zhoubian.model.Login;
@@ -64,9 +67,14 @@ import com.yjyc.zhoubian.ui.activity.BaiDuMapActivity;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.activity.ReleaseSuccessActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
+import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
+import com.yjyc.zhoubian.utils.ArrayUtil;
 import com.yjyc.zhoubian.utils.PermissionUtils;
+import com.yjyc.zhoubian.utils.UploadFileUtil;
+import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import net.masonliu.multipletextview.library.MultipleTextViewGroup;
 
@@ -111,145 +119,102 @@ import static android.content.Context.TELEPHONY_SERVICE;
 public class PublishFragment extends Fragment{
     @BindView(R.id.main_rl)
     public MultipleTextViewGroup main_rl;
-
     public MultipleTextViewGroup main_rl2;
-
     @BindView(R.id.main_rl3)
     public MultipleTextViewGroup main_rl3;
-
     @BindView(R.id.main_rl4)
     public MultipleTextViewGroup main_rl4;
-
-    @BindView(R.id.rl_add1)
+    /*@BindView(R.id.rl_add1)
     RelativeLayout rl_add1;
-
     @BindView(R.id.rl1)
     RelativeLayout rl1;
-
     @BindView(R.id.iv1)
     RoundedImageView iv1;
-
     @BindView(R.id.rl_add2)
     RelativeLayout rl_add2;
-
     @BindView(R.id.rl2)
     RelativeLayout rl2;
-
     @BindView(R.id.iv2)
     RoundedImageView iv2;
-
     @BindView(R.id.rl_add3)
     RelativeLayout rl_add3;
-
     @BindView(R.id.rl3)
     RelativeLayout rl3;
-
     @BindView(R.id.iv3)
-    RoundedImageView iv3;
-
+    RoundedImageView iv3;*/
     @BindView(R.id.et_title)
     EditText et_title;
-
     @BindView(R.id.et_body)
     EditText et_body;
-
     @BindView(R.id.et_custom_post_cate)
     EditText et_custom_post_cate;
-
     @BindView(R.id.et_user_name)
     EditText et_user_name;
-
     @BindView(R.id.et_phone)
     EditText et_phone;
-
     @BindView(R.id.et_code)
     EditText et_code;
-
     @BindView(R.id.et_price)
     EditText et_price;
-
     @BindView(R.id.et_key_word)
     EditText et_key_word;
-
     @BindView(R.id.et_red_package_password)
     EditText et_red_package_password;
-
     @BindView(R.id.tv1)
     TextView tv1;
-
     @BindView(R.id.tv2)
     TextView tv2;
-
     @BindView(R.id.tv_price1)
     TextView tv_price1;
-
     @BindView(R.id.tv_price2)
     TextView tv_price2;
-
     @BindView(R.id.tv_price3)
     TextView tv_price3;
-
     @BindView(R.id.tv_price4)
     TextView tv_price4;
-
     @BindView(R.id.tv_price5)
     TextView tv_price5;
-
     @BindView(R.id.tv_price6)
     TextView tv_price6;
-
     @BindView(R.id.tv_price7)
     TextView tv_price7;
-
     @BindView(R.id.tv_price8)
     TextView tv_price8;
-
     @BindView(R.id.tv_price9)
     TextView tv_price9;
-
     @BindView(R.id.tv_price10)
     TextView tv_price10;
-
     @BindView(R.id.tv_addtrs)
     TextView tv_addtrs;
-
     @BindView(R.id.tv_code)
     TextView tv_code;
-
     @BindView(R.id.tv_red1)
     TextView tv_red1;
-
     @BindView(R.id.tv_red2)
     TextView tv_red2;
-
     @BindView(R.id.tv_red_package_money)
     TextView tv_red_package_money;
-
     @BindView(R.id.tv_single_red_money)
     TextView tv_single_red_money;
-
     @BindView(R.id.ll_phone)
     LinearLayout ll_phone;
-
     @BindView(R.id.ll_red_price)
     LinearLayout ll_red_price;
-
     @BindView(R.id.et_red_price)
     TextView et_red_price;
+    @BindView(R.id.pick_pic_view)
+    PickPicView pickPicView;
 
     Unbinder unbinder;
     Login loginModel;
     private Gson gson;
     private GsonBuilder builder;
-    private List<LocalMedia> selectList = new ArrayList<>();
-    private int tag;
     private ArrayList<UserGroups.UserGroup> userGroups;
     private int post_cate_id = -1;
-    private ArrayList<String> pics = new ArrayList<>();
     private int user_group_id = -1;
     private int phone_from = 1;
     private int i;
-    private ArrayList<String> upLoadPics = new ArrayList<>();
+    private List<String> upLoadPics = new ArrayList<>();
     private String code;
     private GetPostMsg getPostMsg;
     private int red_package_rule = 1;
@@ -301,26 +266,23 @@ public class PublishFragment extends Fragment{
 
             main_rl.setTextViews(dataList);
 
-            main_rl.setOnMultipleTVItemClickListener(new MultipleTextViewGroup.OnMultipleTVItemClickListener() {
-                @Override
-                public void onMultipleTVItemClick(View view, int i) {
-                    PostCate.Data pc = pcs.get(i);
-                    if(pc.getIsChecked() == 1){
-                    }else {
-                        main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                        ((TextView)main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-                        pcs.get(i).setIsChecked(1);
-                        for (int j = 0; j < pcs.size(); j++){
-                            if(j == i){
-                                continue;
-                            }
-
-                            main_rl.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                            ((TextView)main_rl.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
-                            pcs.get(j).setIsChecked(2);
+            main_rl.setOnMultipleTVItemClickListener((view, i) -> {
+                PostCate.Data pc = pcs.get(i);
+                if(pc.getIsChecked() == 1){
+                }else {
+                    main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
+                    ((TextView)main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    pcs.get(i).setIsChecked(1);
+                    for (int j = 0; j < pcs.size(); j++){
+                        if(j == i){
+                            continue;
                         }
-                        post_cate_id = pcs.get(i).getId();
+
+                        main_rl.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView)main_rl.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        pcs.get(j).setIsChecked(2);
                     }
+                    post_cate_id = pcs.get(i).getId();
                 }
             });
         }else {
@@ -412,65 +374,33 @@ public class PublishFragment extends Fragment{
 
             List<String> dataList = new ArrayList<String>();
 
-
             for (UserGroups.UserGroup pc : userGroups){
                 dataList.add(pc.title);
             }
-
             main_rl2.setTextViews(dataList);
-
-            main_rl2.setOnMultipleTVItemClickListener(new MultipleTextViewGroup.OnMultipleTVItemClickListener() {
-                @Override
-                public void onMultipleTVItemClick(View view, int i) {
-                    UserGroups.UserGroup pc = userGroups.get(i);
-                    if(pc.isChecked == 1){
-                    }else {
-                        main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                        ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-                        userGroups.get(i).isChecked = 1;
-                        for (int j = 0; j < userGroups.size(); j++){
-                            if(j == i){
-                                continue;
-                            }
-
-                            main_rl2.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                            ((TextView)main_rl2.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
-                            userGroups.get(j).isChecked = 2;
+            main_rl2.setOnMultipleTVItemClickListener((view, i) -> {
+                UserGroups.UserGroup pc = userGroups.get(i);
+                if(pc.isChecked == 1){
+                }else {
+                    main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
+                    ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    userGroups.get(i).isChecked = 1;
+                    for (int j = 0; j < userGroups.size(); j++){
+                        if(j == i){
+                            continue;
                         }
 
-                        user_group_id = userGroups.get(i).id;
+                        main_rl2.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView)main_rl2.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        userGroups.get(j).isChecked = 2;
                     }
+
+                    user_group_id = userGroups.get(i).id;
                 }
             });
-//            if(SPUtils.getInstance().contains("user_group_id")){
-//                user_group_id = SPUtils.getInstance().getInt("user_group_id");
-//                userGroups = Hawk.get("userGroups");
-//                main_rl2.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
-//                    @Override
-//                    public void onGlobalLayout() {
-//                        // TODO Auto-generated method stub
-//                        for (int i = 0; i < userGroups.size();i++){
-//                            if(user_group_id == userGroups.get(i).id){
-//                                main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-//                                ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-//                                userGroups.get(i).isChecked = 1;
-//                            }
-//                        }
-//
-//                    }
-//                });
-//
-//            }
         }else {
             userGroup();
         }
-
-//        main_rl.getViewTreeObserver().addOnGlobalLayoutListener(
-//                new ViewTreeObserver.OnGlobalLayoutListener(){
-//                    @Override
-//                    public void onGlobalLayout(){
-//                        main_rl.getChildAt(0).setBackground(getResources().getDrawable(R.drawable.d53c3c_bottom_bg));
-//                    }});
 
     }
 
@@ -511,75 +441,6 @@ public class PublishFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @OnClick(R.id.rl_add1)
-    public void rl_add1(){
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete1)
-    public void iv_delete1(){
-        rl1.setVisibility(View.GONE);
-        rl_add1.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.rl_add2)
-    public void rl_add2(){
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete2)
-    public void iv_delete2(){
-        rl2.setVisibility(View.GONE);
-        rl_add2.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.rl_add3)
-    public void rl_add3(){
-        selectPhoto();
-    }
-
-    @OnClick(R.id.iv_delete3)
-    public void iv_delete3(){
-        rl3.setVisibility(View.GONE);
-        rl_add3.setVisibility(View.VISIBLE);
-    }
-
-    @OnClick(R.id.rl1)
-    public void rl1(){
-        tag = 1;
-        selectPhoto2();
-    }
-
-    @OnClick(R.id.rl2)
-    public void rl2(){
-        tag = 2;
-        selectPhoto2();
-    }
-
-    @OnClick(R.id.rl3)
-    public void rl3(){
-        tag = 3;
-        selectPhoto2();
-    }
-
-    @OnClick(R.id.tv1)
-    public void tv1(){
-        phone_from = 1;
-        setTvBackground(R.id.tv1);
-    }
-
-    @OnClick(R.id.tv2)
-    public void tv2(){
-        phone_from = 2;
-        setTvBackground(R.id.tv2);
-    }
-
-    @OnClick(R.id.tv_price1)
-    public void tv_price1(){
-        setTvBackground2(R.id.tv_price1);
-        price_unit = "元";
     }
 
     @OnClick(R.id.tv_price2)
@@ -774,9 +635,7 @@ public class PublishFragment extends Fragment{
                 red_package_money = Integer.parseInt(str);
             }
         }
-
-
-        if(StringUtils.isEmpty(getPostMsg.single_red_money) || red_package_money > Integer.parseInt(getPostMsg.single_red_money)){
+        if(StringUtils.isEmpty(getPostMsg.single_red_money) || red_package_money > Double.parseDouble(getPostMsg.user_balance)){
             ToastUtils.showShort("您的余额不足");
             return;
         }
@@ -785,15 +644,7 @@ public class PublishFragment extends Fragment{
             ToastUtils.showShort("请选择抢红包权限");
             return;
         }
-
-        ProgressDialog.showDialog(getActivity());
-        if(pics.size() > 0){
-            i = 0;
-            upLoadPics.clear();
-            upLoad(i);
-        }else {
-            userPost();
-        }
+        uploadPics();
     }
 
     @OnClick(R.id.tv_publish2)
@@ -813,15 +664,7 @@ public class PublishFragment extends Fragment{
             ToastUtils.showShort("请输入本帖关键词");
             return;
         }
-
-        ProgressDialog.showDialog(getActivity());
-        if(pics.size() > 0){
-            i = 0;
-            upLoadPics.clear();
-            upLoad(i);
-        }else {
-            userPost();
-        }
+        uploadPics();
     }
 
     @OnClick(R.id.tv_publish1)
@@ -830,15 +673,31 @@ public class PublishFragment extends Fragment{
        if(!isFinish()){
            return;
        }
+        uploadPics();
+    }
 
+    private void uploadPics() {
         ProgressDialog.showDialog(getActivity());
-        if(pics.size() > 0){
-            i = 0;
-            upLoadPics.clear();
-            upLoad(i);
-        }else {
-            userPost();
-        }
+        List<String> pics = pickPicView.getPics();
+        upLoadPics = new ArrayList<>();
+        new UploadFileUtil().uploadFiles(pics, getActivity(), new UploadFileUtil.UploadFileCallBack() {
+            @Override
+            public void finish(List<String> strs) {
+                LogUtil.e(new Gson().toJson(strs));
+                upLoadPics = strs;
+                userPost();
+            }
+
+            @Override
+            public void error(String msg) {
+                ProgressDialog.dismiss();
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        pickPicView.onActivityResult(requestCode, resultCode, data);
     }
 
     private boolean isFinish() {
@@ -911,14 +770,7 @@ public class PublishFragment extends Fragment{
     private void userPost() {
         BDLocation location = BaseApplication.getIntstance().getLocation();
         Map<String, String> map = new LinkedHashMap<>();
-        StringBuilder sb = new StringBuilder();
-        String pics = "";
-       if(upLoadPics != null && upLoadPics.size() > 0){
-           for (String pic : upLoadPics){
-               sb.append(pic).append(",");
-           }
-           pics = sb.toString().substring(0, sb.toString().length() - 1);
-       }
+        String pics = ArrayUtil.toCommaSplitStr(upLoadPics);
         map.put("pic", pics);
         map.put("uid", loginModel.uid + "");
         map.put("token", loginModel.token);
@@ -972,173 +824,6 @@ public class PublishFragment extends Fragment{
                         ProgressDialog.dismiss();
                     }
                 });
-    }
-
-    private void upLoad(final int i) {
-        if(i == pics.size()){
-            userPost();
-            return;
-        }
-        Luban.with(getActivity())
-                .load(new File(pics.get(i)))
-                .ignoreBy(30)
-                .setCompressListener(new OnCompressListener() {
-                    @Override
-                    public void onStart() {
-                        // TODO 压缩开始前调用，可以在方法内启动 loading UI
-                    }
-
-                    @Override
-                    public void onSuccess(File file) {
-                        // TODO 压缩成功后调用，返回压缩后的图片文件
-                        setImgByStr( File2StrByBase64(file),
-                                loginModel.token, loginModel.uid + "");
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // TODO 当压缩过程出现问题时调用
-                        setImgByStr( Bitmap2StrByBase64(pics.get(i)),
-                                loginModel.token, loginModel.uid + "");
-                    }
-                }).launch();
-    }
-
-    public String File2StrByBase64(File f){
-        ByteArrayOutputStream out= null;
-        try {
-            FileInputStream stream = new FileInputStream(f);
-            out = new ByteArrayOutputStream(1000);
-            byte[] b = new byte[1000];
-            int n;
-            while ((n = stream.read(b)) != -1)
-                out.write(b, 0, n);
-            stream.close();
-            out.close();
-            byte[] imgBytes = out.toByteArray();
-            return "data:image/jpeg;base64," + Base64.encodeToString(imgBytes, Base64.DEFAULT);
-        } catch (Exception e) {
-            return null;
-        } finally {
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * 通过Base32将Bitmap转换成Base64字符串
-     * @return
-     */
-    public String Bitmap2StrByBase64(String imgPath){
-//        ByteArrayOutputStream bos=new ByteArrayOutputStream();
-//        bit.compress(Bitmap.CompressFormat.JPEG, 40, bos);//参数100表示不压缩
-//        byte[] bytes=bos.toByteArray();
-//        return Base64.encodeToString(bytes, Base64.DEFAULT);
-
-        Bitmap bitmap = null;
-        if (imgPath !=null && imgPath.length() > 0) {
-            bitmap =  BitmapFactory.decodeFile(imgPath);
-        }
-        if(bitmap == null){
-            return null;
-        }
-        ByteArrayOutputStream out = null;
-        try {
-            out = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
-            out.flush();
-            out.close();
-
-            byte[] imgBytes = out.toByteArray();
-            return "data:image/jpeg;base64," + Base64.encodeToString(imgBytes, Base64.DEFAULT);
-        } catch (Exception e) {
-            return null;
-        } finally {
-            try {
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void setImgByStr(String imgStr,String token, String uid){
-        String url =  HttpUrl.UPLOADSIMGFORSTRING;
-        Map<String,Object> params = new HashMap<String, Object>();
-        params.put("file", imgStr);
-        params.put("token", token);
-        params.put("uid", uid);
-        post(params, url);
-    }
-
-
-    public void post(final Map<String, Object> params, final String url) {
-        new Thread(() -> {
-            HttpClient client = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(url);
-            httpPost.addHeader("charset", HTTP.UTF_8);
-            httpPost.setHeader("Content-Type",
-                    "application/x-www-form-urlencoded; charset=utf-8");
-            HttpResponse response = null;
-            if (params != null && params.size() > 0) {
-                List<NameValuePair> nameValuepairs = new ArrayList<NameValuePair>();
-                for (String key : params.keySet()) {
-                    nameValuepairs.add(new BasicNameValuePair(key, (String) params
-                            .get(key)));
-                }
-                try {
-                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuepairs,
-                            HTTP.UTF_8));
-                    response = client.execute(httpPost);
-                    String token = EntityUtils.toString(response.getEntity());
-                    jsonToObject(token);
-                    Logger.i(token);
-                } catch (Exception e) {
-                    Logger.i(e.toString());
-                    ProgressDialog.dismiss();
-                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("编辑失败");
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    response = client.execute(httpPost);
-                } catch (ClientProtocolException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }).start();//这个start()方法不要忘记了
-
-    }
-
-    private void jsonToObject(String token) {
-        try {
-            Logger.i(token);
-            UploadModel um= gson.fromJson(token, UploadModel.class);
-            Logger.i("123");
-            if(um.getHeader() != null && "success".equals(um.getHeader().getStatus()) && um.getBody() != null
-                    && !StringUtils.isEmpty(um.getBody().url)){
-                i ++;
-                upLoadPics.add(um.getBody().url);
-                upLoad(i);
-//                url = um.getBody().url;
-//                head_url = um.getBody().httpUrl;
-            }else {
-                ProgressDialog.dismiss();
-                com.yuqian.mncommonlibrary.utils.ToastUtils.show("编辑失败");
-            }
-        }catch (Exception e){
-            ProgressDialog.dismiss();
-            com.yuqian.mncommonlibrary.utils.ToastUtils.show("编辑失败");
-            Logger.i(e.toString());
-        }
     }
 
     private void setRedTvBackground(int tag) {
@@ -1242,178 +927,6 @@ public class PublishFragment extends Fragment{
         }
     }
 
-    private void selectPhoto() {
-        PermissionUtils.checkCameraPermission(getActivity(), new PermissionUtils.PermissionCallBack() {
-            @Override
-            public void onGranted() {
-                PictureSelector.create(getActivity())
-                        .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                        .maxSelectNum(1)// 最大图片选择数量 int
-                        .minSelectNum(1)// 最小选择数量 int
-                        .imageSpanCount(4)// 每行显示个数 int
-                        .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-                        .previewImage(true)// 是否可预览图片 true or false
-                        .isCamera(true)// 是否显示拍照按钮 true or false
-                        .selectionMedia(selectList)
-                        .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
-                        .sizeMultiplier(0.8f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
-                        .compress(true)// 是否压缩 true or false
-                        .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
-                        .minimumCompressSize(300)// 小于300kb的图片不压缩
-                        .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
-            }
-
-            @Override
-            public void onDenied() {
-                new MaterialDialog.Builder(getActivity())
-                        .title("提示")
-                        .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改相机和存储权限允许访问")
-                        .positiveText("去设置")
-                        .negativeText("取消")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                AndPermission.permissionSetting(getActivity())
-                                        .execute();
-                            }
-                        })
-                        .show();
-            }
-        });
-    }
-
-    private void selectPhoto2() {
-        PermissionUtils.checkCameraPermission(getActivity(), new PermissionUtils.PermissionCallBack() {
-            @Override
-            public void onGranted() {
-                PictureSelector.create(getActivity())
-                        .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
-                        .maxSelectNum(1)// 最大图片选择数量 int
-                        .minSelectNum(1)// 最小选择数量 int
-                        .imageSpanCount(4)// 每行显示个数 int
-                        .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
-                        .previewImage(true)// 是否可预览图片 true or false
-                        .isCamera(true)// 是否显示拍照按钮 true or false
-                        .selectionMedia(selectList)
-                        .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
-                        .sizeMultiplier(0.8f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
-                        .compress(true)// 是否压缩 true or false
-                        .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
-                        .minimumCompressSize(300)// 小于300kb的图片不压缩
-                        .forResult(100);//结果回调onActivityResult code
-            }
-
-            @Override
-            public void onDenied() {
-                new MaterialDialog.Builder(getActivity())
-                        .title("提示")
-                        .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改相机和存储权限允许访问")
-                        .positiveText("去设置")
-                        .negativeText("取消")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                AndPermission.permissionSetting(getActivity())
-                                        .execute();
-                            }
-                        })
-                        .show();
-            }
-        });
-    }
-
-
-    public void result(int resultCode, int requestCode, Intent data) {
-        if (resultCode == getActivity().RESULT_OK) {
-            switch (requestCode) {
-                case 100:
-                    // 图片选择结果回调
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    LocalMedia localMedia = selectList.get(0);
-                    String picUrl;
-                    RequestOptions options = new RequestOptions()
-                            .centerCrop();
-                    if (localMedia.isCompressed()) {
-                        picUrl = localMedia.getCompressPath();
-                    } else {
-                        picUrl = localMedia.getPath();
-                    }
-                    switch (tag){
-                        case 1:
-                            pics.set(0,picUrl);
-                            rl1.setVisibility(View.VISIBLE);
-                            rl_add1.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv1);
-                            break;
-                        case 2:
-                            pics.set(1,picUrl);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl_add2.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv2);
-                            break;
-                        case 3:
-                            pics.set(2,picUrl);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl_add3.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl)
-                                    .apply(options)
-                                    .into(iv3);
-                            break;
-                    }
-                    break;
-                case PictureConfig.CHOOSE_REQUEST:
-                    // 图片选择结果回调
-                    selectList = PictureSelector.obtainMultipleResult(data);
-                    LocalMedia localMedia2 = selectList.get(0);
-                    String picUrl2;
-                    RequestOptions options2 = new RequestOptions()
-                            .centerCrop();
-                    if (localMedia2.isCompressed()) {
-                        picUrl2 = localMedia2.getCompressPath();
-                    } else {
-                        picUrl2 = localMedia2.getPath();
-                    }
-                    switch (pics.size()){
-                        case 0:
-                            pics.add(picUrl2);
-                            rl1.setVisibility(View.VISIBLE);
-                            rl_add1.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl2)
-                                    .apply(options2)
-                                    .into(iv1);
-                            break;
-                        case 1:
-                            pics.add(picUrl2);
-                            rl2.setVisibility(View.VISIBLE);
-                            rl_add2.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl2)
-                                    .apply(options2)
-                                    .into(iv2);
-                            break;
-                        case 2:
-                            pics.add(picUrl2);
-                            rl3.setVisibility(View.VISIBLE);
-                            rl_add3.setVisibility(View.GONE);
-                            Glide.with(getActivity())
-                                    .load(picUrl2)
-                                    .apply(options2)
-                                    .into(iv3);
-                            break;
-                    }
-                    break;
-            }
-        }
-    }
-
     private void postCate() {
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(getActivity());
@@ -1452,8 +965,6 @@ public class PublishFragment extends Fragment{
                 .get()
                 .url(HttpUrl.GETREDENVELOPESETTING)
                 .execute(new AbsJsonCallBack<RedEnvelopeSettingModel, RedEnvelopeSetting[]>() {
-
-
                     @Override
                     public void onSuccess(RedEnvelopeSetting[] body) {
                         ArrayList<RedEnvelopeSetting> redEnvelopeSettings = new ArrayList<>();

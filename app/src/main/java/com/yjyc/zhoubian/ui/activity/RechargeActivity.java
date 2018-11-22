@@ -24,6 +24,8 @@ import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.model.AliRecharge;
 import com.yjyc.zhoubian.model.AliRechargeModel;
+import com.yjyc.zhoubian.model.GetPostMsg;
+import com.yjyc.zhoubian.model.GetPostMsgModel;
 import com.yjyc.zhoubian.model.GetRechargeSetting;
 import com.yjyc.zhoubian.model.GetRechargeSettingModel;
 import com.yjyc.zhoubian.model.Login;
@@ -82,6 +84,8 @@ public class RechargeActivity extends BaseActivity {
     EditText customRcharge;
     @BindView(R.id.delete_custom_rcharge)
     ImageView deleteCustomRcharge;
+    @BindView(R.id.user_balance)
+    TextView userBalance;
 
     private static final int SDK_PAY_FLAG = 129;
     private Context mContext;
@@ -89,6 +93,7 @@ public class RechargeActivity extends BaseActivity {
     private Login login;
     private List<GetRechargeSetting> fixedRecharges;
     private List<TextView> fixRechargeViews = new ArrayList<>();
+    private double balance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +110,9 @@ public class RechargeActivity extends BaseActivity {
             return;
         }
 
-        mHandler.sendEmptyMessageDelayed(INIT, 60);
-
+        //mHandler.sendEmptyMessageDelayed(INIT, 10);
+        initView();
+        getPostMsg();
     }
 
     private void initView() {
@@ -129,6 +135,31 @@ public class RechargeActivity extends BaseActivity {
         reqRechargeSetting();
     }
 
+    private void getPostMsg() {
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.GETPOSTMSG)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token)
+                .execute(new AbsJsonCallBack<GetPostMsgModel, GetPostMsg>() {
+                    @Override
+                    public void onSuccess(GetPostMsg body) {
+                        if (body == null && body.user_balance == null) {
+                            userBalance.setText("当前余额：");
+                            return;
+                        }
+                        try{
+                            balance = Double.parseDouble(body.user_balance.replace("元", ""));
+                        }catch (Exception e){}
+                        userBalance.setText("当前余额：" + balance + "元");
+                    }
+
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                    }
+                });
+    }
+    
     private void initData() {
         if(fixedRecharges != null){
             if(fixedRecharges.size() > 0){
@@ -306,52 +337,19 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void wxPay(WXRecharge body) {
-        PayReq request = new PayReq();
-        request.appId = body.pay_result.appId;
-        request.partnerId = body.pay_result.partnerId;
-        request.prepayId= body.pay_result.prepayId.split("=")[1];
-        request.packageValue = "Sign=WXPay";
-        request.nonceStr= body.pay_result.nonceStr;
-        request.timeStamp= body.pay_result.timeStamp;
-        /*request.sign = body.pay_result.paySign;
-        request.signType = body.pay_result.signType;*/
-
-        // 把参数的值传进去SortedMap集合里面
-        SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
-        parameters.put("appid", body.pay_result.appId);
-        parameters.put("noncestr", body.pay_result.nonceStr);
-        parameters.put("package", "Sign=WXPay");
-        parameters.put("partnerid", body.pay_result.partnerId);
-        parameters.put("prepayid", body.pay_result.prepayId);
-        parameters.put("timestamp", body.pay_result.timeStamp);
-
-        String characterEncoding = "UTF-8";
-        String mySign = createSign(characterEncoding, parameters);
-        System.out.println("我的签名是：" + mySign);
-        request.sign = mySign;
-
-        BaseApplication.mWxApi.sendReq(request);
-    }
-
-    public static String createSign(String characterEncoding,
-                                    SortedMap<Object, Object> parameters) {
-        StringBuffer sb = new StringBuffer();
-        Set es = parameters.entrySet();// 所有参与传参的参数按照accsii排序（升序）
-        Iterator it = es.iterator();
-        while (it.hasNext()) {
-            @SuppressWarnings("rawtypes")
-            Map.Entry entry = (Map.Entry) it.next();
-            String k = (String) entry.getKey();
-            Object v = entry.getValue();
-            if (null != v && !"".equals(v) && !"sign".equals(k)
-                    && !"key".equals(k)) {
-                sb.append(k + "=" + v + "&");
-            }
-        }
-        sb.append("key=" + "50faef596bd1302f2970252ef170e04f"); //KEY是商户秘钥
-        String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding)
-                .toUpperCase();
-        return sign;
+        Runnable payRunnable = () -> {
+            PayReq request = new PayReq();
+            request.appId = body.pay_result.appid;
+            request.partnerId = body.pay_result.partnerid;
+            request.prepayId = body.pay_result.prepayid;
+            request.packageValue = "Sign=WXPay";
+            request.nonceStr = body.pay_result.noncestr;
+            request.timeStamp = body.pay_result.timestamp;
+            request.sign = body.pay_result.sign;
+            BaseApplication.mWxApi.sendReq(request);
+        };
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
     }
 
     private double getRecharge() {

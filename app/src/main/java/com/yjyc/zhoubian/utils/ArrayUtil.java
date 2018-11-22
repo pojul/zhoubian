@@ -21,7 +21,6 @@ public class ArrayUtil {
             return "";
         }
         StringBuilder sb = new StringBuilder();
-        sb.append("");
         for(int i = 0; i < strs.size(); i++){
             if(i > 0){
                 sb.append(",");

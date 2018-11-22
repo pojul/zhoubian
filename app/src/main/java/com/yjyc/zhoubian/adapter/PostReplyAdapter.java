@@ -57,6 +57,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private View roolView;
     private int postId = -1;
     private int postOwnId = -1;
+    public boolean showRedPackageMsg = true;
 
     public PostReplyAdapter(Context mContext, List<ReplyPostList.ReplyPost> replys) {
         this.mContext = mContext;
@@ -201,7 +202,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holderOne.headUrl);
         }
-        if(reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
+        if(showRedPackageMsg && reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
             holderOne.grabRedPackageMsg.setText(reply.grab_red_package_msg);
             holderOne.grabRedPackageMsg.setVisibility(View.VISIBLE);
         }else{
@@ -496,8 +497,8 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void addOneLevelData(ReplyPostList.ReplyPost reply){
         synchronized (replys){
-            replys.add(reply);
-            notifyItemInserted(replys.size());
+            replys.add(0, reply);
+            notifyItemInserted(0);
             notifyItemRangeChanged(0, replys.size());
         }
     }
@@ -538,4 +539,8 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    public void setShowRedPackageMsg(boolean showRedPackageMsg) {
+        this.showRedPackageMsg = showRedPackageMsg;
+        notifyDataSetChanged();
+    }
 }

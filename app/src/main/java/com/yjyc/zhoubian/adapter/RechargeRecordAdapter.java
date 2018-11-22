@@ -47,7 +47,7 @@ public class RechargeRecordAdapter extends RecyclerView.Adapter<RechargeRecordAd
         }else{
             holder.payTime.setText("");
         }
-        if(record.pay_type == 0){
+        if(record.pay_type == 1){
             holder.payType.setText("微信支付");
         }else{
             holder.payType.setText("支付宝支付");

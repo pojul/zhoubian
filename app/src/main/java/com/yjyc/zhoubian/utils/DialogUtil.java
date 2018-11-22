@@ -34,7 +34,7 @@ public class DialogUtil {
     /**
      * @param context
      * @param view
-     * @param type 1: 留言 2: 回复
+     * @param type 1: 留言 2: 回复 3: 红包口令
      * */
     public void showCommentDialog(Context context, View view, int type, String raw) {
         View popView = LayoutInflater.from(context).inflate(R.layout.dialog_comment, null);
@@ -48,11 +48,13 @@ public class DialogUtil {
         if(raw != null && !raw.isEmpty()){
             subReplyText.setText(raw);
         }
-        String hint;
+        String hint = "";
         if(type == 1){
             hint = "评论";
-        }else{
+        }else if(type == 2){
             hint = "回复";
+        }else if(type == 3){
+            hint = "请输入红包口令";
         }
         subReplyText.setHint(hint);
         String finalHint = hint;

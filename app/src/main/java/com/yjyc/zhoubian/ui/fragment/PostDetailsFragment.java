@@ -1,6 +1,8 @@
 package com.yjyc.zhoubian.ui.fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,10 +12,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -21,20 +26,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.bumptech.glide.Glide;
+import com.luck.picture.lib.PictureSelector;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.hawk.Hawk;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.adapter.CardAdapter;
 import com.yjyc.zhoubian.adapter.PostReplyAdapter;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Follow;
 import com.yjyc.zhoubian.model.FollowModel;
+import com.yjyc.zhoubian.model.GrabRedEnvelope;
+import com.yjyc.zhoubian.model.GrabRedEnvelopeModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.PostCollection;
@@ -53,9 +66,11 @@ import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
 import com.yjyc.zhoubian.utils.DateUtil;
+import com.yjyc.zhoubian.utils.DensityUtil;
 import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yjyc.zhoubian.utils.MyDistanceUtil;
 import com.yjyc.zhoubian.utils.PermissionUtils;
+import com.yjyc.zhoubian.wxapi.OkHttpUtils;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
@@ -104,12 +119,6 @@ public class PostDetailsFragment extends BaseFragment {
     TextView price;
     @BindView(R.id.post_note)
     TextView postNote;
-    @BindView(R.id.post_image1)
-    ImageView postImage1;
-    @BindView(R.id.post_image2)
-    ImageView postImage2;
-    @BindView(R.id.post_image3)
-    ImageView postImage3;
     @BindView(R.id.key_word)
     TextView keyWord;
     @BindView(R.id.price_ll)
@@ -132,7 +141,10 @@ public class PostDetailsFragment extends BaseFragment {
     TextView reaPackageLeft;
     @BindView(R.id.comment_num)
     TextView commentNum;
-
+    @BindView(R.id.image_ll)
+    LinearLayout image_ll;
+    @BindView(R.id.show_red_package_msg)
+    CheckBox showRedPackageMsg;
 
     //MyAdapter myAdapter;
     PostReplyAdapter replyAdapter;
@@ -163,13 +175,15 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void initViews() {
-        //myAdapter = new MyAdapter();
         replyAdapter = new PostReplyAdapter(getActivity(), replys);
         myAdapter2 = new CardAdapter();
         recyclerView.setNestedScrollingEnabled(false);
         if(postId != -1){
             getPostDetails();
         }
+        showRedPackageMsg.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            replyAdapter.setShowRedPackageMsg(showRedPackageMsg.isChecked());
+        });
     }
 
     @Override
@@ -321,21 +335,16 @@ public class PostDetailsFragment extends BaseFragment {
             priceLl.setVisibility(View.GONE);
         }
         postNote.setText(postDetail.body);
-        if(postDetail.pic != null){
-            if(postDetail.pic.size() >= 1){
-                postImage1.setVisibility(View.VISIBLE);
-                Glide.with(this).load(postDetail.pic.get(0)).into(postImage1);
-            }
-            if(postDetail.pic.size() >= 2){
-                postImage2.setVisibility(View.VISIBLE);
-                Glide.with(this).load(postDetail.pic.get(1)).into(postImage2);
-            }
-            if(postDetail.pic.size() >= 3){
-                postImage3.setVisibility(View.VISIBLE);
-                Glide.with(this).load(postDetail.pic.get(2)).into(postImage3);
+        if(postDetail.pic != null && postDetail.pic.size() > 0){
+            image_ll.setVisibility(View.VISIBLE);
+            for (int i = 0; i < postDetail.pic.size(); i++) {
+                ImageView iv = new ImageView(getActivity());
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.topMargin = DensityUtil.dp2px(getActivity(), 5);
+                image_ll.addView(iv, params);
+                Glide.with(this).load(postDetail.pic.get(i)).into(iv);
             }
         }
-
         if(postDetail.key_word != null && !postDetail.key_word.isEmpty()){
             keyWord.setText("关键词：" + postDetail.key_word);
         }else{
@@ -360,7 +369,7 @@ public class PostDetailsFragment extends BaseFragment {
         replyAdapter.setPostId(postDetail.id, postDetail.user_id);
     }
 
-    @OnClick({R.id.follow, R.id.collect_rl, R.id.comment_rl, R.id.call, R.id.chat, R.id.user_photo})
+    @OnClick({R.id.follow, R.id.collect_rl, R.id.comment_rl, R.id.call, R.id.chat, R.id.user_photo, R.id.rob_red_package})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.follow:
@@ -384,20 +393,7 @@ public class PostDetailsFragment extends BaseFragment {
                 });
                 break;
             case R.id.call:
-                PermissionUtils.checkPhonePermission(getActivity(), new PermissionUtils.PermissionCallBack() {
-                    @Override
-                    public void onGranted() {
-                        Intent intent = new Intent(Intent.ACTION_CALL);
-                        Uri data = Uri.parse("tel:" + postDetail.phone);
-                        intent.setData(data);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onDenied() {
-                        showShortToats("通话权限被拒绝");
-                    }
-                });
+                call();
                 break;
             case R.id.chat:
                 Intent intent = new Intent(getActivity(), ChatActivity.class);
@@ -409,7 +405,91 @@ public class PostDetailsFragment extends BaseFragment {
                 intent.putExtra("uid", postDetail.user_id + "");
                 startActivity(intent);
                 break;
+            case R.id.rob_red_package:
+                if((postDetail.grad_red_package_number >= postDetail.red_package_number) || postDetail.red_package_number <= 0){
+                    return;
+                }
+                Login login = Hawk.get("LoginModel");
+                if(login == null){
+                    Toast.makeText(activity, "请先登录", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                userInfo = Hawk.get("userInfo");
+                if(postDetail.red_package_password != null && !postDetail.red_package_password.isEmpty()){
+                    DialogUtil.getInstance().showCommentDialog(getActivity(), rootRl, 3, null);
+                    DialogUtil.getInstance().setDialogClick(str->{
+                        gradRedPackage(str, login);
+                    });
+                }else{
+                    gradRedPackage("", login);
+                }
+                break;
         }
+    }
+
+    private void gradRedPackage(String str, Login login) {
+        LoadingDialog.showLoading(getActivity());
+        OkhttpUtils okHttpUtils = OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.GRABREDENVELOPE)
+                .addParams("uid", ("" + login.uid))
+                .addParams("token", login.token)
+                .addParams("post_id", (postDetail.id + ""));
+        if (str != null && !str.isEmpty()) {
+            okHttpUtils.addParams("red_package_password", str);
+        }
+        okHttpUtils.execute(new AbsJsonCallBack<GrabRedEnvelopeModel, GrabRedEnvelope>() {
+            @Override
+            public void onFailure(String errorCode, String errorMsg) {
+                LoadingDialog.closeLoading();
+                showShortToats(errorMsg);
+            }
+
+            @Override
+            public void onSuccess(GrabRedEnvelope body) {
+                LoadingDialog.closeLoading();
+                showShortToats("您抢到了" + body.money + "元红包");
+                postDetail.grad_red_package_number++;
+                reaPackageLeft.setText(("已抢" + postDetail.grad_red_package_number + "份，剩余"
+                        + (postDetail.red_package_number - postDetail.grad_red_package_number) + "份"));
+
+                if (str != null && !str.isEmpty()) {
+                    ReplyPostList.ReplyPost replyPost = new ReplyPostList().new ReplyPost();
+                    replyPost._level = 1;
+                    replyPost.id = Integer.parseInt(body.id);
+                    replyPost.body = str;
+                    replyPost.nickname = userInfo.nickname;
+                    replyPost.head_url = userInfo.head_url_img;
+                    replyPost.interval_time = "刚刚";
+                    replyPost.article_id = postDetail.id;
+                    replyPost.uid = login.uid;
+                    replyAdapter.addOneLevelData(replyPost);
+                }
+            }
+        });
+    }
+
+    @SuppressLint("CheckResult")
+    private void call() {
+        new RxPermissions(getActivity())
+                .request(Manifest.permission.CALL_PHONE)
+                .subscribe(granted -> {
+                    if (!granted) {
+                        new MaterialDialog.Builder(getContext())
+                                .title("提示")
+                                .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改电话权限允许访问")
+                                .positiveText("去设置")
+                                .negativeText("取消")
+                                .onPositive((dialog, which) -> AndPermission.permissionSetting(getActivity())
+                                        .execute())
+                                .show();
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_CALL);
+                        Uri data = Uri.parse("tel:" + postDetail.phone);
+                        intent.setData(data);
+                        startActivity(intent);
+                    }
+                });
     }
 
     private void postComment(String str) {
@@ -419,7 +499,7 @@ public class PostDetailsFragment extends BaseFragment {
             return;
         }
         Login login = Hawk.get("LoginModel");
-        UserInfo userInfo = Hawk.get("userInfo");
+        userInfo = Hawk.get("userInfo");
         LoadingDialog.showLoading(getActivity());
         OkhttpUtils.with()
                 .post()
@@ -628,8 +708,6 @@ public class PostDetailsFragment extends BaseFragment {
         void onLongClick( int position);
     }
 
-    //public  class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemClickListener
-
     private PopupWindow popWindow;
     private int offsetX;
     private int offsetY;
@@ -642,20 +720,12 @@ public class PostDetailsFragment extends BaseFragment {
             contentView = LayoutInflater.from(getActivity()).inflate(R.layout.deletepopuptoplayout, null);
         }
         RelativeLayout rl_dismiss = contentView.findViewById(R.id.rl_dismiss);
-        rl_dismiss.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popWindow.dismiss();
-            }
-        });
+        rl_dismiss.setOnClickListener(view -> popWindow.dismiss());
 
         TextView tv_report = contentView.findViewById(R.id.tv_report);
-        tv_report.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                popWindow.dismiss();
-                startActivity(new Intent(getActivity(), ReportActivity.class));
-            }
+        tv_report.setOnClickListener(view -> {
+            popWindow.dismiss();
+            startActivity(new Intent(getActivity(), ReportActivity.class));
         });
 
         popWindow = new PopupWindow(contentView,
@@ -663,12 +733,7 @@ public class PostDetailsFragment extends BaseFragment {
         popWindow.setContentView(contentView);
         contentView.measure(makeDropDownMeasureSpec(popWindow.getWidth()),
                 makeDropDownMeasureSpec(popWindow.getHeight()));
-        popWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                activity.rl_bg.setVisibility(View.GONE);
-            }
-        });
+        popWindow.setOnDismissListener(() -> activity.rl_bg.setVisibility(View.GONE));
 
         //显示PopupWindow
         if(isDown){

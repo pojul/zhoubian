@@ -122,10 +122,10 @@ public class WithdrawCashActivity extends BaseActivity {
             showToast("请选择提现金额");
             return;
         }
-        /*if(money > balance){
+        if(money > balance){
             showToast("余额不足");
             return;
-        }*/
+        }
         LoadingDialog.showLoading(this);
         OkhttpUtils.with()
                 .post()
@@ -137,7 +137,9 @@ public class WithdrawCashActivity extends BaseActivity {
                     @Override
                     public void onSuccess(WithdrawApply body) {
                         LoadingDialog.closeLoading();
-                        showToast("申请提现成功，我们将尽快处理您的提现订单");
+                        balance = balance - money;
+                        userBalance.setText("当前余额：" + balance + "元");
+                        showToast("申请提现成功");
                     }
 
                     @Override

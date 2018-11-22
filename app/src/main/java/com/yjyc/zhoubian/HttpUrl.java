@@ -74,4 +74,8 @@ public class HttpUrl {
     public static final String CHECKEVALUATIONEXPOSE = BASE_URL + "index/UserHomepage/checkEvaluationExpose";
     public static final String REFRESHPOST = BASE_URL + "index/Post/refreshPost";
     public static final String USERREPORT = BASE_URL + "index/Report/userReport";
+    public static final String INFOPOST = BASE_URL + "index/InvestmentCooperation/infoPost";
+    public static final String GRABREDENVELOPE = BASE_URL + "index/Post/grabRedEnvelope";
+
+
 }

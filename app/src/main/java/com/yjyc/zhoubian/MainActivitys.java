@@ -339,10 +339,10 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PictureConfig.CHOOSE_REQUEST) {
-            publishFragment.result(resultCode, requestCode, data);
+        if(publishFragment != null && resultCode == RESULT_OK && requestCode == PictureConfig.CHOOSE_REQUEST){
+            publishFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 

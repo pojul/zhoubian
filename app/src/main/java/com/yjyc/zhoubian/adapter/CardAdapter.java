@@ -184,10 +184,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 || (position % 20 == 1 && position != 1)){
+        if(position == 0 || (position % 21 == 0)){
             return TYPE_ZERO;//第一种布局
         }
-        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -  (1 + position/20));
+        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -   (position/21 + 1));
         if(search.pic != null && search.pic.size() > 1){
             return TYPE_THREE;
         }else if(search.pic != null && search.pic.size() == 1){
@@ -251,12 +251,17 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void bindTypeZero(final MyViewHolderZero holderZero, int position) {
-        holderZero.tv.setText((position == 0 ? 0 : position - (position / 20)) + "m深");
+        holderZero.tv.setText((position / 21) * 20 + "m深");
+        if(position == 0){
+            holderZero.tv.setVisibility(View.INVISIBLE);
+        }else{
+            holderZero.tv.setVisibility(View.VISIBLE);
+        }
         holderZero.downturnNum.setOnClickListener(v->{
             if(mContext instanceof MainActivitys){
-                ((MainActivitys)mContext).postDownturn((position == 0 ? 0 : position - (position / 20)), 20);
+                ((MainActivitys)mContext).postDownturn((position == 0 ? 0 : position - (1+ position / 21)), 20);
             }else if(mContext instanceof SearchActivity){
-                ((SearchActivity)mContext).postDownturn((position == 0 ? 0 : position - (position / 20)), 20);
+                ((SearchActivity)mContext).postDownturn((position == 0 ? 0 : position - (1 + position / 21)), 20);
             }
         });
         holderZero.shutdown.setOnClickListener(v->{
@@ -266,7 +271,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             DialogUtil.getInstance().postShutDownPop(mContext, holderZero.rootLl);
             DialogUtil.getInstance().setDialogClick(str -> {
                 int num = 0;
-                int currentPos = (position == 0 ? 0 : position - ((position / 20)));
+                int currentPos = (position == 0 ? 0 : position - ((1 + position / 21)));
                 try{
                     num = Integer.parseInt(str);
                 }catch(Exception e){}
@@ -296,7 +301,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
             showPopWindow(holderOne.iv_delete, isDown, position, itemPosition);
         });
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/20));
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
         if(!StringUtils.isEmpty(sp.title)){
             holderOne.tv_title.setText(sp.title);
         }
@@ -351,7 +356,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
         notInterested.setOnClickListener(v->{
             synchronized (datas){
-                datas.remove(itemPosition == 0 ? 0 : itemPosition -  (1 + itemPosition/20));
+                datas.remove(itemPosition -  (1 + itemPosition/21));
                 notifyItemRemoved(itemPosition);
                 notifyItemRangeChanged(0, datas.size());
             }
@@ -359,7 +364,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         });
         pullBlack.setOnClickListener(v->{
             popWindow.dismiss();
-            SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/20));
+            SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
             pullBlackUser(sp.user_id);
         });
 
@@ -452,7 +457,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/20));
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
         if(!StringUtils.isEmpty(sp.title)){
             holderTwo.tv_title.setText(sp.title);
         }
@@ -505,7 +510,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/20));
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
         if(!StringUtils.isEmpty(sp.title)){
             holder.tv_title.setText(sp.title);
         }
@@ -589,10 +594,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public int getPostId(int position) {
-        if(position == 0 || (position % 20 == 1 && position != 1)){
+        if(position == 0 || (position % 21 == 0)){
             return -2;
         }
-        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -  (1 + position/20));
+        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
         if(search != null){
             return search.id;
         }
@@ -600,10 +605,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public SearchPosts.SearchPost getSearchPost(int position) {
-        if(position == 0 || (position % 20 == 1 && position != 1)){
+        if(position == 0 || (position % 21 == 0)){
             return null;
         }
-        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -  (1 + position/20));
+        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
         return search;
     }
 

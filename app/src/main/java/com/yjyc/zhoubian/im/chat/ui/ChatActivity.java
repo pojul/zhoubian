@@ -208,10 +208,10 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void onSendMessageComplete(ECError error, ECMessage message) {
             LogUtil.e("onSendMessageComplete , error=" + error.errorMsg);
+            messageListAdapter.notifyMessageStatus(message);
             if (message == null) {
                 return;
             }
-            messageListAdapter.notifyMessageStatus(message);
         }
 
         @Override

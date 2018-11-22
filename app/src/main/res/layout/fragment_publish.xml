@@ -186,7 +186,16 @@
                 android:paddingRight="7dp"
                 />
 
+            <com.yjyc.zhoubian.ui.view.pickpicview.PickPicView
+                android:id="@+id/pick_pic_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="15dp">
+            </com.yjyc.zhoubian.ui.view.pickpicview.PickPicView>
+
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -1123,6 +1132,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="24dp"
+                    android:visibility="gone"
                     >
                     <TextView
                         android:id="@+id/tv_red1"
