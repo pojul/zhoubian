@@ -25,6 +25,7 @@ import com.luck.picture.lib.config.PictureConfig;
 import com.orhanobut.hawk.Hawk;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.app.BaseApplication;
+import com.yjyc.zhoubian.im.ECMIm;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.PostCate;
 import com.yjyc.zhoubian.model.PostCateModel;
@@ -104,7 +105,7 @@ public class MainActivitys extends AppCompatActivity {
     private ValuableBookFragment valuableBookFragment;
     private MainFragment mainFragment;
     //private DopeFragment dopeFragment;
-    private ConversationFragment conversationFragment;
+    public ConversationFragment conversationFragment;
     private MeFragment meFragment;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
@@ -118,7 +119,7 @@ public class MainActivitys extends AppCompatActivity {
         initView();
 
         BaseApplication.application.initImSDK();
-
+        ECMIm.getInstance().mainActivitys = this;
     }
 
     private void initView() {

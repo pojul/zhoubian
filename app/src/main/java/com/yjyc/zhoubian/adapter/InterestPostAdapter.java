@@ -1,6 +1,5 @@
 package com.yjyc.zhoubian.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -46,46 +45,22 @@ import java.util.List;
  * Created by Administrator on 2018/10/13/013.
  */
 
-public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     private ArrayList<SearchPosts.SearchPost> datas = new ArrayList<>();
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
     public static final int TYPE_THREE = 2;//三种不同的布局
-    public static final int TYPE_ZERO= 3;
     RequestOptions options;
     private PopupWindow popWindow;
     private int offsetX;
     private int offsetY;
-    public CardAdapter(ArrayList<SearchPosts.SearchPost> datas, Context mCcontext) {
+    public InterestPostAdapter(ArrayList<SearchPosts.SearchPost> datas, Context mCcontext) {
         this.datas = datas;
         this.mContext = mCcontext;
         options = new RequestOptions()
                 .centerCrop().placeholder(R.drawable.img_bg).error(R.drawable.img_bg);
-    }
-
-    public CardAdapter() {
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener ){
-        this. mOnItemClickListener=onItemClickListener;
-    }
-
-    public class MyViewHolderZero extends RecyclerView.ViewHolder {
-        View myView;
-        TextView tv;
-        TextView downturnNum;
-        ImageView shutdown;
-        LinearLayout rootLl;
-        public MyViewHolderZero(View itemView) {
-            super(itemView);
-            myView = itemView;
-            tv = itemView.findViewById(R.id.tv);
-            downturnNum = itemView.findViewById(R.id.downturn_num);
-            shutdown = itemView.findViewById(R.id.shutdown);
-            rootLl = itemView.findViewById(R.id.root_ll);
-        }
     }
 
     public class MyViewHolderOne extends RecyclerView.ViewHolder {
@@ -170,10 +145,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 || (position % 21 == 0)){
-            return TYPE_ZERO;//第一种布局
-        }
-        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -   (position/21 + 1));
+        SearchPosts.SearchPost search = datas.get(position);
         if(search.pic != null && search.pic.size() > 1){
             return TYPE_THREE;
         }else if(search.pic != null && search.pic.size() == 1){
@@ -182,16 +154,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return TYPE_ONE;
         }
     }
-//        public MyAdapter(List<ItemBean> list){
-//            this.mList = list;
-//        }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case TYPE_ZERO:
-                return new MyViewHolderZero(LayoutInflater.from(parent.getContext()).inflate(R.layout
-                        .fragment_main_item_img, parent, false));
             case TYPE_ONE:
                 return new MyViewHolderOne(LayoutInflater.from(parent.getContext()).inflate(R.layout
                         .fragment_main_item_img0, parent, false));
@@ -215,62 +181,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             bindTypeTwo((MyViewHolderTwo) holder, position);
         } else if (holder instanceof MyViewHolderThree) {
             bindTypeThree((MyViewHolderThree) holder, position);
-        }else if (holder instanceof MyViewHolderZero) {
-            bindTypeZero((MyViewHolderZero) holder, position);
         }
-
-        if( mOnItemClickListener!= null){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onClick(position);
-                }
-            });
-            holder. itemView.setOnLongClickListener( new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mOnItemClickListener.onLongClick(position);
-                    return false;
-                }
-            });
-        }
-    }
-
-    private void bindTypeZero(final MyViewHolderZero holderZero, int position) {
-        holderZero.tv.setText((position / 21) * 20 + "m深");
-        if(position == 0){
-            holderZero.tv.setVisibility(View.INVISIBLE);
-        }else{
-            holderZero.tv.setVisibility(View.VISIBLE);
-        }
-        holderZero.downturnNum.setOnClickListener(v->{
-            if(mContext instanceof MainActivitys){
-                ((MainActivitys)mContext).postDownturn((position == 0 ? 0 : position - (1+ position / 21)), 20);
-            }else if(mContext instanceof SearchActivity){
-                ((SearchActivity)mContext).postDownturn((position == 0 ? 0 : position - (1 + position / 21)), 20);
-            }
-        });
-        holderZero.shutdown.setOnClickListener(v->{
-            if(mContext == null || holderZero.rootLl == null){
-                return;
-            }
-            DialogUtil.getInstance().postShutDownPop(mContext, holderZero.rootLl);
-            DialogUtil.getInstance().setDialogClick(str -> {
-                int num = 0;
-                int currentPos = (position == 0 ? 0 : position - ((1 + position / 21)));
-                try{
-                    num = Integer.parseInt(str);
-                }catch(Exception e){}
-                if(num <= 0){
-                    return;
-                }
-                if(mContext instanceof MainActivitys){
-                    ((MainActivitys)mContext).postDownturn(currentPos, num);
-                }else if(mContext instanceof SearchActivity){
-                    ((SearchActivity)mContext).postDownturn(currentPos, num);
-                }
-            });
-        });
     }
 
     private void bindTypeOne(final MyViewHolderOne holderOne, int itemPosition) {
@@ -287,7 +198,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
             showPopWindow(holderOne.iv_delete, isDown, position, itemPosition);
         });
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
+        SearchPosts.SearchPost sp = datas.get(itemPosition);
         if(!StringUtils.isEmpty(sp.title)){
             holderOne.tv_title.setText(sp.title);
         }
@@ -333,7 +244,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         TextView pullBlack = contentView.findViewById(R.id.pull_black);
         tv_report.setOnClickListener(view -> {
             popWindow.dismiss();
-            SearchPosts.SearchPost post = getSearchPost(itemPosition);
+            SearchPosts.SearchPost post = datas.get(itemPosition);
             if(post != null){
                 Intent intent = new Intent(mContext, ReportActivity.class);
                 intent.putExtra("report_uid", post.user_id);
@@ -342,7 +253,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         });
         notInterested.setOnClickListener(v->{
             synchronized (datas){
-                datas.remove(itemPosition -  (1 + itemPosition/21));
+                datas.remove(itemPosition);
                 notifyItemRemoved(itemPosition);
                 notifyItemRangeChanged(0, datas.size());
             }
@@ -350,7 +261,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         });
         pullBlack.setOnClickListener(v->{
             popWindow.dismiss();
-            SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
+            SearchPosts.SearchPost sp = datas.get(itemPosition);
             pullBlackUser(sp.user_id);
         });
 
@@ -447,7 +358,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
+        SearchPosts.SearchPost sp = datas.get(itemPosition );
         if(!StringUtils.isEmpty(sp.title)){
             holderTwo.tv_title.setText(sp.title);
         }
@@ -500,7 +411,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
+        SearchPosts.SearchPost sp = datas.get(itemPosition);
         if(!StringUtils.isEmpty(sp.title)){
             holder.tv_title.setText(sp.title);
         }
@@ -556,19 +467,14 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        if(datas == null || datas.size() <= 0){
-            return 0;
-        }
-        return datas.size() + 1 + datas.size()/20 ;
+        return (datas==null?0:datas.size());
     }
 
 
     //下面两个方法提供给页面刷新和加载时调用
     public void add(List<SearchPosts.SearchPost> addMessageList) {
-        //增加数据
         int position = datas.size();
         datas.addAll(position, addMessageList);
-
         notifyItemInserted(getItemCount());
     }
 
@@ -584,25 +490,6 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         datas.clear();
         datas.addAll(newList);
         notifyDataSetChanged();
-    }
-
-    public int getPostId(int position) {
-        if(position == 0 || (position % 21 == 0)){
-            return -2;
-        }
-        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
-        if(search != null){
-            return search.id;
-        }
-        return -1;
-    }
-
-    public SearchPosts.SearchPost getSearchPost(int position) {
-        if(position == 0 || (position % 21 == 0)){
-            return null;
-        }
-        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
-        return search;
     }
 
 }

@@ -12,6 +12,7 @@
         android:layout_marginRight="15dp"
         >
         <TextView
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="65dp"
@@ -46,14 +47,16 @@
         android:layout_marginBottom="7dp"
         >
         <TextView
+            android:id="@+id/delete"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textColor="#d53c3c"
             android:text="删除"
             android:textSize="13sp"
             android:gravity="center"
+            android:clickable="true"
             />
 
         <ImageView
@@ -64,14 +67,16 @@
             />
 
         <TextView
+            android:id="@+id/edit"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:textColor="#459dda"
             android:text="编辑"
             android:textSize="13sp"
             android:gravity="center"
+            android:clickable="true"
             />
     </LinearLayout>
 

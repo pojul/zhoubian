@@ -15,7 +15,8 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yjyc.zhoubian.R;
-import com.yjyc.zhoubian.adapter.ConversationAdapter;
+import com.yjyc.zhoubian.im.ECMIm;
+import com.yjyc.zhoubian.im.chat.adapter.ConversationAdapter;
 import com.yjyc.zhoubian.im.entity.Conversation;
 
 import java.util.List;
@@ -30,8 +31,7 @@ public class ConversationFragment extends Fragment {
     SwipeMenuRecyclerView conversationList;
 
     private Unbinder unbinder;
-    private List<Conversation> conversations;
-    private ConversationAdapter conversationAdapter;
+    public ConversationAdapter conversationAdapter;
 
     public ConversationFragment() {
         // Required empty public constructor
@@ -54,7 +54,7 @@ public class ConversationFragment extends Fragment {
         conversationList.setSwipeMenuCreator(swipeMenuCreator);
         conversationList.setSwipeMenuItemClickListener(mMenuItemClickListener);
 
-        conversationAdapter = new ConversationAdapter(getActivity(), conversations);
+        conversationAdapter = new ConversationAdapter(getActivity(), ECMIm.getInstance().conversations);
         conversationList.setAdapter(conversationAdapter);
 
     }

@@ -25,10 +25,14 @@ import com.yjyc.zhoubian.model.EmptyEntity;
 import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.LoginModel;
+import com.yjyc.zhoubian.model.PostDetail;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserPostList;
 import com.yjyc.zhoubian.model.UserPostListModel;
+import com.yjyc.zhoubian.ui.activity.BaseActivity;
+import com.yjyc.zhoubian.ui.activity.EditPostActivity;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
+import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
@@ -202,6 +206,8 @@ public class MyPublishFragment extends BaseFragment {
             View v1;
             LinearLayout operate_ll;
             TextView refresh;
+            TextView edit;
+            LinearLayout root_ll;
             public MyViewHolderOne(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -215,6 +221,8 @@ public class MyPublishFragment extends BaseFragment {
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
                 refresh = itemView.findViewById(R.id.refresh);
+                edit = itemView.findViewById(R.id.edit);
+                root_ll = itemView.findViewById(R.id.root_ll);
             }
         }
 
@@ -232,6 +240,8 @@ public class MyPublishFragment extends BaseFragment {
             View v1;
             LinearLayout operate_ll;
             TextView refresh;
+            TextView edit;
+            LinearLayout root_ll;
             public MyViewHolderTwo(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -246,6 +256,8 @@ public class MyPublishFragment extends BaseFragment {
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
                 refresh = itemView.findViewById(R.id.refresh);
+                edit = itemView.findViewById(R.id.edit);
+                root_ll = itemView.findViewById(R.id.root_ll);
             }
         }
 
@@ -264,6 +276,8 @@ public class MyPublishFragment extends BaseFragment {
             View v1;
             LinearLayout operate_ll;
             TextView refresh;
+            TextView edit;
+            LinearLayout root_ll;
             public MyViewHolderThree(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -280,6 +294,8 @@ public class MyPublishFragment extends BaseFragment {
                 v1 = itemView.findViewById(R.id.v1);
                 operate_ll = itemView.findViewById(R.id.operate_ll);
                 refresh = itemView.findViewById(R.id.refresh);
+                edit = itemView.findViewById(R.id.edit);
+                root_ll = itemView.findViewById(R.id.root_ll);
             }
         }
 
@@ -383,6 +399,16 @@ public class MyPublishFragment extends BaseFragment {
             holderOne.refresh.setOnClickListener(v->{
                 refreshPost(up, position);
             });
+            holderOne.edit.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(EditPostActivity.class, bundle);
+            });
+            holderOne.root_ll.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("PostId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(PostDetailsActivity.class, bundle);
+            });
         }
 
         private void bindTypeTwo(MyViewHolderTwo holderTwo, final int position) {
@@ -431,6 +457,16 @@ public class MyPublishFragment extends BaseFragment {
             });
             holderTwo.refresh.setOnClickListener(v->{
                 refreshPost(up, position);
+            });
+            holderTwo.edit.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(EditPostActivity.class, bundle);
+            });
+            holderTwo.root_ll.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("PostId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(PostDetailsActivity.class, bundle);
             });
         }
 
@@ -494,6 +530,16 @@ public class MyPublishFragment extends BaseFragment {
             });
             holder.refresh.setOnClickListener(v->{
                 refreshPost(up, position);
+            });
+            holder.edit.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("postId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(EditPostActivity.class, bundle);
+            });
+            holder.root_ll.setOnClickListener(v->{
+                Bundle bundle = new Bundle();
+                bundle.putInt("PostId", up.id);
+                ((BaseActivity)getActivity()).startActivityAni(PostDetailsActivity.class, bundle);
             });
         }
 

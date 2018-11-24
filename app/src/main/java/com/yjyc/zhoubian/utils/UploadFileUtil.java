@@ -141,6 +141,17 @@ public class UploadFileUtil {
             }
             return;
         }
+        compressFile();
+
+    }
+
+    private void compressFile() {
+        if(FileUtil.isNetUrl(files.get(uploadedFiles))){
+            uploadResults.add( (files.get(uploadedFiles).replace(HttpUrl.BASE_URL_NOEND, "")) );
+            uploadedFiles ++;
+            uploadFile();
+            return;
+        }
         Luban.with(context)
                 .load(new File(files.get(uploadedFiles)))
                 .ignoreBy(30)

@@ -58,6 +58,10 @@ public class PickPicView extends RecyclerView{
         }
     }
 
+    public void setData(List<String> pics){
+        adapter.setdata(pics);
+    }
+
     public List<String> getPics(){
         List<String> pics = adapter.getPics();
         return pics;

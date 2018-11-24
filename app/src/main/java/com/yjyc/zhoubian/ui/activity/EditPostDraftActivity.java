@@ -1,51 +1,33 @@
-package com.yjyc.zhoubian.ui.fragment;
+package com.yjyc.zhoubian.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
-import android.util.Base64;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
+import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.luck.picture.lib.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
-import com.luck.picture.lib.config.PictureMimeType;
-import com.luck.picture.lib.entity.LocalMedia;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.hawk.Hawk;
-import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.HttpUrl;
-import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.event.BaiduEvent;
-import com.yjyc.zhoubian.model.ExperienceCate;
-import com.yjyc.zhoubian.model.ExperienceCateModel;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.GetPostMsg;
 import com.yjyc.zhoubian.model.GetPostMsgModel;
 import com.yjyc.zhoubian.model.Login;
@@ -54,21 +36,14 @@ import com.yjyc.zhoubian.model.LoginCodeModel;
 import com.yjyc.zhoubian.model.LoginModel;
 import com.yjyc.zhoubian.model.PostCate;
 import com.yjyc.zhoubian.model.PostCateModel;
-import com.yjyc.zhoubian.model.PostDetail;
-import com.yjyc.zhoubian.model.PostDetailModel;
-import com.yjyc.zhoubian.model.PostDraft;
+import com.yjyc.zhoubian.model.PostDraftDetail;
+import com.yjyc.zhoubian.model.PostDraftDetailModel;
 import com.yjyc.zhoubian.model.RedEnvelopeDistance;
 import com.yjyc.zhoubian.model.RedEnvelopeDistanceModel;
 import com.yjyc.zhoubian.model.RedEnvelopeSetting;
 import com.yjyc.zhoubian.model.RedEnvelopeSettingModel;
-import com.yjyc.zhoubian.model.UploadModel;
 import com.yjyc.zhoubian.model.UserGroupModel;
 import com.yjyc.zhoubian.model.UserGroups;
-import com.yjyc.zhoubian.model.UserInfo;
-import com.yjyc.zhoubian.model.UserInfoModel;
-import com.yjyc.zhoubian.ui.activity.BaiDuMapActivity;
-import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
-import com.yjyc.zhoubian.ui.activity.ReleaseSuccessActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
 import com.yjyc.zhoubian.utils.ArrayUtil;
@@ -81,26 +56,11 @@ import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import net.masonliu.multipletextview.library.MultipleTextViewGroup;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,19 +69,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
-import static android.content.Context.TELEPHONY_SERVICE;
+public class EditPostDraftActivity extends BaseActivity {
 
-/**
- * 发布
- * Created by Administrator on 2018/10/9/009.
- */
-
-public class PublishFragment extends Fragment{
     @BindView(R.id.main_rl)
     public MultipleTextViewGroup main_rl;
+    @BindView(R.id.main_rl2)
     public MultipleTextViewGroup main_rl2;
     @BindView(R.id.main_rl3)
     public MultipleTextViewGroup main_rl3;
@@ -189,6 +142,8 @@ public class PublishFragment extends Fragment{
     TextView et_red_price;
     @BindView(R.id.pick_pic_view)
     PickPicView pickPicView;
+    @BindView(R.id.root_sv)
+    ScrollView root_sv;
 
     Unbinder unbinder;
     Login loginModel;
@@ -198,7 +153,6 @@ public class PublishFragment extends Fragment{
     private int post_cate_id = -1;
     private int user_group_id = -1;
     private int phone_from = 1;
-    private int i;
     private List<String> upLoadPics = new ArrayList<>();
     private String code;
     private GetPostMsg getPostMsg;
@@ -208,287 +162,392 @@ public class PublishFragment extends Fragment{
     private int publishTag;
     private String price_unit = "元";
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_publish, container, false);
+    private int draftId;
+    private PostDraftDetail.PostDraft postDraft;
+    private List<TextView> tv_prices = new ArrayList<>();
 
-        unbinder = ButterKnife.bind(this, view);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_post_draft);
+        ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        main_rl2 = view.findViewById(R.id.main_rl2);
-        initViews();
-        return view;
+        draftId = getIntent().getIntExtra("draftId", -1);
+        loginModel = Hawk.get("LoginModel");
+        if(draftId < 0 || loginModel == null){
+            finish();
+        }
+        BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
+        reqData();
     }
+
     ArrayList<PostCate.Data> pcs;
     ArrayList<RedEnvelopeSetting> redEnvelopeSettings;
     ArrayList<RedEnvelopeDistance> redEnvelopeDistances;
-    private void initViews() {
 
-        if(SPUtils.getInstance().contains("user_name")){
+    public void reqData(){
+        getPostMsg();
+    }
+
+    private void initViews() {
+        root_sv.setVisibility(View.VISIBLE);
+        tv_prices.add(tv_price1);tv_prices.add(tv_price2);tv_prices.add(tv_price3);tv_prices.add(tv_price3);
+        tv_prices.add(tv_price5);tv_prices.add(tv_price6);tv_prices.add(tv_price7);tv_prices.add(tv_price8);
+        tv_prices.add(tv_price9);tv_prices.add(tv_price10);
+        if (SPUtils.getInstance().contains("user_name")) {
             user_name = SPUtils.getInstance().getString("user_name");
             et_user_name.setText(user_name);
         }
 
-
         BDLocation location = BaseApplication.getIntstance().getLocation();
-        if(location != null && !StringUtils.isEmpty(location.getAddrStr())){
+        if (location != null && !StringUtils.isEmpty(location.getAddrStr())) {
             tv_addtrs.setText("已获取位置：" + location.getAddrStr());
-        }else {
+        } else {
             tv_addtrs.setText("获取位置失败，请检查定位权限是否开启");
         }
-        builder=new GsonBuilder();
-        gson=builder.create();
+        builder = new GsonBuilder();
+        gson = builder.create();
         loginModel = Hawk.get("LoginModel");
-        getPostMsg();
-        if(Hawk.contains("pcs")){
+
+        if (Hawk.contains("pcs")) {
             pcs = Hawk.get("pcs");
-
             List<String> dataList = new ArrayList<String>();
-
-            for (PostCate.Data pc : pcs){
+            for (PostCate.Data pc : pcs) {
                 dataList.add(pc.getTitle());
             }
-
             main_rl.setTextViews(dataList);
-
+            main_rl.requestLayout();
             main_rl.setOnMultipleTVItemClickListener((view, i) -> {
                 PostCate.Data pc = pcs.get(i);
-                if(pc.getIsChecked() == 1){
-                }else {
+                if (pc.getIsChecked() == 1) {
+                } else {
                     main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                    ((TextView)main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView) main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
                     pcs.get(i).setIsChecked(1);
-                    for (int j = 0; j < pcs.size(); j++){
-                        if(j == i){
+                    for (int j = 0; j < pcs.size(); j++) {
+                        if (j == i) {
                             continue;
                         }
-
                         main_rl.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                        ((TextView)main_rl.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        ((TextView) main_rl.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
                         pcs.get(j).setIsChecked(2);
                     }
                     post_cate_id = pcs.get(i).getId();
                 }
             });
-        }else {
-            postCate();
         }
 
-        if(Hawk.contains("redEnvelopeSettings")){
+        if (Hawk.contains("redEnvelopeSettings")) {
             redEnvelopeSettings = Hawk.get("redEnvelopeSettings");
-
             List<String> dataList = new ArrayList<String>();
-
-            for (RedEnvelopeSetting pc : redEnvelopeSettings){
+            for (RedEnvelopeSetting pc : redEnvelopeSettings) {
                 dataList.add(pc.title);
             }
-
             main_rl3.setTextViews(dataList);
-
-            main_rl3.setOnMultipleTVItemClickListener(new MultipleTextViewGroup.OnMultipleTVItemClickListener() {
-                @Override
-                public void onMultipleTVItemClick(View view, int i) {
-                    RedEnvelopeSetting pc = redEnvelopeSettings.get(i);
-                    if(pc.isChecked == 1){
-                    }else {
-                        main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                        ((TextView)main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-                        redEnvelopeSettings.get(i).isChecked = 1;
-                        for (int j = 0; j < redEnvelopeSettings.size(); j++){
-                            if(j == i){
-                                continue;
-                            }
-
-                            main_rl3.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                            ((TextView)main_rl3.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
-                            redEnvelopeSettings.get(j).isChecked = 2;
+            main_rl3.requestLayout();
+            main_rl3.setOnMultipleTVItemClickListener((view, i) -> {
+                RedEnvelopeSetting pc = redEnvelopeSettings.get(i);
+                if (pc.isChecked == 1) {
+                } else {
+                    main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
+                    ((TextView) main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    redEnvelopeSettings.get(i).isChecked = 1;
+                    for (int j = 0; j < redEnvelopeSettings.size(); j++) {
+                        if (j == i) {
+                            continue;
                         }
-
-                        if(!StringUtils.isEmpty(pc.title)){
-                            red_package_money = Integer.parseInt(pc.title);
-                            tv_red_package_money.setText(red_package_money + "元");
-                        }
-
+                        main_rl3.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView) main_rl3.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        redEnvelopeSettings.get(j).isChecked = 2;
                     }
+                    if (!StringUtils.isEmpty(pc.title)) {
+                        red_package_money = Integer.parseInt(pc.title);
+                        tv_red_package_money.setText(red_package_money + "元");
+                    }
+
                 }
             });
-        }else {
-            getRedEnvelopeSetting();
         }
 
-        if(Hawk.contains("redEnvelopeDistances")){
+        if (Hawk.contains("redEnvelopeDistances")) {
             redEnvelopeDistances = Hawk.get("redEnvelopeDistances");
-
             List<String> dataList = new ArrayList<String>();
-
-            for (RedEnvelopeDistance pc : redEnvelopeDistances){
+            for (RedEnvelopeDistance pc : redEnvelopeDistances) {
                 dataList.add(pc.title + (StringUtils.isEmpty(pc.unit) ? "" : pc.unit));
             }
-
             main_rl4.setTextViews(dataList);
-
-            main_rl4.setOnMultipleTVItemClickListener(new MultipleTextViewGroup.OnMultipleTVItemClickListener() {
-                @Override
-                public void onMultipleTVItemClick(View view, int i) {
-                    RedEnvelopeDistance pc = redEnvelopeDistances.get(i);
-                    if(pc.isChecked == 1){
-                    }else {
-                        main_rl4.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                        ((TextView)main_rl4.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
-                        redEnvelopeDistances.get(i).isChecked = 1;
-                        for (int j = 0; j < redEnvelopeDistances.size(); j++){
-                            if(j == i){
-                                continue;
-                            }
-
-                            main_rl4.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                            ((TextView)main_rl4.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
-                            redEnvelopeDistances.get(j).isChecked = 2;
+            main_rl4.requestLayout();
+            main_rl4.setOnMultipleTVItemClickListener((view, i) -> {
+                RedEnvelopeDistance pc = redEnvelopeDistances.get(i);
+                if (pc.isChecked == 1) {
+                } else {
+                    main_rl4.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
+                    ((TextView) main_rl4.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    redEnvelopeDistances.get(i).isChecked = 1;
+                    for (int j = 0; j < redEnvelopeDistances.size(); j++) {
+                        if (j == i) {
+                            continue;
                         }
-
-                        rob_red_package_range = pc.id;
+                        main_rl4.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView) main_rl4.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        redEnvelopeDistances.get(j).isChecked = 2;
                     }
+                    rob_red_package_range = pc.id;
                 }
             });
-        }else {
-            getRedEnvelopeDistance();
         }
 
-        if(Hawk.contains("userGroups")){
+        if (Hawk.contains("userGroups")) {
             userGroups = Hawk.get("userGroups");
-
             List<String> dataList = new ArrayList<String>();
-
-            for (UserGroups.UserGroup pc : userGroups){
+            for (UserGroups.UserGroup pc : userGroups) {
                 dataList.add(pc.title);
             }
             main_rl2.setTextViews(dataList);
+            main_rl2.requestLayout();
             main_rl2.setOnMultipleTVItemClickListener((view, i) -> {
                 UserGroups.UserGroup pc = userGroups.get(i);
-                if(pc.isChecked == 1){
-                }else {
+                if (pc.isChecked == 1) {
+                } else {
                     main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
-                    ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
+                    ((TextView) main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
                     userGroups.get(i).isChecked = 1;
-                    for (int j = 0; j < userGroups.size(); j++){
-                        if(j == i){
+                    for (int j = 0; j < userGroups.size(); j++) {
+                        if (j == i) {
                             continue;
                         }
-
                         main_rl2.getChildAt(j).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
-                        ((TextView)main_rl2.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
+                        ((TextView) main_rl2.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
                         userGroups.get(j).isChecked = 2;
                     }
-
                     user_group_id = userGroups.get(i).id;
                 }
             });
-        }else {
-            userGroup();
         }
+
+        reqDraftDetail();
 
     }
 
+    public void reqDraftDetail() {
+        Login login = Hawk.get("LoginModel");
+        if(login == null || draftId == -1){
+            ProgressDialog.dismiss();
+            return;
+        }
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.POSTDRAFTDETAIL)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token + "")
+                .addParams("id", draftId + "")
+                .execute(new AbsJsonCallBack<PostDraftDetailModel, PostDraftDetail>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        ProgressDialog.dismiss();
+                        Toast.makeText(EditPostDraftActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(PostDraftDetail body) {
+                        ProgressDialog.dismiss();
+                        if(body == null){
+                            Toast.makeText(EditPostDraftActivity.this, "数据错误", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                        postDraft = body.post_draft;
+                        setData();
+                    }
+                });
+    }
+
+    private void setData() {
+        if(postDraft == null){
+            finish();
+            return;
+        }
+        postDraft.pic = ArrayUtil.filterLocalPic(postDraft.pic);
+        if(postDraft.pic != null){
+            pickPicView.setData(postDraft.pic);
+        }
+        post_cate_id = postDraft.post_cate_id;
+        for (int i = 0; i < main_rl.getChildCount(); i++) {
+            PostCate.Data pc = pcs.get(i);
+            if(pc.getId() == post_cate_id){
+                main_rl.getChildAt(i).performClick();
+            }
+        }
+        if(postDraft.custom_post_cate != null){
+            et_custom_post_cate.setText(postDraft.custom_post_cate);
+        }
+        title = postDraft.title;
+        et_title.setText(title);
+        body = postDraft.body;
+        et_body.setText(body);
+        user_group_id = postDraft.user_group_id;
+        for (int i = 0; i < main_rl2.getChildCount(); i++) {
+            UserGroups.UserGroup userGroup = userGroups.get(i);
+            if(userGroup.id == user_group_id){
+                main_rl2.getChildAt(i).performClick();
+            }
+        }
+        user_name = postDraft.user_name;
+        et_user_name.setText(user_name);
+        if(postDraft.phone_from > 0){
+            phone_from = postDraft.phone_from;
+        }
+        if(phone_from == 2){
+            tv2.performClick();
+        }
+        BDLocation location = new BDLocation();
+        location.setLatitude(postDraft.lat);
+        location.setLongitude(postDraft.lon);
+        BaseApplication.getIntstance().setLocation(location);
+        BaseApplication.getIntstance().setProvince(postDraft.province);
+        BaseApplication.getIntstance().setCity(postDraft.city);
+        tv_addtrs.setText("已获取位置：" + postDraft.province + postDraft.city);
+        price = postDraft.price + "";
+        if(postDraft.price > 0){
+            et_price.setText(price);
+        }
+        price_unit = postDraft.price_unit;
+        if(price_unit != null){
+            for (int i = 0; i < tv_prices.size(); i++) {
+                TextView tv_price = tv_prices.get(i);
+                if(price_unit.equals(tv_price.getText().toString())){
+                    tv_price.performClick();
+                }
+            }
+        }
+        if(postDraft.key_word != null){
+            et_key_word.setText(postDraft.key_word);
+        }
+        red_package_money = ((int)postDraft.red_package_money);
+        for (int i = 0; i < main_rl3.getChildCount(); i++) {
+            RedEnvelopeSetting redEnvelopeSetting = redEnvelopeSettings.get(i);
+            if(("" + red_package_money).equals(redEnvelopeSetting.title)){
+                main_rl3.getChildAt(i).performClick();
+            }
+        }
+        if(red_package_money > 0){
+            tv_red_package_money.setText((red_package_money + "元"));
+        }
+        if(postDraft.red_package_password != null){
+            et_red_package_password.setText(postDraft.red_package_password);
+        }
+        if(postDraft.rob_red_package_range != null && !postDraft.rob_red_package_range.isEmpty()){
+            int tempRange = Integer.parseInt(postDraft.rob_red_package_range);
+            if(tempRange > 0){
+                rob_red_package_range = tempRange;
+                for (int i = 0; i < main_rl4.getChildCount(); i++) {
+                    RedEnvelopeDistance redEnvelopeDistance = redEnvelopeDistances.get(i);
+                    if(redEnvelopeDistance.id == rob_red_package_range){
+                        main_rl4.getChildAt(i).performClick();
+                    }
+                }
+            }
+        }
+    }
+
     private void getPostMsg() {
+        if (!ProgressDialog.isShowing()) {
+            ProgressDialog.showDialog(this);
+        }
         OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.GETPOSTMSG)
                 .addParams("uid", loginModel.uid + "")
                 .addParams("token", loginModel.token)
                 .execute(new AbsJsonCallBack<GetPostMsgModel, GetPostMsg>() {
-
                     @Override
                     public void onSuccess(GetPostMsg body) {
-                        PublishFragment.this.getPostMsg = body;
+                        getPostMsg = body;
                         tv_single_red_money.setText("平均每个红包" + body.single_red_money + "元左右");
+                        postCate();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        getPostMsg();
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ProgressDialog.dismiss();
+                        postCate();
                     }
                 });
     }
 
     @OnClick(R.id.save)
-    public void save(){
+    public void save() {
         savePost();
     }
 
     @OnClick(R.id.tv_my_publish)
-    public void tv_my_publish(){
-        Intent intent = new Intent(getActivity(), MyPublishActivity.class);
+    public void tv_my_publish() {
+        Intent intent = new Intent(this, MyPublishActivity.class);
         intent.putExtra("uid", loginModel.uid + "");
         startActivity(intent);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    @OnClick(R.id.tv_price1)
+    public void tv_price1() {
+        setTvBackground2(R.id.tv_price1);
+        price_unit = "元";
     }
 
     @OnClick(R.id.tv_price2)
-    public void tv_price2(){
+    public void tv_price2() {
         setTvBackground2(R.id.tv_price2);
         price_unit = "元/小时";
     }
 
     @OnClick(R.id.tv_price3)
-    public void tv_price3(){
+    public void tv_price3() {
         setTvBackground2(R.id.tv_price3);
         price_unit = "元/天";
     }
 
     @OnClick(R.id.tv_price4)
-    public void tv_price4(){
+    public void tv_price4() {
         setTvBackground2(R.id.tv_price4);
         price_unit = "元/月";
     }
 
     @OnClick(R.id.tv_price5)
-    public void tv_price5(){
+    public void tv_price5() {
         setTvBackground2(R.id.tv_price5);
         price_unit = "元/次";
     }
 
     @OnClick(R.id.tv_price6)
-    public void tv_price6(){
+    public void tv_price6() {
         setTvBackground2(R.id.tv_price6);
         price_unit = "元/M²";
     }
 
     @OnClick(R.id.tv_price7)
-    public void tv_price7(){
+    public void tv_price7() {
         setTvBackground2(R.id.tv_price7);
         price_unit = "元/斤";
     }
 
     @OnClick(R.id.tv_price8)
-    public void tv_price8(){
+    public void tv_price8() {
         setTvBackground2(R.id.tv_price8);
         price_unit = "元/年";
     }
 
     @OnClick(R.id.tv_price9)
-    public void tv_price9(){
+    public void tv_price9() {
         setTvBackground2(R.id.tv_price9);
         price_unit = "元/万";
     }
 
     @OnClick(R.id.tv_price10)
-    public void tv_price10(){
+    public void tv_price10() {
         setTvBackground2(R.id.tv_price10);
         price_unit = "元/折";
     }
 
     @OnClick(R.id.tv_red1)
-    public void tv_red1(){
+    public void tv_red1() {
         red_package_rule = 1;
         setRedTvBackground(R.id.tv_red1);
         main_rl3.setVisibility(View.VISIBLE);
@@ -496,7 +555,7 @@ public class PublishFragment extends Fragment{
     }
 
     @OnClick(R.id.tv_red2)
-    public void tv_red2(){
+    public void tv_red2() {
         red_package_rule = 2;
         setRedTvBackground(R.id.tv_red2);
         main_rl3.setVisibility(View.GONE);
@@ -516,8 +575,8 @@ public class PublishFragment extends Fragment{
     }
 
     @OnClick(R.id.tv_code)
-    public void tv_code(){
-        if(et_phone.getText().toString().length() != 11){
+    public void tv_code() {
+        if (et_phone.getText().toString().length() != 11) {
             ToastUtils.showShort("请输入11位手机号");
             return;
         }
@@ -526,8 +585,8 @@ public class PublishFragment extends Fragment{
     }
 
     private void postCode() {
-        if(!ProgressDialog.isShowing()){
-            ProgressDialog.showDialog(getActivity());
+        if (!ProgressDialog.isShowing()) {
+            ProgressDialog.showDialog(this);
         }
         OkhttpUtils.with()
                 .post()
@@ -575,16 +634,16 @@ public class PublishFragment extends Fragment{
     }
 
     @OnClick(R.id.tv_baidu)
-    public void tv_baidu(){
-        PermissionUtils.checkLocationPermission(getActivity(), new PermissionUtils.PermissionCallBack() {
+    public void tv_baidu() {
+        PermissionUtils.checkLocationPermission(this, new PermissionUtils.PermissionCallBack() {
             @Override
             public void onGranted() {
-                startActivity(new Intent(getActivity(), BaiDuMapActivity.class));
+                startActivity(new Intent(EditPostDraftActivity.this, BaiDuMapActivity.class));
             }
 
             @Override
             public void onDenied() {
-                new MaterialDialog.Builder(getActivity())
+                new MaterialDialog.Builder(EditPostDraftActivity.this)
                         .title("提示")
                         .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改定位和存储权限允许访问")
                         .positiveText("去设置")
@@ -592,7 +651,7 @@ public class PublishFragment extends Fragment{
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                AndPermission.permissionSetting(getActivity())
+                                AndPermission.permissionSetting(EditPostDraftActivity.this)
                                         .execute();
                             }
                         })
@@ -600,15 +659,17 @@ public class PublishFragment extends Fragment{
             }
         });
     }
+
     String title;
     String body;
     String user_name;
     String phone;
     String price;
+
     @OnClick(R.id.tv_publish3)
-    public void tv_publish3(){
+    public void tv_publish3() {
         publishTag = 3;
-        if(!isFinish()){
+        if (!isFinish()) {
             return;
         }
         /*price = et_price.getText().toString();
@@ -651,9 +712,9 @@ public class PublishFragment extends Fragment{
     }
 
     @OnClick(R.id.tv_publish2)
-    public void tv_publish2(){
+    public void tv_publish2() {
         publishTag = 2;
-        if(!isFinish()){
+        if (!isFinish()) {
             return;
         }
         /*if(StringUtils.isEmpty(price.trim())){
@@ -671,19 +732,19 @@ public class PublishFragment extends Fragment{
     }
 
     @OnClick(R.id.tv_publish1)
-    public void tv_publish1(){
+    public void tv_publish1() {
         publishTag = 1;
-        if(!isFinish()){
+        if (!isFinish()) {
             return;
         }
         uploadPics();
     }
 
     private void uploadPics() {
-        ProgressDialog.showDialog(getActivity());
+        ProgressDialog.showDialog(this);
         List<String> pics = pickPicView.getPics();
         upLoadPics = new ArrayList<>();
-        new UploadFileUtil().uploadFiles(pics, getActivity(), new UploadFileUtil.UploadFileCallBack() {
+        new UploadFileUtil().uploadFiles(pics, this, new UploadFileUtil.UploadFileCallBack() {
             @Override
             public void finish(List<String> strs) {
                 LogUtil.e(new Gson().toJson(strs));
@@ -694,7 +755,7 @@ public class PublishFragment extends Fragment{
             @Override
             public void error(String msg) {
                 ProgressDialog.dismiss();
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditPostDraftActivity.this, msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -704,80 +765,81 @@ public class PublishFragment extends Fragment{
     }
 
     private boolean isFinish() {
-        if(post_cate_id == -1){
+        if (post_cate_id == -1) {
             ToastUtils.showShort("请选择帖子类别");
             return false;
         }
 
         title = et_title.getText().toString();
-        if(StringUtils.isEmpty(title.trim())){
+        if (StringUtils.isEmpty(title.trim())) {
             ToastUtils.showShort("请输入帖子标题");
             return false;
         }
 
-        if(title.length() < 4){
+        if (title.length() < 4) {
             ToastUtils.showShort("帖子标题长度必须4-30字");
             return false;
         }
 
         body = et_body.getText().toString();
-        if(StringUtils.isEmpty(body.trim())){
+        if (StringUtils.isEmpty(body.trim())) {
             ToastUtils.showShort("请输入帖子详情");
             return false;
         }
 
-        if(body.length() < 20){
+        if (body.length() < 20) {
             ToastUtils.showShort("帖子详情长度必须20-1500字");
             return false;
         }
 
-        if(BaseApplication.getIntstance().getLocation() == null){
+        if (BaseApplication.getIntstance().getLocation() == null) {
             ToastUtils.showShort("请选择本帖位置");
             return false;
         }
 
-        if(user_group_id == -1){
+        if (user_group_id == -1) {
             ToastUtils.showShort("请选择发布者身份");
             return false;
         }
         SPUtils.getInstance().put("user_group_id", user_group_id);
 
         user_name = et_user_name.getText().toString();
-        if(StringUtils.isEmpty(user_name.trim())){
+        if (StringUtils.isEmpty(user_name.trim())) {
             ToastUtils.showShort("请输入发布者称呼");
             return false;
         }
         SPUtils.getInstance().put("user_name", user_name);
 
-        if(phone_from == 1){
+        if (phone_from == 1) {
             phone = loginModel.phone;
         }
 
-        if(phone_from == 2){
+        if (phone_from == 2) {
             phone = et_phone.getText().toString();
-            if(StringUtils.isEmpty(phone.trim())){
+            if (StringUtils.isEmpty(phone.trim())) {
                 ToastUtils.showShort("请输入手机号");
                 return false;
             }
 
             code = et_code.getText().toString();
-            if(StringUtils.isEmpty(code.trim())){
+            if (StringUtils.isEmpty(code.trim())) {
                 ToastUtils.showShort("请输入验证码");
                 return false;
             }
         }
 
         price = et_price.getText().toString();
-        try{
+        try {
             red_package_money = Integer.parseInt(et_red_price.getText().toString().trim());
-        }catch(Exception e){}
-        if(red_package_money > 0){
-            if(StringUtils.isEmpty(getPostMsg.single_red_money) || red_package_money > Double.parseDouble(getPostMsg.user_balance)){
+        } catch (Exception e) {
+        }
+        if (red_package_money > 0) {
+            if (StringUtils.isEmpty(getPostMsg.single_red_money) || red_package_money > Double.parseDouble(getPostMsg.user_balance)) {
                 ToastUtils.showShort("您的余额不足");
                 return false;
             }
 
-            if(rob_red_package_range == -1){
+            if (rob_red_package_range == -1) {
                 ToastUtils.showShort("请选择抢红包权限");
                 return false;
             }
@@ -804,6 +866,7 @@ public class PublishFragment extends Fragment{
         map.put("pic", pics);
         map.put("uid", loginModel.uid + "");
         map.put("token", loginModel.token);
+        map.put("post_draft_id", postDraft.id + "");
         map.put("post_cate_id", post_cate_id + "");
         map.put("custom_post_cate", et_custom_post_cate.getText().toString().trim());
         map.put("title", title);
@@ -811,7 +874,7 @@ public class PublishFragment extends Fragment{
         map.put("user_group_id", user_group_id + "");
         map.put("user_name", user_name);
         map.put("phone_from", phone_from + "");
-        if(phone_from == 2){
+        if (phone_from == 2) {
             map.put("phone", phone);
             map.put("code", code);
         }
@@ -839,9 +902,8 @@ public class PublishFragment extends Fragment{
 
                     @Override
                     public void onSuccess(Login body) {
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
-                        startActivity(new Intent(getActivity(), ReleaseSuccessActivity.class));
+                        startActivity(new Intent(EditPostDraftActivity.this, ReleaseSuccessActivity.class));
+                        finish();
                     }
 
                     @Override
@@ -857,7 +919,7 @@ public class PublishFragment extends Fragment{
     }
 
     private void savePost() {
-        if(!isFinish()){
+        if (!isFinish()) {
             return;
         }
         BDLocation location = BaseApplication.getIntstance().getLocation();
@@ -866,6 +928,7 @@ public class PublishFragment extends Fragment{
         map.put("pic", pics);
         map.put("uid", loginModel.uid + "");
         map.put("token", loginModel.token);
+        map.put("id", postDraft.id + "");
         map.put("post_cate_id", post_cate_id + "");
         map.put("custom_post_cate", et_custom_post_cate.getText().toString().trim());
         map.put("title", title);
@@ -873,7 +936,7 @@ public class PublishFragment extends Fragment{
         map.put("user_group_id", user_group_id + "");
         map.put("user_name", user_name);
         map.put("phone_from", phone_from + "");
-        if(phone_from == 2){
+        if (phone_from == 2) {
             map.put("phone", phone);
             map.put("code", code);
         }
@@ -893,19 +956,17 @@ public class PublishFragment extends Fragment{
             map.put("red_package_password", et_red_package_password.getText().toString().trim());
             map.put("rob_red_package_range", rob_red_package_range + "");
         }
-        LoadingDialog.showLoading(getActivity());
+        LoadingDialog.showLoading(this);
         OkhttpUtils.with()
                 .post()
-                .url(HttpUrl.POSTSAVEDRAFT)
+                .url(HttpUrl.EDITPOSTDRAFT)
                 .params(map)
-                .execute(new AbsJsonCallBack<LoginModel, Login>() {
-
+                .execute(new AbsJsonCallBack<EmptyEntityModel, EmptyEntity>() {
                     @Override
-                    public void onSuccess(Login body) {
+                    public void onSuccess(EmptyEntity body) {
                         LoadingDialog.closeLoading();
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
-                        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPostDraftActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
 
                     @Override
@@ -921,7 +982,7 @@ public class PublishFragment extends Fragment{
         tv_red1.setTextColor(getResources().getColor(R.color.color080808));
         tv_red2.setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
         tv_red2.setTextColor(getResources().getColor(R.color.color080808));
-        switch (tag){
+        switch (tag) {
             case R.id.tv_red1:
                 tv_red1.setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                 tv_red1.setTextColor(getResources().getColor(R.color.white));
@@ -938,7 +999,7 @@ public class PublishFragment extends Fragment{
         tv1.setTextColor(getResources().getColor(R.color.color080808));
         tv2.setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
         tv2.setTextColor(getResources().getColor(R.color.color080808));
-        switch (tag){
+        switch (tag) {
             case R.id.tv1:
                 tv1.setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                 tv1.setTextColor(getResources().getColor(R.color.white));
@@ -973,7 +1034,7 @@ public class PublishFragment extends Fragment{
         tv_price9.setTextColor(getResources().getColor(R.color.color080808));
         tv_price10.setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
         tv_price10.setTextColor(getResources().getColor(R.color.color080808));
-        switch (tag){
+        switch (tag) {
             case R.id.tv_price1:
                 tv_price1.setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                 tv_price1.setTextColor(getResources().getColor(R.color.white));
@@ -1018,34 +1079,24 @@ public class PublishFragment extends Fragment{
     }
 
     private void postCate() {
-        if(!ProgressDialog.isShowing()){
-            ProgressDialog.showDialog(getActivity());
-        }
         OkhttpUtils.with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate>() {
-
-
                     @Override
                     public void onSuccess(PostCate body) {
                         ArrayList<PostCate.Data> list = (ArrayList<PostCate.Data>) body.list;
-                        if(list == null){
+                        if (list == null) {
                             return;
                         }
                         Hawk.put("pcs", list);
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
+                        getRedEnvelopeSetting();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ProgressDialog.dismiss();
+                        getRedEnvelopeSetting();
                     }
                 });
     }
@@ -1058,22 +1109,17 @@ public class PublishFragment extends Fragment{
                     @Override
                     public void onSuccess(RedEnvelopeSetting[] body) {
                         ArrayList<RedEnvelopeSetting> redEnvelopeSettings = new ArrayList<>();
-                        for (RedEnvelopeSetting pc : body){
+                        for (RedEnvelopeSetting pc : body) {
                             redEnvelopeSettings.add(pc);
                         }
                         Hawk.put("redEnvelopeSettings", redEnvelopeSettings);
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
+                        getRedEnvelopeDistance();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ProgressDialog.dismiss();
+                        getRedEnvelopeDistance();
                     }
                 });
     }
@@ -1085,22 +1131,17 @@ public class PublishFragment extends Fragment{
                 .execute(new AbsJsonCallBack<UserGroupModel, UserGroups>() {
                     @Override
                     public void onSuccess(UserGroups body) {
-                        if(body.list == null && body.list.size() > 0){
+                        if (body.list == null && body.list.size() > 0) {
                             return;
                         }
                         Hawk.put("userGroups", body.list);
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
+                        initViews();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ProgressDialog.dismiss();
+                        initViews();
                     }
                 });
     }
@@ -1110,27 +1151,20 @@ public class PublishFragment extends Fragment{
                 .get()
                 .url(HttpUrl.GETREDENVELOPEDISTANCE)
                 .execute(new AbsJsonCallBack<RedEnvelopeDistanceModel, RedEnvelopeDistance[]>() {
-
-
                     @Override
                     public void onSuccess(RedEnvelopeDistance[] body) {
                         ArrayList<RedEnvelopeDistance> redEnvelopeSettings = new ArrayList<>();
-                        for (RedEnvelopeDistance pc : body){
+                        for (RedEnvelopeDistance pc : body) {
                             redEnvelopeSettings.add(pc);
                         }
                         Hawk.put("redEnvelopeDistances", redEnvelopeSettings);
-                        MainActivitys activity = (MainActivitys)getActivity();
-                        activity.reLoadFragView();
+                        userGroup();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        ProgressDialog.dismiss();
+                        userGroup();
                     }
                 });
     }
@@ -1139,6 +1173,12 @@ public class PublishFragment extends Fragment{
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void finish(){
+        super.finish();
+        overridePendingTransition(R.anim.activity_scale_in_anim, R.anim.activity_move_out_anim);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

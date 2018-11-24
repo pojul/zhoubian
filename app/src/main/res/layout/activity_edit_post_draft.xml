@@ -4,6 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:focusableInTouchMode="false"
     android:background="#fff">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,17 +30,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="发布"
+            android:text="编辑草稿"
             android:textSize="18sp"
             android:textColor="#fff"
             />
-
 
         <TextView
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="存为草稿"
+            android:text="保存草稿"
             android:textColor="#fff"
             android:textSize="13sp"
             android:layout_marginRight="10dp"
@@ -49,6 +50,8 @@
             />
     </RelativeLayout>
     <ScrollView
+        android:id="@+id/root_sv"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout

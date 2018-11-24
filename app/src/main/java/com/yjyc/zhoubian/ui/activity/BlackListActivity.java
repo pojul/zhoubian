@@ -47,7 +47,7 @@ public class BlackListActivity extends BaseActivity {
         ButterKnife.bind(this);
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
         initTitleBar("黑名单", v -> onBackPressed());
-        mHandler.sendEmptyMessageDelayed(INIT, 100);
+        mHandler.sendEmptyMessageDelayed(INIT, 10);
     }
 
     private void init(){
@@ -81,6 +81,9 @@ public class BlackListActivity extends BaseActivity {
                     @Override
                     public void onSuccess(List<BlackUser> body) {
                         LoadingDialog.closeLoading();
+                        if(body == null || body.size() <= 0){
+                            return;
+                        }
                         blackListAdapter.addData(body);
                     }
                 });

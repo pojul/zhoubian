@@ -4,26 +4,48 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingTop="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/root_rl"
+    android:clickable="true">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/test_me"
-        app:riv_oval="true"
-        android:scaleType="centerCrop"
-        app:riv_tile_mode="clamp"
-        app:riv_corner_radius="23.5dp"
-        android:layout_gravity="center_vertical"
+    <RelativeLayout
+        android:id="@+id/photo_rl"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
         android:layout_marginLeft="12sp"
-        android:padding="2dp"
-        />
+        android:layout_marginTop="3dp"
+        android:padding="2dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/test_me"
+            app:riv_oval="true"
+            android:scaleType="centerCrop"
+            app:riv_tile_mode="clamp"
+            android:padding="2dp"
+            app:riv_corner_radius="23.5dp"
+            android:layout_gravity="center_vertical"
+            android:clickable="true"
+            />
+
+        <TextView
+            android:id="@+id/un_red_num"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/shape_red"
+            android:gravity="center"
+            android:text="91"
+            android:textColor="#ffffff"
+            android:textSize="9dp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/photo"
+        android:layout_toRightOf="@+id/photo_rl"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="6dp"
         android:orientation="vertical">

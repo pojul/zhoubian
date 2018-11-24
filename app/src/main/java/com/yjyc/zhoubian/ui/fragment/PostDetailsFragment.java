@@ -4,11 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +43,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.adapter.CardAdapter;
+import com.yjyc.zhoubian.adapter.InterestPostAdapter;
 import com.yjyc.zhoubian.adapter.PostReplyAdapter;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
@@ -59,6 +64,8 @@ import com.yjyc.zhoubian.model.ReplyPost;
 import com.yjyc.zhoubian.model.ReplyPostList;
 import com.yjyc.zhoubian.model.ReplyPostListModel;
 import com.yjyc.zhoubian.model.ReplyPostModel;
+import com.yjyc.zhoubian.model.SearchPostModel;
+import com.yjyc.zhoubian.model.SearchPosts;
 import com.yjyc.zhoubian.model.UserGroups;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
@@ -74,6 +81,7 @@ import com.yjyc.zhoubian.wxapi.OkHttpUtils;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -148,7 +156,7 @@ public class PostDetailsFragment extends BaseFragment {
 
     //MyAdapter myAdapter;
     PostReplyAdapter replyAdapter;
-    CardAdapter myAdapter2;
+    InterestPostAdapter myAdapter2;
 
     private int postId = -1;
     private static final String TAG = "PostDetailsFragment";
@@ -176,14 +184,21 @@ public class PostDetailsFragment extends BaseFragment {
 
     private void initViews() {
         replyAdapter = new PostReplyAdapter(getActivity(), replys);
-        myAdapter2 = new CardAdapter();
+        myAdapter2 = new InterestPostAdapter(new ArrayList<>(), getActivity());
         recyclerView.setNestedScrollingEnabled(false);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());//纵向线性布局
+        recyclerView2.setLayoutManager(layoutManager2);
+        recyclerView2.setAdapter(myAdapter2);
+        recyclerView2.setNestedScrollingEnabled(false);
+
         if(postId != -1){
             getPostDetails();
         }
         showRedPackageMsg.setOnCheckedChangeListener((buttonView, isChecked) -> {
             replyAdapter.setShowRedPackageMsg(showRedPackageMsg.isChecked());
         });
+        reqInterestedPosts();
     }
 
     @Override
@@ -246,34 +261,9 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void initData(){
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
-
         recyclerView.setLayoutManager(layoutManager);
-        //recyclerView.setAdapter(myAdapter);
         recyclerView.setAdapter(replyAdapter);
-
-        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());//纵向线性布局
-
-        recyclerView2.setLayoutManager(layoutManager2);
-        recyclerView2.setAdapter(myAdapter2);
-
-        myAdapter2.setOnItemClickListener(new com.yjyc.zhoubian.adapter.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                startActivity(new Intent(getActivity(), PostDetailsActivity.class));
-            }
-
-            @Override
-            public void onLongClick(int position) {
-
-            }
-
-            @Override
-            public void onDeleteClick(ImageView iv_delete, boolean isDown, int[] position) {
-                showPopWindow(iv_delete, isDown, position);
-            }
-        });
 
         title.setText(postDetail.title);
         nickName.setText(postDetail.user_name);
@@ -469,27 +459,11 @@ public class PostDetailsFragment extends BaseFragment {
         });
     }
 
-    @SuppressLint("CheckResult")
     private void call() {
-        new RxPermissions(getActivity())
-                .request(Manifest.permission.CALL_PHONE)
-                .subscribe(granted -> {
-                    if (!granted) {
-                        new MaterialDialog.Builder(getContext())
-                                .title("提示")
-                                .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改电话权限允许访问")
-                                .positiveText("去设置")
-                                .negativeText("取消")
-                                .onPositive((dialog, which) -> AndPermission.permissionSetting(getActivity())
-                                        .execute())
-                                .show();
-                    } else {
-                        Intent intent = new Intent(Intent.ACTION_CALL);
-                        Uri data = Uri.parse("tel:" + postDetail.phone);
-                        intent.setData(data);
-                        startActivity(intent);
-                    }
-                });
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        Uri data = Uri.parse("tel:" + postDetail.phone);
+        intent.setData(data);
+        startActivity(intent);
     }
 
     private void postComment(String str) {
@@ -566,6 +540,32 @@ public class PostDetailsFragment extends BaseFragment {
                             replyAdapter.setHasMore(false);
                         }
                         replyAdapter.addRawData(body);
+                    }
+                });
+    }
+
+    private void reqInterestedPosts() {
+        OkhttpUtils okHttpUtils = OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.INTERESTEDPOSTS);
+        Login loginModel = Hawk.get("LoginModel");
+        if(loginModel != null){
+            okHttpUtils.addParams("uid", ("" + loginModel.uid))
+                    .addParams("token", loginModel.token);
+        }
+        okHttpUtils
+                .execute(new AbsJsonCallBack<SearchPostModel, SearchPosts>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LogUtil.e(errorMsg);
+                    }
+
+                    @Override
+                    public void onSuccess(SearchPosts body) {
+                        if(body != null && body.list != null && body.list.size() <= 0){
+                            return;
+                        }
+                        myAdapter2.add(body.list);
                     }
                 });
     }

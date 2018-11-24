@@ -1,4 +1,4 @@
-package com.yjyc.zhoubian.adapter;
+package com.yjyc.zhoubian.im.chat.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,20 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.yjyc.zhoubian.R;
-import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.im.entity.ChatMessage;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.utils.DateUtil;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -98,7 +94,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             holder.text.setSelected(true);
             holder.text.setText(textMessageBody.getMessage());
         }else{
-            holder.friendText.setSelected(true);
+            holder.friendText.setSelected(false);
             holder.friendText.setText(textMessageBody.getMessage());
         }
     }

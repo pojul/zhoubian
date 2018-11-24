@@ -13,6 +13,8 @@ public class PostDetail {
     public List<String> pic;
     public float lon;
     public float lat;
+    public String province;
+    public String city;
     public int user_group_id; //用户身份id
     public String user_name;
     public int phone_from;
@@ -21,20 +23,26 @@ public class PostDetail {
     public float price;
     public String price_unit;
     public String key_word;
+    public int red_package_rule;
     public float red_package_money;
+    public double single_red_money;
+    public int red_package_number;
+    public String red_package_password;
     public String rob_red_package_range;
-    public int package_number;
     public int grad_red_package_number;
     public int view;
+    public int virtual_distance;
+    public String actual_title;
+    public int refresh_number;
     public int weather_examine;
     public int admin_examine_status;
+    public int delete_time;
     public String user_look_date_time;
     public String come_before;
     public String create_time;
-    public String red_package_password;
+    public String update_time;
+    public String user_update_time;
     public String head_url;
     public boolean is_follow_user;
     public boolean is_collect;
-    public int red_package_number;
-
 }

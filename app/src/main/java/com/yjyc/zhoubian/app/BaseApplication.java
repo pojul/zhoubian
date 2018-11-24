@@ -11,9 +11,13 @@ import android.widget.Toast;
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.google.gson.Gson;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.yjyc.zhoubian.im.ECMIm;
+import com.yjyc.zhoubian.im.entity.ChatMessage;
+import com.yjyc.zhoubian.im.entity.Conversation;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.utils.Constant;
@@ -31,6 +35,7 @@ import com.yuqian.mncommonlibrary.MBaseManager;
 import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -80,10 +85,7 @@ public class BaseApplication extends Application {
     public void setLocation(BDLocation location) {
         this.location = location;
     }
-
     private BDLocation location;
-
-    private List<IReceiveMessage> IReceiveMessages = new ArrayList<>();
 
     public static IWXAPI mWxApi;
 
@@ -99,8 +101,8 @@ public class BaseApplication extends Application {
         SDKInitializer.setCoordType(CoordType.BD09LL);
         //初始化
         MBaseManager.init(this, "---logtag---", true);
-
         registerToWX();
+        ECMIm.Instance(getApplicationContext());
     }
 
     private void registerToWX() {
@@ -163,77 +165,80 @@ public class BaseApplication extends Application {
         });
 
         ECDevice.setOnChatReceiveListener(new OnChatReceiveListener() {
-
             @Override
             public void OnReceivedMessage(ECMessage ecMessage) {
-                toast("OnReceivedMessage");
+                //toast("OnReceivedMessage");
                 LogUtil.e("OnReceivedMessage");
-                for (int i = 0; i < IReceiveMessages.size(); i++) {
+                /*for (int i = 0; i < IReceiveMessages.size(); i++) {
                     IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
                     if(iReceiveMessage != null){
                         iReceiveMessage.OnReceivedMessage(ecMessage);
                     }
-                }
+                }*/
+                ECMIm.getInstance().onReceiveMessage(ecMessage);
             }
 
             @Override
             public void onReceiveMessageNotify(ECMessageNotify ecMessageNotify) {
-                toast("onReceiveMessageNotify");
+                //toast("onReceiveMessageNotify");
                 LogUtil.e("onReceiveMessageNotify");
             }
 
             @Override
             public void OnReceiveGroupNoticeMessage(ECGroupNoticeMessage ecGroupNoticeMessage) {
-                toast("OnReceiveGroupNoticeMessage");
+                //toast("OnReceiveGroupNoticeMessage");
                 LogUtil.e("OnReceiveGroupNoticeMessage");
             }
 
             @Override
             public void onOfflineMessageCount(int i) {
-                toast("onOfflineMessageCount");
-                LogUtil.e("onOfflineMessageCount");
+                //toast("onOfflineMessageCount");
+                LogUtil.e("onOfflineMessageCount: " + i);
             }
 
             @Override
             public int onGetOfflineMessage() {
-                toast("onGetOfflineMessage");
+                //toast("onGetOfflineMessage");
                 LogUtil.e("onGetOfflineMessage");
                 return 0;
             }
 
             @Override
             public void onReceiveOfflineMessage(List<ECMessage> list) {
-                toast("onReceiveOfflineMessage");
-                LogUtil.e("onReceiveOfflineMessage");
-                for (int i = 0; i < IReceiveMessages.size(); i++) {
+                //toast("onReceiveOfflineMessage");
+                LogUtil.e("onReceiveOfflineMessage------>" + new Gson().toJson(list));
+                /*for (int i = 0; i < IReceiveMessages.size(); i++) {
                     IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
                     if(iReceiveMessage != null){
                         iReceiveMessage.onReceiveOfflineMessage(list);
                     }
+                }*/
+                for (int i = 0; i < list.size(); i++) {
+                    ECMIm.getInstance().onReceiveMessage(list.get(i));
                 }
             }
 
             @Override
             public void onReceiveOfflineMessageCompletion() {
-                toast("onReceiveOfflineMessageCompletion");
+                //toast("onReceiveOfflineMessageCompletion");
                 LogUtil.e("onReceiveOfflineMessageCompletion");
             }
 
             @Override
             public void onServicePersonVersion(int i) {
-                toast("onServicePersonVersion");
+                //toast("onServicePersonVersion");
                 LogUtil.e("onServicePersonVersion");
             }
 
             @Override
             public void onReceiveDeskMessage(ECMessage ecMessage) {
-                toast("onReceiveDeskMessage");
+                //toast("onReceiveDeskMessage");
                 LogUtil.e("onReceiveDeskMessage");
             }
 
             @Override
             public void onSoftVersion(String s, int i) {
-                toast("onSoftVersion");
+                //toast("onSoftVersion");
                 LogUtil.e("onSoftVersion");
             }
         });
@@ -331,27 +336,6 @@ public class BaseApplication extends Application {
             e.printStackTrace();
         } finally {
         }
-    }
-
-    public void registerReceiveMessage(IReceiveMessage iReceiveMessage){
-        synchronized (IReceiveMessages){
-            if(iReceiveMessage != null){
-                IReceiveMessages.add(iReceiveMessage);
-            }
-        }
-    }
-
-    public void unRegisterReceiveMessage(IReceiveMessage iReceiveMessage){
-        synchronized (IReceiveMessages){
-            if(iReceiveMessage != null){
-                IReceiveMessages.remove(iReceiveMessage);
-            }
-        }
-    }
-
-    public interface IReceiveMessage{
-        void OnReceivedMessage(ECMessage ecMessage);
-        void onReceiveOfflineMessage(List<ECMessage> list);
     }
 
     public static Handler getHandler() {

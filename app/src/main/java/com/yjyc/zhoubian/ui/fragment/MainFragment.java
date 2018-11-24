@@ -179,6 +179,7 @@ public class MainFragment extends Fragment{
             loadPostFlag = 1;
             reqPostList();
         });
+        refreshLayout.autoLoadmore();//自动加载
     }
 
     private void reqPostList(){
@@ -199,13 +200,15 @@ public class MainFragment extends Fragment{
         }
         if(login != null){
             okhttpUtils.addParams("uid", ("" + login.uid));
+            okhttpUtils.addParams("token", ("" + login.token));
         }
         if(loadPostCateId == -4){
-            okhttpUtils.addParams("follow", "true");
-            //okhttpUtils.addParams("uid", ("" + login.uid));
+            okhttpUtils.post()
+                    .url(HttpUrl.FOLLOWUSERPOSTS)
+                    .addParams("follow", "true");
         }else if(loadPostCateId == -3){
-            /**爱好帖子接口暂未写好**/
-            return;
+            okhttpUtils.post()
+                    .url(HttpUrl.HOBBYPOSTS);
         }else if(loadPostCateId == -2){
         }else if(loadPostCateId == -1){
             okhttpUtils.addParams("order", "create_time");
@@ -265,6 +268,7 @@ public class MainFragment extends Fragment{
                     }
                 });
     }
+
 
     public void postDownturn(int currentPos, int downturnNum){
         int nextPage = datas.size() - (currentPos + 10 + downturnNum);

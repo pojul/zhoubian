@@ -3,7 +3,6 @@ package com.yjyc.zhoubian.im.chat.ui;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,34 +14,29 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
-import com.yjyc.zhoubian.adapter.MessageListAdapter;
-import com.yjyc.zhoubian.app.BaseApplication;
-import com.yjyc.zhoubian.im.entity.ChatMessage;
+import com.yjyc.zhoubian.im.ECMIm;
+import com.yjyc.zhoubian.im.chat.adapter.MessageListAdapter;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
 import com.yjyc.zhoubian.ui.activity.BaseActivity;
-import com.yjyc.zhoubian.ui.activity.BlackListActivity;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
-import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yuntongxun.ecsdk.ECChatManager;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECMessage;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
-import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import com.yuqian.mncommonlibrary.utils.LogUtil;
-
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,21 +58,22 @@ public class ChatActivity extends BaseActivity {
     TextView holdOnTv;
     @BindView(R.id.message_list)
     RecyclerView messageList;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
 
-    private String friendId;
+    public String friendId;
     private Login login;
     private UserInfo owner;
     private UserInfo friend;
     private static final int INIT = 374;
-    private MessageListAdapter messageListAdapter;
-    private List<ChatMessage> datas = new ArrayList<>();
+    public MessageListAdapter messageListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
-
+        BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
         login = Hawk.get("LoginModel");
         if(login == null){
             startActivity(new Intent(this, LoginActivity.class));
@@ -91,9 +86,9 @@ public class ChatActivity extends BaseActivity {
             finish();
             return;
         }
-
-        mHandler.sendEmptyMessageDelayed(INIT, 100);
-
+        /*mHandler.sendEmptyMessageDelayed(INIT, 100);*/
+        ECMIm.getInstance().registerChatActivity(this);
+        initView();
     }
 
    /* private void showSendBt(){
@@ -105,6 +100,7 @@ public class ChatActivity extends BaseActivity {
     }*/
 
     private void initView(){
+
         inputEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -127,12 +123,11 @@ public class ChatActivity extends BaseActivity {
         owner = Hawk.get("userInfo");
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         messageList.setLayoutManager(layoutManager);
+
         reqFriendInfo(friendId);
-        BaseApplication.application.registerReceiveMessage(iReceiveMessage);
     }
 
     private void reqFriendInfo(String friendId) {
-        LoadingDialog.showLoading(this);
         OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.USERINFO)
@@ -140,28 +135,29 @@ public class ChatActivity extends BaseActivity {
                 .execute(new AbsJsonCallBack<UserInfoModel, UserInfo>() {
                     @Override
                     public void onSuccess(UserInfo body) {
-                        LoadingDialog.closeLoading();
                         friend = body;
-                        try{
-                            friend.uid = Integer.parseInt(friendId);
-                        }catch(Exception e){
-                            showToast("数据错误");
-                            finish();
-                        }
-                        messageListAdapter = new MessageListAdapter(datas, ChatActivity.this, owner, friend);
+                        friend.uid = Integer.parseInt(friendId);
+                        messageListAdapter = new MessageListAdapter(ECMIm.getInstance().getChatRoomMessages(friendId), ChatActivity.this, owner, friend);
                         messageList.setAdapter(messageListAdapter);
+                        String title;
+                        if(friend.nickname != null && !friend.nickname.isEmpty()){
+                            title = friend.nickname;
+                        }else{
+                            title = "佚名";
+                        }
+                        tv_title.setText(title);
+                        ECMIm.getInstance().clearConversationUndead(friendId);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        LoadingDialog.closeLoading();
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                         finish();
                     }
                 });
     }
 
-    @OnClick({R.id.voice_hold, R.id.emoji, R.id.more_message, R.id.send, R.id.hold_on_tv})
+    @OnClick({R.id.voice_hold, R.id.emoji, R.id.more_message, R.id.send, R.id.hold_on_tv, R.id.iv_left})
     public void click(View v){
         switch (v.getId()){
             case R.id.voice_hold:
@@ -187,6 +183,9 @@ public class ChatActivity extends BaseActivity {
                 break;
             case R.id.hold_on_tv:
                 break;
+            case R.id.iv_left:
+                finish();
+                break;
         }
     }
 
@@ -199,8 +198,15 @@ public class ChatActivity extends BaseActivity {
             ECChatManager manager = ECDevice.getECChatManager();
             manager.sendMessage(msg, messageSendListener);
             messageListAdapter.addMessage(msg);
+            checkConversation(msg);
         } catch (Exception e) {
             LogUtil.e("send message fail , e=" + e.getMessage());
+        }
+    }
+
+    private void checkConversation(ECMessage ecMessage) {
+        if(ECMIm.getInstance().getConversation(friendId) == null){
+            ECMIm.getInstance().createConversation(friend, (friendId + ""), ecMessage);
         }
     }
 
@@ -208,28 +214,16 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void onSendMessageComplete(ECError error, ECMessage message) {
             LogUtil.e("onSendMessageComplete , error=" + error.errorMsg);
-            messageListAdapter.notifyMessageStatus(message);
             if (message == null) {
                 return;
             }
+            messageListAdapter.notifyMessageStatus(message);
         }
 
         @Override
         public void onProgress(String msgId, int totalByte, int progressByte) {
             // 处理文件发送上传进度（尽上传文件、图片时候SDK回调该方法）
             LogUtil.e("send message progress , progressByte=" + progressByte);
-        }
-    };
-
-    private BaseApplication.IReceiveMessage iReceiveMessage = new BaseApplication.IReceiveMessage() {
-        @Override
-        public void OnReceivedMessage(ECMessage ecMessage) {
-            messageListAdapter.addMessage(ecMessage);
-        }
-
-        @Override
-        public void onReceiveOfflineMessage(List<ECMessage> list) {
-            messageListAdapter.addMessage(list);
         }
     };
 
@@ -257,7 +251,7 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        BaseApplication.application.unRegisterReceiveMessage(iReceiveMessage);
+        ECMIm.getInstance().unRegisterChatActivity();
         super.onDestroy();
     }
 }

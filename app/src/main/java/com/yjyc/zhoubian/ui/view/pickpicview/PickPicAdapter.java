@@ -24,6 +24,9 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.utils.ArrayUtil;
+import com.yjyc.zhoubian.utils.FileUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +65,13 @@ public class PickPicAdapter extends RecyclerView.Adapter<PickPicAdapter.MyViewHo
             holder.tv.setVisibility(View.VISIBLE);
             holder.pic.setVisibility(View.VISIBLE);
             holder.picAdd.setVisibility(View.GONE);
-            File file = new File(pic.getPath());
-            Glide.with(mContext).load(file).into(holder.pic);
+            String path = pic.getPath();
+            if(FileUtil.isNetUrl(path)){
+                Glide.with(mContext).load(path).into(holder.pic);
+            }else{
+                File file = new File(pic.getPath());
+                Glide.with(mContext).load(file).into(holder.pic);
+            }
         }
         holder.delete.setOnClickListener(v->{
             datas.remove(position);
@@ -156,6 +164,17 @@ public class PickPicAdapter extends RecyclerView.Adapter<PickPicAdapter.MyViewHo
             datas.clear();
             notifyDataSetChanged();
         }
+    }
+
+    public void setdata(List<String> pics) {
+        List<LocalMedia> localMedias = new ArrayList<>();
+        for (int i = 0; i < pics.size(); i++) {
+            LocalMedia localMedia = new LocalMedia();
+            localMedia.setPath(pics.get(i));
+            localMedias.add(localMedia);
+        }
+        this.datas = localMedias;
+        notifyDataSetChanged();
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {

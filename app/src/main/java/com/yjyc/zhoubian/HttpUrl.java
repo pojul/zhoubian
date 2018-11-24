@@ -76,6 +76,15 @@ public class HttpUrl {
     public static final String USERREPORT = BASE_URL + "index/Report/userReport";
     public static final String INFOPOST = BASE_URL + "index/InvestmentCooperation/infoPost";
     public static final String GRABREDENVELOPE = BASE_URL + "index/Post/grabRedEnvelope";
-
+    public static final String POSTSAVEDRAFT = BASE_URL + "index/Post/postSaveDraft";
+    public static final String POSTDRAFT = BASE_URL + "index/post/postDraft";
+    public static final String DELETEPOSTDRAFT = BASE_URL + "index/post/deletePostDraft";
+    public static final String POSTDRAFTDETAIL = BASE_URL + "index/Post/postDraftDetail";
+    public static final String EDITPOSTDRAFT = BASE_URL + "index/post/editPostDraft";
+    public static final String EDITPOST = BASE_URL + "index/post/editPost";
+    public static final String GETPOSTDETAIL = BASE_URL + "index/Post/getPostDetail";
+    public static final String INTERESTEDPOSTS = BASE_URL + "index/post/interestedPosts";
+    public static final String HOBBYPOSTS = BASE_URL + "index/Index/hobbyPosts";
+    public static final String FOLLOWUSERPOSTS = BASE_URL + "index/Index/followUserPosts";
 
 }
