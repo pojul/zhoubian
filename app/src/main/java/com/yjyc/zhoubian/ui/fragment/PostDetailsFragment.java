@@ -210,19 +210,16 @@ public class PostDetailsFragment extends BaseFragment {
     private void getPostDetails() {
         LoadingDialog.showLoading(getActivity());
         /**需去掉身份验证**/
-        int uid = -1;
-        String token = "";
         Login loginModel = Hawk.get("LoginModel");
-        if(loginModel != null){
-            uid = loginModel.uid;
-            token = loginModel.token;
-        }
-        OkhttpUtils.with()
+        OkhttpUtils okhttpUtils = OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.POSTDETAIL)
-                .addParams("id", ("" + postId))
-                .addParams("uid", ("" + uid))
-                .addParams("token", token)
+                .addParams("id", ("" + postId));
+        if(loginModel != null){
+            okhttpUtils.addParams("uid", ("" + loginModel.uid))
+                    .addParams("token", "" + loginModel.token);
+        }
+        okhttpUtils
                 .execute(new AbsJsonCallBack<PostDetailModel, PostDetail>() {
 
                     @Override
@@ -508,20 +505,16 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void reqReplyLists() {
-        /**需去掉身份验证**/
-        int uid = 0;
-        String token = "";
         Login loginModel = Hawk.get("LoginModel");
-        if(loginModel != null){
-            uid = loginModel.uid;
-            token = loginModel.token;
-        }
-        OkhttpUtils.with()
+        OkhttpUtils  okhttpUtils = OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.REPLYPOSTLIST)
-                .addParams("uid", ("" + uid))
-                .addParams("token", token)
-                .addParams("post_id", ("" + postDetail.id))
+                .addParams("post_id", ("" + postDetail.id));
+        if(loginModel != null){
+            okhttpUtils.addParams("uid", ("" + loginModel.uid))
+                    .addParams("token", "" + loginModel.token);
+        }
+        okhttpUtils
                 .execute(new AbsJsonCallBack<ReplyPostListModel, List<ReplyPostList.ReplyPost>>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {

@@ -88,6 +88,7 @@ public class BaseApplication extends Application {
     private BDLocation location;
 
     public static IWXAPI mWxApi;
+    public static boolean firstIn = true;
 
     @Override
     public void onCreate() {

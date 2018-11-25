@@ -189,7 +189,8 @@
             android:name=".ui.activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+            android:windowSoftInputMode="adjustUnspecified|stateHidden"
+            android:launchMode="singleInstance"/>
         <activity
             android:name=".ui.activity.VermicelliListActivity"
             android:screenOrientation="portrait"

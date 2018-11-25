@@ -209,7 +209,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
                 Glide.with(this).load(experienceDetail.detail.pic.get(i)).into(iv);
             }
         }
-        if(experienceDetail != null && login.uid != experienceDetail.detail.uid){
+        if(login != null && experienceDetail != null && login.uid != experienceDetail.detail.uid){
             follow.setVisibility(View.VISIBLE);
         }
         if(experienceDetail.detail.is_follow_user){

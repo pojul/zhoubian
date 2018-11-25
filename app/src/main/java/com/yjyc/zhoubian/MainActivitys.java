@@ -41,6 +41,7 @@ import com.yjyc.zhoubian.ui.activity.LoginActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yjyc.zhoubian.ui.fragment.ConversationFragment;
 import com.yjyc.zhoubian.ui.fragment.MainFragment;
+import com.yjyc.zhoubian.ui.fragment.MainsFragment;
 import com.yjyc.zhoubian.ui.fragment.MeFragment;
 import com.yjyc.zhoubian.ui.fragment.PublishFragment;
 import com.yjyc.zhoubian.ui.fragment.ValuableBookFragment;
@@ -103,7 +104,7 @@ public class MainActivitys extends AppCompatActivity {
 
     private PublishFragment publishFragment;
     private ValuableBookFragment valuableBookFragment;
-    private MainFragment mainFragment;
+    private MainsFragment mainsFragment;
     //private DopeFragment dopeFragment;
     public ConversationFragment conversationFragment;
     private MeFragment meFragment;
@@ -221,7 +222,11 @@ public class MainActivitys extends AppCompatActivity {
 
     @OnClick(R.id.btn_bottom_bar_04)
     public void btn_bottom_bar_04() {
-            setFragmentSelection(R.id.btn_bottom_bar_04);
+        if(!Hawk.contains("LoginModel")){
+            startActivity(new Intent(this, LoginActivity.class));
+            return;
+        }
+        setFragmentSelection(R.id.btn_bottom_bar_04);
     }
 
     @OnClick(R.id.btn_bottom_bar_05)
@@ -258,11 +263,11 @@ public class MainActivitys extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_bottom_bar_03:
-                if (mainFragment == null) {
-                    mainFragment = new MainFragment(this);
-                    fragmentTransaction.add(R.id.frame_content, mainFragment);
+                if (mainsFragment == null) {
+                    mainsFragment = new MainsFragment();
+                    fragmentTransaction.add(R.id.frame_content, mainsFragment);
                 } else {
-                    fragmentTransaction.show(mainFragment);
+                    fragmentTransaction.show(mainsFragment);
                 }
                 break;
             case R.id.btn_bottom_bar_04:
@@ -293,8 +298,8 @@ public class MainActivitys extends AppCompatActivity {
         if (valuableBookFragment != null) {
             transaction.hide(valuableBookFragment);
         }
-        if (mainFragment != null) {
-            transaction.hide(mainFragment);
+        if (mainsFragment != null) {
+            transaction.hide(mainsFragment);
         }
         if (conversationFragment != null) {
             transaction.hide(conversationFragment);
@@ -540,8 +545,8 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     public void postDownturn(int currentPos, int downturnNum){
-        if(mainFragment != null){
-            mainFragment.postDownturn(currentPos, downturnNum);
+        if(mainsFragment != null){
+            mainsFragment.postDownturn(currentPos, downturnNum);
         }
     }
 
