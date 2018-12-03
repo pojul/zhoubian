@@ -240,6 +240,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -258,6 +259,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="今天还可抢10次红包，每天5次机会，分享任何帖子到朋友圈、好友可以加2次机会（只限当天用完）；塞红包加10次"
@@ -271,6 +273,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -319,6 +322,7 @@
             </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#ffffff"
@@ -494,6 +498,20 @@
                     android:background="@drawable/me_right"
                     />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/system_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:paddingBottom="10dp"
+                android:textSize="13sp"
+                android:textColor="#454545"
+                android:text="受到收到树倒猢狲散但是要手动刷新速度速度啊大大好塞萨速度速度测试的合适的话还是大城市的还是是个好的公司v管道工程施工场地是电池更换"
+                />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

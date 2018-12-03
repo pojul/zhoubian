@@ -15,6 +15,7 @@ public class ExperienceList {
         public int uid;
         public int view;
         public String cate_name;
+        public String custom_cate;
         public String user_name;
         public String time;
     }

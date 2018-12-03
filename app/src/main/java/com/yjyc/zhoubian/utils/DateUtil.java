@@ -1,5 +1,7 @@
 package com.yjyc.zhoubian.utils;
 
+import com.yjyc.zhoubian.im.entity.ChatMessage;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,13 +35,14 @@ public class DateUtil {
 
 
     public static String getTimemess(long timeMilli) {
-        long dsTimeMilli = System.currentTimeMillis() - timeMilli;
-        long l;
-        if (dsTimeMilli <= 24 * 60 * 60 * 1000) {
+        String date1 = converterDate(System.currentTimeMillis()).split(" ")[0];
+        String date2 = converterDate(timeMilli).split(" ")[0];
+        if (date1.equals(date2)) {
             String hours = converterDate(timeMilli).split(" ")[1];
             return hours.substring(0, (hours.length() - 3));
         } else {
-            return converterDate(timeMilli);
+            String date = converterDate(timeMilli);
+            return date.substring(0, date.lastIndexOf(":"));
         }
     }
 

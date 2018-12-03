@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -14,10 +15,14 @@ import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.app.BaseApplication;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.LoginCode;
 import com.yjyc.zhoubian.model.LoginCodeModel;
 import com.yjyc.zhoubian.model.LoginModel;
+import com.yjyc.zhoubian.model.UpdateUserTime;
+import com.yjyc.zhoubian.model.UpdateUserTimeModel;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
@@ -151,6 +156,7 @@ public class LoginActivity extends BaseActivity {
                         body.uid = loginModel.uid;
                         Hawk.put("LoginModel", loginModel);
                         Hawk.put("userInfo", body);
+                        updateUserTime();
                         BaseApplication.application.loginIm(loginModel);
                         finish();
                     }
@@ -163,6 +169,28 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public void onFinish() {
                         ProgressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void updateUserTime() {
+        Login login = Hawk.get("LoginModel");
+        if(login == null){
+            return;
+        }
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.UPDATEUSERTIME)
+                .execute(new AbsJsonCallBack<UpdateUserTimeModel, UpdateUserTime>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                    }
+                    @Override
+                    public void onSuccess(UpdateUserTime body) {
+                        if(!body.user_state){
+                            finish();
+                            System.exit(0);
+                        }
                     }
                 });
     }

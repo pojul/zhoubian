@@ -65,10 +65,17 @@ public class MeFragment extends Fragment{
     @BindView(R.id.iv_headUrl)
     RoundedImageView iv_headUrl;
 
+    @BindView(R.id.system_msg)
+    TextView system_msg;
+    @BindView(R.id.note)
+    TextView note;
+
     Unbinder unbinder;
     RequestOptions options;
     public UserInfo body;
     Login loginModel;
+    private String noteStr = "今天还可抢10次红包，每天5次机会，分享任何帖子到朋友圈、好友可以加2次机会（只限当天用完）；塞红包加10次";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -99,8 +106,6 @@ public class MeFragment extends Fragment{
                 .addParams("uid", loginModel.uid + "")
                 .addParams("token", loginModel.token)
                 .execute(new AbsJsonCallBack<UserInfoModel, UserInfo>() {
-
-
                     @Override
                     public void onSuccess(UserInfo body) {
                         body.uid = loginModel.uid;
@@ -122,9 +127,14 @@ public class MeFragment extends Fragment{
     }
 
     private void setView(UserInfo body) {
-        if(!StringUtils.isEmpty(body.head_url_img)){
+        if(body.head_url_img != null && !StringUtils.isEmpty(body.head_url_img)){
             Glide.with(getActivity())
                     .load(body.head_url_img)
+                    .apply(options)
+                    .into(iv_headUrl);
+        }else if(body.head_url != null && !body.head_url.isEmpty()){
+            Glide.with(getActivity())
+                    .load(body.head_url)
                     .apply(options)
                     .into(iv_headUrl);
         }
@@ -147,6 +157,37 @@ public class MeFragment extends Fragment{
         tv_balance.setText(StringUtils.isEmpty(body.balance) ? "" : body.balance);
 
         tv_age.setText(body.age + "岁");
+        if (body.system_msg != null && !body.system_msg.isEmpty()){
+            system_msg.setText("\u3000\u3000" + body.system_msg);
+        }else{
+            system_msg.setText("");
+        }
+        //noteStr = "今天还可抢10次红包，每天5次机会，分享任何帖子到朋友圈、好友可以加2次机会（只限当天用完）；塞红包加10次";
+        noteStr = "今天还可抢" + body.grad_red_num + "次红包，每天" + body.red_num + "次机会，分享任何帖子到朋友圈、好友可以加2次机会" +
+                "（只限当天用完）；塞红包加" + body.post_red_num + "次";
+        note.setText(noteStr);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            Login login = Hawk.get("LoginModel");
+            if(login != null){
+                userInfo();
+            }
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            Login login = Hawk.get("LoginModel");
+            if(login != null){
+                userInfo();
+            }
+        }
     }
 
     @OnClick(R.id.iv_edit_profile)

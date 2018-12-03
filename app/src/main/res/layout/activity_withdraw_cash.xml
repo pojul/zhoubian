@@ -62,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="直接提现至微信，1元、2元直接到账，无手续费。5-500元提现24小时审核通过后发放，提现系统将收购2%手续费"
+                android:text="直接提现至微信，提现24小时审核通过后发放，提现系统将收购2%手续费"
                 android:textSize="12sp"
                 android:textColor="#5c5c5c"
                 android:lineSpacingExtra="5dp"

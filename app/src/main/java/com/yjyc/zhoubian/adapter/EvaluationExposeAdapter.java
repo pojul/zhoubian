@@ -105,8 +105,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
     private void bindTypeOne(MyViewHolderOne holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
         Login login = Hawk.get("LoginModel");
-        if(evaluationExpose.user_info != null && evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
+        if(evaluationExpose.user_info != null && evaluationExpose.user_info.head_url != null && !evaluationExpose.user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.user_info.head_url).into(holder.iv_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_head_url);
         }
@@ -115,8 +115,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.tv_nickname.setText("佚名");
         }
-        if(evaluationExpose.be_user_info != null && evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.iv_be_head_url);
+        if(evaluationExpose.be_user_info != null && evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.iv_be_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_be_head_url);
         }
@@ -147,8 +147,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
             }else{
                 holder.operate_ll.setVisibility(View.GONE);
             }
-            if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
+            if(evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.reply_photo);
             }else{
                 Glide.with(mContext).load(R.drawable.test_me).into(holder.reply_photo);
             }
@@ -170,13 +170,23 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.delete.setOnClickListener(v->{
             deleteReply(evaluationExpose, position);
         });
+        holder.iv_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.user_id + "");
+            mContext.startActivity(intent);
+        });
+        holder.iv_be_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.be_exposed_user_id + "");
+            mContext.startActivity(intent);
+        });
     }
 
     private void bindTypeTwo(MyViewHolderTwo holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
         Login login = Hawk.get("LoginModel");
-        if(evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
+        if(evaluationExpose.user_info.head_url != null && !evaluationExpose.user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.user_info.head_url).into(holder.iv_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_head_url);
         }
@@ -185,8 +195,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.tv_nickname.setText("佚名");
         }
-        if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.iv_be_head_url);
+        if(evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.iv_be_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_be_head_url);
         }
@@ -217,8 +227,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
             }else{
                 holder.operate_ll.setVisibility(View.GONE);
             }
-            if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
+            if(evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.reply_photo);
             }else{
                 Glide.with(mContext).load(R.drawable.test_me).into(holder.reply_photo);
             }
@@ -241,13 +251,23 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.delete.setOnClickListener(v->{
             deleteReply(evaluationExpose, position);
         });
+        holder.iv_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.user_id + "");
+            mContext.startActivity(intent);
+        });
+        holder.iv_be_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.be_exposed_user_id + "");
+            mContext.startActivity(intent);
+        });
     }
 
     private void bindTypeThree(MyViewHolderThree holder, int position) {
         AcceptEvaluationExposes.AcceptEvaluationExpose evaluationExpose = datas.get(position);
         Login login = Hawk.get("LoginModel");
-        if(evaluationExpose.user_info.head_url_img != null && !evaluationExpose.user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.user_info.head_url_img).into(holder.iv_head_url);
+        if(evaluationExpose.user_info.head_url != null && !evaluationExpose.user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.user_info.head_url).into(holder.iv_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_head_url);
         }
@@ -256,8 +276,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }else{
             holder.tv_nickname.setText("佚名");
         }
-        if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.iv_be_head_url);
+        if(evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+            Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.iv_be_head_url);
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holder.iv_be_head_url);
         }
@@ -288,8 +308,8 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
             }else{
                 holder.operate_ll.setVisibility(View.GONE);
             }
-            if(evaluationExpose.be_user_info.head_url_img != null && !evaluationExpose.be_user_info.head_url_img.isEmpty()){
-                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url_img).into(holder.reply_photo);
+            if(evaluationExpose.be_user_info.head_url != null && !evaluationExpose.be_user_info.head_url.isEmpty()){
+                Glide.with(mContext).load(evaluationExpose.be_user_info.head_url).into(holder.reply_photo);
             }else{
                 Glide.with(mContext).load(R.drawable.test_me).into(holder.reply_photo);
             }
@@ -318,6 +338,16 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         });
         holder.delete.setOnClickListener(v->{
             deleteReply(evaluationExpose, position);
+        });
+        holder.iv_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.user_id + "");
+            mContext.startActivity(intent);
+        });
+        holder.iv_be_head_url.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid", evaluationExpose.be_exposed_user_id + "");
+            mContext.startActivity(intent);
         });
     }
 

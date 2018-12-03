@@ -85,6 +85,15 @@ public class MyPublishActivity extends BaseActivity {
     TextView operate;
     @BindView(R.id.root_ll)
     public LinearLayout root_ll;
+    @BindView(R.id.regist_time)
+    TextView regist_time;
+    @BindView(R.id.come_before)
+    TextView come_before;
+    @BindView(R.id.note_ll)
+    LinearLayout note_ll;
+    @BindView(R.id.note_text)
+    TextView note_text;
+
 
     private Context mContext;
     RequestOptions options;
@@ -97,6 +106,11 @@ public class MyPublishActivity extends BaseActivity {
     private MyExposeFragment myExposeFragment;
     private UserInfo userInfo;
     private CheckEvaluationExpose checkEvaluationExpose;
+
+    private String giveEvaluationStr = "1.评价仅作为参考，具体请自行分辨2.若被别人评价，觉得不相符，请不要玻璃心，回复解释即可。";
+    private String giveExposeStr = "1，被他骗了或套路了，请在此揭露详细过程。\n2、被揭露不一定代表事实，可能是网友偏见，也可能是诬陷，具体还需要你自己分辨，仅供参考。\n3.若被别人揭露，觉得不相符，请不要玻璃心，回复解释下即可。";
+    private String recEvaluationStr = "设置此栏，万一有人到处刷评论，你就可以在这里看见他曾经所作所为，供你自行分辨可信度。";
+    private String recExposeStr = "设置此栏，万一有人到处抹黑别人，你就可以在这里看见他曾经所作所为，供你自行分辨可信度。";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,11 +141,38 @@ public class MyPublishActivity extends BaseActivity {
         }else{
             operate.setVisibility(View.VISIBLE);
         }
+
+        setNote();
+
         checkEvaluationExpose();
         /*if(Hawk.contains("userInfo")){
             UserInfo userInfo = Hawk.get("userInfo");
             setView(userInfo);
         }*/
+    }
+
+    private void setNote() {
+        switch (mViewPager.getCurrentItem()){
+            case 0:
+                note_ll.setVisibility(View.GONE);
+                break;
+            case 1:
+                note_ll.setVisibility(View.VISIBLE);
+                note_text.setText(giveEvaluationStr);
+                break;
+            case 2:
+                note_ll.setVisibility(View.VISIBLE);
+                note_text.setText(giveExposeStr);
+                break;
+            case 3:
+                note_ll.setVisibility(View.VISIBLE);
+                note_text.setText(recEvaluationStr);
+                break;
+            case 4:
+                note_ll.setVisibility(View.VISIBLE);
+                note_text.setText(recExposeStr);
+                break;
+        }
     }
 
     public void checkEvaluationExpose(){
@@ -194,9 +235,14 @@ public class MyPublishActivity extends BaseActivity {
     }
 
     private void setView(UserInfo body) {
-        if(!StringUtils.isEmpty(body.head_url_img)){
+        if(body.head_url_img != null && !StringUtils.isEmpty(body.head_url_img)){
             Glide.with(this)
                     .load(body.head_url_img)
+                    .apply(options)
+                    .into(iv_headUrl);
+        }else if(body.head_url != null && !body.head_url.isEmpty()){
+            Glide.with(this)
+                    .load(body.head_url)
                     .apply(options)
                     .into(iv_headUrl);
         }
@@ -212,7 +258,23 @@ public class MyPublishActivity extends BaseActivity {
         StringBuilder city = new StringBuilder();
         city.append(StringUtils.isEmpty(body.provinces) ? "" : body.provinces).append
                 (StringUtils.isEmpty(body.city) ? "" : body.city);
-        tv_cty.setText("85-90年   " + city.toString());
+
+        String ageStr ="";
+        if(body.birthday != null && !body.birthday.isEmpty()){
+            String ageYears = body.birthday.substring(0, body.birthday.indexOf("-"));
+            int lastYeat = Integer.parseInt( (ageYears.charAt((ageYears.length() - 1)) + "") );
+            int years = Integer.parseInt(ageYears);
+            if(lastYeat < 5){
+                ageStr = ageYears.substring(ageYears.length() - 2, (ageYears.length() - 1)) + 0 + "-" +
+                        ageYears.substring(ageYears.length() - 2, (ageYears.length() - 1)) + 5 + "年";
+            }else{
+                String yearsMore = years + 5 + "";
+                ageStr = ageYears.substring(ageYears.length() - 2, (ageYears.length() - 1)) + 5 + "-" +
+                        yearsMore.substring(yearsMore.length() - 2, (yearsMore.length() - 1)) + 0 + "年";
+            }
+        }
+
+        tv_cty.setText(ageStr + "   " + city.toString());
 
         tv_sign.setText(StringUtils.isEmpty(body.sign) ? "" : body.sign);
 
@@ -222,6 +284,8 @@ public class MyPublishActivity extends BaseActivity {
 
         String phone = userInfo.phone;
         tv_phone.setText("（" + phone.substring(0, 3)+ "****" + phone.substring(7, phone.length()) + "）");
+        regist_time.setText("注册于" + body.register_time);
+        come_before.setText(body.user_view_time + "来过");
     }
 
     private void initViewPager() {
@@ -278,6 +342,7 @@ public class MyPublishActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 Login login = Hawk.get("LoginModel");
+                setNote();
                 if(login == null || (login.uid + "").equals(uid)){
                     operate.setVisibility(View.GONE);
                 }else{

@@ -1,5 +1,7 @@
 package com.yjyc.zhoubian.utils;
 
+import com.yjyc.zhoubian.HttpUrl;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,10 +110,10 @@ public class ArrayUtil {
             return null;
         }
         for (int j = 0; j < localPic.size(); j++) {
-            if (localPic.get(j).contains("http://zbxx.whmstc.cn/uploads")) {
-                localPic.set(j, localPic.get(j).replace("http://zbxx.whmstc.cn/uploads", ""));
+            if ( localPic.get(j).contains((HttpUrl.BASE_URL_NOEND + "/uploads")) ) {
+                localPic.set(j, localPic.get(j).replace((HttpUrl.BASE_URL_NOEND + "/uploads"), ""));
             } else {
-                localPic.set(j, localPic.get(j).replace("http://zbxx.whmstc.cn", ""));
+                localPic.set(j, localPic.get(j).replace(HttpUrl.BASE_URL_NOEND, ""));
             }
         }
         Iterator<String> it = localPic.iterator();

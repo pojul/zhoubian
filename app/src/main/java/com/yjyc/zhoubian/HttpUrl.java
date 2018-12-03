@@ -5,8 +5,12 @@ package com.yjyc.zhoubian;
  */
 
 public class HttpUrl {
-    public static final String BASE_URL = "http://zbxx.whmstc.cn/";
-    public static final String BASE_URL_NOEND = "http://zbxx.whmstc.cn";
+    //public static final String BASE_URL = "http://zbxx.whmstc.cn/";
+    //public static final String BASE_URL_NOEND = "http://zbxx.whmstc.cn";
+
+    public static final String BASE_URL = "http://www.zhoubianxinxi.com/";
+    public static final String BASE_URL_NOEND = "http://www.zhoubianxinxi.com";
+
     public static final String LOGINCODE = BASE_URL + "common/Verification/loginCode";
     public static final String LOGIN = BASE_URL + "index/Login/login";
     public static final String USERINFO = BASE_URL + "index/User/userInfo";
@@ -86,5 +90,13 @@ public class HttpUrl {
     public static final String INTERESTEDPOSTS = BASE_URL + "index/post/interestedPosts";
     public static final String HOBBYPOSTS = BASE_URL + "index/Index/hobbyPosts";
     public static final String FOLLOWUSERPOSTS = BASE_URL + "index/Index/followUserPosts";
+
+    public static final String GETCHATSTATE = BASE_URL + "index/Blacklist/getChatState";
+    public static final String UPDATEUSERTIME = BASE_URL + "index/User/updateUserTime";
+    public static final String GETPIC = BASE_URL + "index/Index/getPic";
+    public static final String SITEMSG = BASE_URL + "index/SiteMsg/siteMsg";
+    public static final String UPDATEAPP = BASE_URL + "index/Index/updateApp";
+
+    public static final String userPostNum = BASE_URL + "index/Post/userPostNum";
 
 }

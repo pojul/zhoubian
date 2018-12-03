@@ -204,7 +204,8 @@ public class PublishValuableBookActivity extends BaseActivity {
                     public void onSuccess(ExperienceSave body) {
                         LoadingDialog.closeLoading();
                         showToast("发布成功");
-                        clearData();
+                        finish();
+                        //clearData();
                     }
                 });
     }

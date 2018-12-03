@@ -18,9 +18,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="想被推送更多自己感兴趣的信息，可以在下面添加自己的爱好类别和爱好关键词，系统会给你推送更多这些方面的信息哦。"
+                android:text="设置爱好后，首页“爱好”栏将全是你爱好的信息哦!"
                 android:textSize="12sp"
-                android:textColor="#6d6d6d"
+                android:textColor="@color/red"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="11dp"
@@ -58,16 +58,32 @@
                 app:columnNum="5"
                 app:overspread="false" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#080808"
-                android:text="请输入您的爱好关键词"
-                android:textSize="14sp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="30dp"
-                />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#080808"
+                    android:text="请输入您的爱好关键词"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="30dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#565656"
+                    android:text="(关键词之间请一定用空格隔开)"
+                    android:textSize="12sp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="29dp"
+                    />
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/et1"
@@ -82,12 +98,13 @@
                 android:hint="输入关键词用空格隔开"
                 android:textSize="12sp"
                 android:singleLine="true"
-                android:maxLength="8"
+                android:maxLength="80"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
                 />
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="举例：比如我最近在找坚果R1手机，也喜欢吃各种水果，也喜欢周杰伦演唱会。"
@@ -110,25 +127,41 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="不想看见某些自己不感兴趣的信息，可以在下面添加要屏蔽掉的类别和关键词，系统会帮你屏蔽掉不给你推送这方面的信息哦。"
+                    android:text="设置屏蔽后，那些厌恶的信息就不见啦!"
                     android:textSize="12sp"
-                    android:textColor="#6d6d6d"
+                    android:textColor="@color/red"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="13dp"
                     android:lineSpacingExtra="5dp"
                     />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#080808"
-                    android:text="请选择爱屏蔽帖子的类别"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="25dp"
-                    />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#080808"
+                        android:text="请选择爱屏蔽帖子的类别"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="25dp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#565656"
+                        android:text="(关键词之间请一定用空格隔开)"
+                        android:textSize="12sp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="24dp"
+                        />
+
+                </LinearLayout>
 
                 <net.masonliu.multipletextview.library.MultipleTextViewGroup
                     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -174,12 +207,13 @@
                     android:hint="输入关键词用空格隔开"
                     android:textSize="12sp"
                     android:singleLine="true"
-                    android:maxLength="8"
+                    android:maxLength="80"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     />
 
                 <TextView
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="举例：比如我最近在找坚果R1手机，也喜欢吃各种水果，也喜欢周杰伦演唱会。"

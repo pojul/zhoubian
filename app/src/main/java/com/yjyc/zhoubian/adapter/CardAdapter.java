@@ -3,9 +3,14 @@ package com.yjyc.zhoubian.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +39,7 @@ import com.yjyc.zhoubian.ui.activity.LoginActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
 import com.yjyc.zhoubian.ui.activity.SearchActivity;
+import com.yjyc.zhoubian.utils.DensityUtil;
 import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
@@ -63,9 +69,6 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         this.mContext = mCcontext;
         options = new RequestOptions()
                 .centerCrop().placeholder(R.drawable.img_bg).error(R.drawable.img_bg);
-    }
-
-    public CardAdapter() {
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener ){
@@ -170,10 +173,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 || (position % 21 == 0)){
+        if(position != 0 && ((position + 1) % 21 == 0)){
             return TYPE_ZERO;//第一种布局
         }
-        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -   (position/21 + 1));
+        SearchPosts.SearchPost search = datas.get(position == 0 ? 0 : position -  position/21);
         if(search.pic != null && search.pic.size() > 1){
             return TYPE_THREE;
         }else if(search.pic != null && search.pic.size() == 1){
@@ -220,24 +223,16 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
 
         if( mOnItemClickListener!= null){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOnItemClickListener.onClick(position);
-                }
-            });
-            holder. itemView.setOnLongClickListener( new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mOnItemClickListener.onLongClick(position);
-                    return false;
-                }
+            holder.itemView.setOnClickListener(v -> mOnItemClickListener.onClick(position));
+            holder. itemView.setOnLongClickListener(v -> {
+                mOnItemClickListener.onLongClick(position);
+                return false;
             });
         }
     }
 
     private void bindTypeZero(final MyViewHolderZero holderZero, int position) {
-        holderZero.tv.setText((position / 21) * 20 + "m深");
+        holderZero.tv.setText(((position + 1) / 21) * 20 + "m深");
         if(position == 0){
             holderZero.tv.setVisibility(View.INVISIBLE);
         }else{
@@ -245,9 +240,9 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
         holderZero.downturnNum.setOnClickListener(v->{
             if(mContext instanceof MainActivitys){
-                ((MainActivitys)mContext).postDownturn((position == 0 ? 0 : position - (1+ position / 21)), 20);
+                ((MainActivitys)mContext).postDownturn((position == 0 ? 0 : position - position/ 21), 20);
             }else if(mContext instanceof SearchActivity){
-                ((SearchActivity)mContext).postDownturn((position == 0 ? 0 : position - (1 + position / 21)), 20);
+                ((SearchActivity)mContext).postDownturn((position == 0 ? 0 : position - position/ 21), 20);
             }
         });
         holderZero.shutdown.setOnClickListener(v->{
@@ -257,7 +252,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             DialogUtil.getInstance().postShutDownPop(mContext, holderZero.rootLl);
             DialogUtil.getInstance().setDialogClick(str -> {
                 int num = 0;
-                int currentPos = (position == 0 ? 0 : position - ((1 + position / 21)));
+                int currentPos = (position == 0 ? 0 : position - position / 21);
                 try{
                     num = Integer.parseInt(str);
                 }catch(Exception e){}
@@ -287,9 +282,28 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
             showPopWindow(holderOne.iv_delete, isDown, position, itemPosition);
         });
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
-        if(!StringUtils.isEmpty(sp.title)){
-            holderOne.tv_title.setText(sp.title);
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  itemPosition/21);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holderOne.tv_title.setText(spannableString);
+        }else{
+            holderOne.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){
@@ -312,9 +326,9 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             holderOne.iv_red_package.setVisibility(View.INVISIBLE);
         }
 
-        if(!StringUtils.isEmpty(sp.price)){
+        /*if(!StringUtils.isEmpty(sp.price)){
             holderOne.tv_price.setText(sp.price);
-        }
+        }*/
     }
 
     private void showPopWindow(ImageView iv_delete, boolean isDown, int[] location, int itemPosition) {
@@ -342,7 +356,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         });
         notInterested.setOnClickListener(v->{
             synchronized (datas){
-                datas.remove(itemPosition -  (1 + itemPosition/21));
+                datas.remove(itemPosition -  itemPosition/21);
                 notifyItemRemoved(itemPosition);
                 notifyItemRangeChanged(0, datas.size());
             }
@@ -350,7 +364,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         });
         pullBlack.setOnClickListener(v->{
             popWindow.dismiss();
-            SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
+            SearchPosts.SearchPost sp = datas.get(itemPosition -  itemPosition/21);
             pullBlackUser(sp.user_id);
         });
 
@@ -447,9 +461,28 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
-        if(!StringUtils.isEmpty(sp.title)){
-            holderTwo.tv_title.setText(sp.title);
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  itemPosition/21);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holderTwo.tv_title.setText(spannableString);
+        }else{
+            holderTwo.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){
@@ -465,6 +498,11 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if(!StringUtils.isEmpty(sp.distance)){
             holderTwo.tv_distance.setText("距离" + sp.distance);
         }
+
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        int width = dm.widthPixels;
+        holderTwo.iv1.getLayoutParams().width = (width - DensityUtil.dp2px(mContext, 18) * 2) / 3;
+        holderTwo.iv1.requestLayout();
 
         if(!StringUtils.isEmpty(sp.pic.get(0))){
             Glide.with(mContext)
@@ -500,9 +538,28 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
         });
 
-        SearchPosts.SearchPost sp = datas.get(itemPosition -  (1 + itemPosition/21));
-        if(!StringUtils.isEmpty(sp.title)){
-            holder.tv_title.setText(sp.title);
+        SearchPosts.SearchPost sp = datas.get(itemPosition -  itemPosition/21);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.tv_title.setText(spannableString);
+        }else{
+            holder.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){
@@ -559,7 +616,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         if(datas == null || datas.size() <= 0){
             return 0;
         }
-        return datas.size() + 1 + datas.size()/20 ;
+        return datas.size() + datas.size()/20 ;
     }
 
 
@@ -587,10 +644,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public int getPostId(int position) {
-        if(position == 0 || (position % 21 == 0)){
+        if(position != 0 && ((position + 1) % 21 == 0)){
             return -2;
         }
-        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
+        SearchPosts.SearchPost search = datas.get(position -  position/21);
         if(search != null){
             return search.id;
         }
@@ -598,10 +655,10 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     public SearchPosts.SearchPost getSearchPost(int position) {
-        if(position == 0 || (position % 21 == 0)){
+        if(position != 0 && ((position + 1) % 21 == 0)){
             return null;
         }
-        SearchPosts.SearchPost search = datas.get(position -  (1 + position/21));
+        SearchPosts.SearchPost search = datas.get(position -  position/21);
         return search;
     }
 

@@ -15,7 +15,7 @@ public class PostDetail {
     public float lat;
     public String province;
     public String city;
-    public int user_group_id; //用户身份id
+    public String user_group_id; //用户身份id
     public String user_name;
     public int phone_from;
     public String phone;
@@ -45,4 +45,7 @@ public class PostDetail {
     public String head_url;
     public boolean is_follow_user;
     public boolean is_collect;
+    public String nickname;
+    public boolean has_grab_status;
+    public boolean user_grab_status;
 }

@@ -13,8 +13,10 @@
     <include layout="@layout/title_bar" />
 
     <TextView
+        android:id="@+id/text"
+        android:padding="15dp"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:background="#ffffff"
         android:text="此处为富文本显示区域"
         android:textSize="18sp"
@@ -23,6 +25,7 @@
         android:gravity="center"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,6 +55,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,6 +84,7 @@
             />
     </LinearLayout>
     <LinearLayout
+        android:visibility="gone"
         android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -108,6 +113,7 @@
             />
     </LinearLayout>
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/ll_city"
         android:background="#ffffff"
         android:layout_width="match_parent"
@@ -156,11 +162,11 @@
         android:padding="5dp"
         android:textColor="#787878"
         android:textSize="13sp"
-        android:text="请输入其他信息"/>
+        android:text="请输入详细信息"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="125dp"
+        android:layout_height="155dp"
         android:background="#ffffff"
         android:padding="10dp">
 
@@ -171,6 +177,7 @@
             android:background="@drawable/corner_border_et"
             android:textColor="#787878"
             android:padding="3dp"
+            android:maxLength="200"
             android:gravity="start"/>
 
     </RelativeLayout>

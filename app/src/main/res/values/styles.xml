@@ -36,7 +36,24 @@
     </style>
 
     <style name="TabLayoutStyle">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">13dp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="translucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="NoToolBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="showPopupAnimation2" parent="android:Animation">
+        <item name="android:windowExitAnimation">@anim/popwin_exit_anim2</item>
     </style>
 </resources>

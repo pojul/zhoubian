@@ -127,25 +127,42 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/ivBottomBar04"
-                    android:layout_width="21dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="9dp"
-                    android:background="@drawable/main_bottom_dope"
-                    />
-                <TextView
-                    android:id="@+id/tv_bottom_bar_04"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
-                    android:text="消息"
-                    android:textSize="11sp"
-                    android:textColor="#4d4d4d"
-                    android:layout_marginBottom="4dp"
-                    />
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/ivBottomBar04"
+                        android:layout_width="21dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="9dp"
+                        android:background="@drawable/main_bottom_dope"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_bottom_bar_04"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7dp"
+                        android:text="消息"
+                        android:textSize="11sp"
+                        android:textColor="#4d4d4d"
+                        android:layout_marginBottom="4dp"
+                        android:layout_below="@id/ivBottomBar04"
+                        />
+
+                    <TextView
+                        android:visibility="gone"
+                        android:id="@+id/unread_msg"
+                        android:layout_width="11dp"
+                        android:layout_height="11dp"
+                        android:background="@drawable/shape_red"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="15dp"/>
+
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout

@@ -8,6 +8,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,13 +18,14 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.hawk.Hawk;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.adapter.ExperienceReplyAdapter;
-import com.yjyc.zhoubian.adapter.PostReplyAdapter;
+import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.model.ExperienceDetail;
 import com.yjyc.zhoubian.model.ExperienceDetailModel;
 import com.yjyc.zhoubian.model.Follow;
@@ -33,6 +36,7 @@ import com.yjyc.zhoubian.model.ReplyPostList;
 import com.yjyc.zhoubian.model.ReplyPostListModel;
 import com.yjyc.zhoubian.model.ReplyPostModel;
 import com.yjyc.zhoubian.model.UserInfo;
+import com.yjyc.zhoubian.ui.view.SwipeBackLayout;
 import com.yjyc.zhoubian.utils.DensityUtil;
 import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
@@ -89,6 +93,8 @@ public class ValuableBookDetailActivity extends BaseActivity {
     LinearLayout image_ll;
     @BindView(R.id.root_rl)
     RelativeLayout rootRl;
+    @BindView(R.id.create_time)
+    TextView create_time;
 
     private Context mContext;
     private String id;
@@ -102,6 +108,9 @@ public class ValuableBookDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SwipeBackLayout layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+                R.layout.swipe_back_layout, null);
+        layout.attachToActivity(this);
         setContentView(R.layout.activity_valuable_book_detail);
         id = getIntent().getStringExtra("id");
         if(id == null || id.isEmpty()){
@@ -142,6 +151,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
                 .execute(new AbsJsonCallBack<ExperienceDetailModel, ExperienceDetail>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
+                        Log.e("EXPERIENCEDETAIL", "onFailure: " + errorMsg);
                         LoadingDialog.closeLoading();
                         showToast(errorMsg);
                         finish();
@@ -149,6 +159,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(ExperienceDetail body) {
+                        Log.e("EXPERIENCEDETAIL", "body: " + new Gson().toJson(body));
                         LoadingDialog.closeLoading();
                         if(body == null){
                             showToast("数据错误");
@@ -162,7 +173,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
                 });
     }
 
-    @OnClick({R.id.follow, R.id.comment_rl})
+    @OnClick({R.id.follow, R.id.comment_rl, R.id.chat_rl})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.follow:
@@ -178,7 +189,11 @@ public class ValuableBookDetailActivity extends BaseActivity {
                     postComment(str);
                 });
                 break;
-
+            case R.id.chat_rl:
+                Intent intent = new Intent(this, ChatActivity.class);
+                intent.putExtra("frindId", ("" + experienceDetail.detail.uid));
+                startActivity(intent);
+                break;
         }
     }
 
@@ -219,6 +234,11 @@ public class ValuableBookDetailActivity extends BaseActivity {
         }
         replyAdapter.setRootVew(rootRl);
         replyAdapter.seExpericeId(experienceDetail.detail.id, experienceDetail.detail.uid);
+        String date = "发布于" + experienceDetail.detail.create_time.substring(0, experienceDetail.detail.create_time.lastIndexOf(":"));
+        date = date.replaceFirst("-", "年");
+        date = date.replaceFirst("-", "月");
+        date = date.replaceFirst("-", "日");
+        create_time.setText(date);
     }
 
     public void cancelFollow(){
@@ -345,11 +365,13 @@ public class ValuableBookDetailActivity extends BaseActivity {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
+                        comments.setText("评论 · " + 0);
                     }
                     @Override
                     public void onSuccess(List<ReplyPostList.ReplyPost> body) {
                         LoadingDialog.closeLoading();
                         if(body == null || body.size() <= 0){
+                            comments.setText("评论 · " + 0);
                             return;
                         }
                         comments.setText("评论 · " + body.size());

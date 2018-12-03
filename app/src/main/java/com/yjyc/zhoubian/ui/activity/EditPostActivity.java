@@ -249,8 +249,16 @@ public class EditPostActivity extends BaseActivity {
             main_rl3.setTextViews(dataList);
             main_rl3.requestLayout();
             main_rl3.setOnMultipleTVItemClickListener((view, i) -> {
+                if(post.red_package_money > 0){
+                    return;
+                }
                 RedEnvelopeSetting pc = redEnvelopeSettings.get(i);
                 if (pc.isChecked == 1) {
+                    main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                    ((TextView)main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.color080808));
+                    redEnvelopeSettings.get(i).isChecked = 2;
+                    red_package_money = -1;
+                    tv_red_package_money.setText(0 + "元");
                 } else {
                     main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                     ((TextView) main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
@@ -533,7 +541,7 @@ public class EditPostActivity extends BaseActivity {
     @OnClick(R.id.tv_price10)
     public void tv_price10() {
         setTvBackground2(R.id.tv_price10);
-        price_unit = "元/折";
+        price_unit = "折";
     }
 
     @OnClick(R.id.tv_red1)

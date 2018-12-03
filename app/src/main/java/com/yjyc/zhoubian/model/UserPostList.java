@@ -14,6 +14,8 @@ public class UserPostList {
         public int uid;
         public String user_name;
         public String title;
+        public String post_cate_title;
+        public String custom_post_cate;
         public String lon;
         public String lat;
         public String create_time;

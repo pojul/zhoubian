@@ -1,5 +1,6 @@
 package com.yjyc.zhoubian.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -43,6 +44,7 @@ import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.model.JsonBean;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UploadModel;
@@ -151,17 +153,14 @@ public class EditProfileActivity extends BaseActivity {
                 .centerCrop();
 
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
-        initTitleBar("编辑资料", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra("userInfo", userInfo);
-                setResult(200, data);
-                onBackPressed();
-            }
+        initTitleBar("编辑资料", v -> {
+            Intent data = new Intent();
+            data.putExtra("userInfo", userInfo);
+            setResult(200, data);
+            onBackPressed();
         });
 
-        userInfo = (UserInfo) getIntent().getSerializableExtra("userInfo");
+        userInfo = Hawk.get("userInfo");
         if(userInfo == null){
             userInfo = new UserInfo();
             userInfo();
@@ -250,13 +249,22 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void setView(UserInfo body) {
-        if(!StringUtils.isEmpty(body.head_url_img)){
+        if(body.head_url_img != null && !StringUtils.isEmpty(body.head_url_img)){
             head_url = body.head_url_img;
-            url = body.head_url;
+            url = body.head_url_img.replace(HttpUrl.BASE_URL_NOEND, "");
             isUpload = false;
             picTag = true;
-            Glide.with(context)
+            Glide.with(this)
                     .load(body.head_url_img)
+                    .apply(options)
+                    .into(iv_headUrl);
+        }else if(body.head_url != null && !body.head_url.isEmpty()){
+            head_url = body.head_url;
+            url = body.head_url.replace(HttpUrl.BASE_URL_NOEND, "");
+            isUpload = false;
+            picTag = true;
+            Glide.with(this)
+                    .load(body.head_url)
                     .apply(options)
                     .into(iv_headUrl);
         }
@@ -850,7 +858,7 @@ public class EditProfileActivity extends BaseActivity {
         PermissionUtils.checkCameraPermission(this, new PermissionUtils.PermissionCallBack() {
             @Override
             public void onGranted() {
-                PictureSelector.create(EditProfileActivity.this)
+                /*PictureSelector.create(EditProfileActivity.this)
                         .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
                         .maxSelectNum(1)// 最大图片选择数量 int
                         .minSelectNum(1)// 最小选择数量 int
@@ -868,6 +876,20 @@ public class EditProfileActivity extends BaseActivity {
                         .previewImage(true)// 是否可预览图片 true or false
                         .enableCrop(true)// 是否裁剪 true or false
                         .rotateEnabled(false) // 裁剪是否可旋转图片 true or false
+                        .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code*/
+                PictureSelector.create((Activity) mContext)
+                        .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
+                        .maxSelectNum(1)// 最大图片选择数量 int
+                        .minSelectNum(1)// 最小选择数量 int
+                        .imageSpanCount(4)// 每行显示个数 int
+                        .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                        .previewImage(true)// 是否可预览图片 true or false
+                        .isCamera(true)// 是否显示拍照按钮 true or false
+                        .imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg
+                        .sizeMultiplier(0.8f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
+                        .compress(true)// 是否压缩 true or false
+                        .previewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中) true or false
+                        .minimumCompressSize(300)// 小于300kb的图片不压缩
                         .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
             }
 
@@ -908,7 +930,7 @@ public class EditProfileActivity extends BaseActivity {
                         currentPath = localMedia.getPath();
                     }
                     picTag = true;
-                    Glide.with(context)
+                    Glide.with(this)
                             .load(currentPath)
                             .apply(options)
                             .into(iv_headUrl);

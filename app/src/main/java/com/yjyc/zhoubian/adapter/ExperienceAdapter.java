@@ -87,7 +87,15 @@ public class ExperienceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void bindTypeOne(MyViewHolderOne holderOne, int position) {
         ExperienceList.Experience experience = datas.get(position);
-        holderOne.text.setText(experience.title);
+
+        String title= experience.title;
+        if(experience.custom_cate != null && !experience.custom_cate.isEmpty()){
+            title = "【" + experience.custom_cate + "】" + title;
+        }else if(experience.cate_name != null && !experience.cate_name.isEmpty()){
+            title = "【" + experience.cate_name + "】" + title;
+        }
+        holderOne.text.setText(title);
+
         if(experience.user_name == null){
             holderOne.nick_name.setText("佚名");
         }else{
@@ -104,7 +112,13 @@ public class ExperienceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void bindTypeTwo(MyViewHolderTwo holderTwo, int position) {
         ExperienceList.Experience experience = datas.get(position);
-        holderTwo.text.setText(experience.title);
+        String title= experience.title;
+        if(experience.custom_cate != null && !experience.custom_cate.isEmpty()){
+            title = "【" + experience.custom_cate + "】" + title;
+        }else if(experience.cate_name != null && !experience.cate_name.isEmpty()){
+            title = "【" + experience.cate_name + "】" + title;
+        }
+        holderTwo.text.setText(title);
         if(experience.user_name == null){
             holderTwo.nick_name.setText("佚名");
         }else{
@@ -122,7 +136,13 @@ public class ExperienceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private void bindTypeThree(MyViewHolderThree holder, int position) {  //在其中镶嵌一个RecyclerView
         ExperienceList.Experience experience = datas.get(position);
-        holder.text.setText(experience.title);
+        String title= experience.title;
+        if(experience.custom_cate != null && !experience.custom_cate.isEmpty()){
+            title = "【" + experience.custom_cate + "】" + title;
+        }else if(experience.cate_name != null && !experience.cate_name.isEmpty()){
+            title = "【" + experience.cate_name + "】" + title;
+        }
+        holder.text.setText(title);
         if(experience.user_name == null){
             holder.nick_name.setText("佚名");
         }else{

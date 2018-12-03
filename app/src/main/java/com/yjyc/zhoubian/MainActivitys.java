@@ -2,17 +2,20 @@ package com.yjyc.zhoubian;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -26,6 +29,8 @@ import com.orhanobut.hawk.Hawk;
 import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.im.ECMIm;
+import com.yjyc.zhoubian.model.EmptyEntity;
+import com.yjyc.zhoubian.model.EmptyEntityModel;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.PostCate;
 import com.yjyc.zhoubian.model.PostCateModel;
@@ -35,9 +40,14 @@ import com.yjyc.zhoubian.model.RedEnvelopeSetting;
 import com.yjyc.zhoubian.model.RedEnvelopeSettingModel;
 import com.yjyc.zhoubian.model.SearchModel;
 import com.yjyc.zhoubian.model.Searchs;
+import com.yjyc.zhoubian.model.UpdateApp;
+import com.yjyc.zhoubian.model.UpdateAppModel;
+import com.yjyc.zhoubian.model.UpdateUserTime;
+import com.yjyc.zhoubian.model.UpdateUserTimeModel;
 import com.yjyc.zhoubian.model.UserGroupModel;
 import com.yjyc.zhoubian.model.UserGroups;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
+import com.yjyc.zhoubian.ui.activity.SetUpActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yjyc.zhoubian.ui.fragment.ConversationFragment;
 import com.yjyc.zhoubian.ui.fragment.MainFragment;
@@ -45,11 +55,14 @@ import com.yjyc.zhoubian.ui.fragment.MainsFragment;
 import com.yjyc.zhoubian.ui.fragment.MeFragment;
 import com.yjyc.zhoubian.ui.fragment.PublishFragment;
 import com.yjyc.zhoubian.ui.fragment.ValuableBookFragment;
+import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yjyc.zhoubian.utils.PermissionUtils;
+import com.yjyc.zhoubian.utils.VersionUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
 import com.yuntongxun.ecsdk.ECInitParams;
 import com.yuntongxun.ecsdk.SdkErrorCode;
+import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 
@@ -101,6 +114,9 @@ public class MainActivitys extends AppCompatActivity {
     @BindView(R.id.rl_bg)
     public RelativeLayout rl_bg;
 
+    @BindView(R.id.unread_msg)
+    public TextView unread_msg ;
+
 
     private PublishFragment publishFragment;
     private ValuableBookFragment valuableBookFragment;
@@ -110,6 +126,7 @@ public class MainActivitys extends AppCompatActivity {
     private MeFragment meFragment;
     public LocationClient mLocationClient = null;
     public BDLocationListener myListener = new MyLocationListener();
+    public int currentTag = R.id.btn_bottom_bar_03;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +138,12 @@ public class MainActivitys extends AppCompatActivity {
 
         BaseApplication.application.initImSDK();
         ECMIm.getInstance().mainActivitys = this;
+        BaseApplication.getIntstance().mainActivitys = this;
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        BaseApplication.SCREEN_WIDTH = dm.widthPixels;
+        BaseApplication.SCREEN_HEIGHT = dm.heightPixels;
     }
 
     private void initView() {
@@ -132,11 +155,14 @@ public class MainActivitys extends AppCompatActivity {
         getRedEnvelopeDistance();
         searchTimeForDay();
         userGroup();
+        updateUserTime();
+
 
         PermissionUtils.checkLocationPermission(MainActivitys.this, new PermissionUtils.PermissionCallBack() {
             @Override
             public void onGranted() {
                 startLocate();
+                reqVersionInfo();
             }
 
             @Override
@@ -156,6 +182,40 @@ public class MainActivitys extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    private void reqVersionInfo() {
+        LoadingDialog.showLoading(this);
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.UPDATEAPP)
+                /*.addParams("uid", ("" + login.uid))
+                .addParams("token", login.token)*/
+                .execute(new AbsJsonCallBack<UpdateAppModel, UpdateApp>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                    @Override
+                    public void onSuccess(UpdateApp body) {
+                        LoadingDialog.closeLoading();
+                        PackageInfo packageInfo = new VersionUtil().getVersionName(MainActivitys.this);
+                        if(packageInfo == null || body == null || body.app_info == null){
+                            return;
+                        }
+                        if(body.app_info.versionCode <= packageInfo.versionCode){
+                            return;
+                        }
+                        DialogUtil.getInstance().showUpdateAppDialog(MainActivitys.this
+                                , body.app_info.versionCode, body.app_info.versionName, packageInfo.versionCode, packageInfo.versionName);
+                        DialogUtil.getInstance().setDialogClick(str -> {
+                            if("立即更新".equals(str)){
+                                BaseApplication.getIntstance().downloadNewApk(body.app_info.downloadUrl);
+                            }
+                        });
+                    }
+                });
     }
 
     /**
@@ -192,6 +252,8 @@ public class MainActivitys extends AppCompatActivity {
                 BaseApplication.getIntstance().setAddress(location.getAddrStr());
                 BaseApplication.getIntstance().setProvince(location.getProvince());
                 BaseApplication.getIntstance().setCity(location.getCity());
+
+                BaseApplication.myLocation = location;
             }
         }
     }
@@ -238,7 +300,7 @@ public class MainActivitys extends AppCompatActivity {
         setFragmentSelection(R.id.btn_bottom_bar_05);
     }
 
-    private void setFragmentSelection(int flag) {
+    public void setFragmentSelection(int flag) {
         // 开启一个Fragment事务
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         // 先隐藏掉所有的Fragment，以防止有多个Fragment显示在界面上的情况
@@ -253,6 +315,7 @@ public class MainActivitys extends AppCompatActivity {
                 } else {
                     fragmentTransaction.show(publishFragment);
                 }
+                currentTag = R.id.btn_bottom_bar_01;
                 break;
             case R.id.btn_bottom_bar_02:
                 if (valuableBookFragment == null) {
@@ -261,6 +324,7 @@ public class MainActivitys extends AppCompatActivity {
                 } else {
                     fragmentTransaction.show(valuableBookFragment);
                 }
+                currentTag = R.id.btn_bottom_bar_02;
                 break;
             case R.id.btn_bottom_bar_03:
                 if (mainsFragment == null) {
@@ -269,6 +333,7 @@ public class MainActivitys extends AppCompatActivity {
                 } else {
                     fragmentTransaction.show(mainsFragment);
                 }
+                currentTag = R.id.btn_bottom_bar_03;
                 break;
             case R.id.btn_bottom_bar_04:
                 if (conversationFragment == null) {
@@ -277,6 +342,7 @@ public class MainActivitys extends AppCompatActivity {
                 } else {
                     fragmentTransaction.show(conversationFragment);
                 }
+                currentTag = R.id.btn_bottom_bar_04;
                 break;
             case R.id.btn_bottom_bar_05:
                 if (meFragment == null) {
@@ -285,10 +351,10 @@ public class MainActivitys extends AppCompatActivity {
                 } else {
                     fragmentTransaction.show(meFragment);
                 }
+                currentTag = R.id.btn_bottom_bar_05;
                 break;
         }
         fragmentTransaction.commit();
-
     }
 
     private void hideFragments(FragmentTransaction transaction) {
@@ -355,7 +421,10 @@ public class MainActivitys extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        if(!Hawk.contains("LoginModel") && (currentTag == R.id.btn_bottom_bar_01 || currentTag == R.id.btn_bottom_bar_04
+                || currentTag == R.id.btn_bottom_bar_05) ){
+            setDefaultFragment();
+        }
     }
 
     private void distance() {
@@ -419,8 +488,6 @@ public class MainActivitys extends AppCompatActivity {
                 .get()
                 .url(HttpUrl.USERGROUP)
                 .execute(new AbsJsonCallBack<UserGroupModel, UserGroups>() {
-
-
                     @Override
                     public void onSuccess(UserGroups body) {
                         if(body.list == null ){
@@ -439,6 +506,30 @@ public class MainActivitys extends AppCompatActivity {
                     @Override
                     public void onFinish() {
                         ProgressDialog.dismiss();
+                    }
+                });
+    }
+
+    private void updateUserTime() {
+        Login login = Hawk.get("LoginModel");
+        if(login == null){
+            return;
+        }
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.UPDATEUSERTIME)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token + "")
+                .execute(new AbsJsonCallBack<UpdateUserTimeModel, UpdateUserTime>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                    }
+                    @Override
+                    public void onSuccess(UpdateUserTime body) {
+                        if(!body.user_state){
+                            finish();
+                            System.exit(0);
+                        }
                     }
                 });
     }

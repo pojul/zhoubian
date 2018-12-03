@@ -20,8 +20,16 @@ android {
     signingConfigs {
         debug {
             keyAlias 'key0'
-            //storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
-            storeFile file('D:/gitPro/zhoubian/zhoubian/zhoubian.jks')
+            storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
+            //storeFile file('D:/gitPro/zhoubian/zhoubian/zhoubian.jks')
+            keyPassword '123456'
+            storePassword '123456'
+        }
+
+        release {
+            keyAlias 'key0'
+            storeFile file('F:/project/gitzhoubian/zhoubian/zhoubian.jks')
+            //storeFile file('D:/gitPro/zhoubian/zhoubian/zhoubian.jks')
             keyPassword '123456'
             storePassword '123456'
         }
@@ -51,15 +59,16 @@ android {
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
-        versionName "1.0"
+        versionName "V1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.debug
         multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            /*minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'*/
         }
         debug {
             signingConfig signingConfigs.debug
@@ -112,4 +121,5 @@ dependencies {
     implementation files('libs/alipaySdk-20180601.jar')
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
+    implementation 'com.liulishuo.filedownloader:library:1.7.4'
 }

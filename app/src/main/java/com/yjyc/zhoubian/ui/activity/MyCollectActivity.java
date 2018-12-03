@@ -176,6 +176,7 @@ public class MyCollectActivity extends BaseActivity {
 
     public  class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemClickListener{
         private OnItemClickListener mOnItemClickListener;
+        public static final int TYPE_NONE = -1;
         public static final int TYPE_ONE = 0;
         public static final int TYPE_TWO = 1;
         public static final int TYPE_THREE = 2;//三种不同的布局
@@ -250,7 +251,6 @@ public class MyCollectActivity extends BaseActivity {
 
         public class MyViewHolderThree extends RecyclerView.ViewHolder {
 
-
             View myView;
             TextView tv_title;
             TextView tv_user_name;
@@ -281,10 +281,21 @@ public class MyCollectActivity extends BaseActivity {
             }
         }
 
+        public class MyViewHolderNone extends RecyclerView.ViewHolder {
+            TextView cancel_collect;
+            public MyViewHolderNone(View itemView) {
+                super(itemView);
+                cancel_collect = itemView.findViewById(R.id.cancel_collect);
+            }
+        }
+
         @Override
         public int getItemViewType(int position) {
             PostCollectionLists.Data up = datas.get(position);
             PostCollectionLists.PostInfo info = up.post_info;
+            if(info == null){
+                return TYPE_NONE;
+            }
             if(info.pic != null && info.pic.size() > 1){
                 return TYPE_THREE;
             }else if(info.pic != null && info.pic.size() == 1){
@@ -300,6 +311,9 @@ public class MyCollectActivity extends BaseActivity {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             switch (viewType) {
+                case TYPE_NONE:
+                    return new MyViewHolderNone(LayoutInflater.from(parent.getContext()).inflate(R.layout
+                            .activity_my_collect_item_imgnone, parent, false));
                 case TYPE_ONE:
                     return new MyViewHolderOne(LayoutInflater.from(parent.getContext()).inflate(R.layout
                             .activity_my_collect_item_img0, parent, false));
@@ -323,6 +337,8 @@ public class MyCollectActivity extends BaseActivity {
                 bindTypeTwo((MyViewHolderTwo) holder, position);
             } else if (holder instanceof MyViewHolderThree) {
                 bindTypeThree((MyViewHolderThree) holder, position);
+            } else if (holder instanceof MyViewHolderNone) {
+                bindTypeNone((MyViewHolderNone) holder, position);
             }
 
             if( mOnItemClickListener!= null){
@@ -342,6 +358,13 @@ public class MyCollectActivity extends BaseActivity {
             }
         }
 
+        private void bindTypeNone(MyViewHolderNone holder, int position) {
+            PostCollectionLists.Data data = datas.get(position);
+            holder.cancel_collect.setOnClickListener(v->{
+                cancelPostCollection(position, data);
+            });
+        }
+
         private void bindTypeOne(MyViewHolderOne holderOne, int position) {
             PostCollectionLists.Data data = datas.get(position);
             if(data == null){
@@ -352,14 +375,13 @@ public class MyCollectActivity extends BaseActivity {
             if(postInfo == null){
                 return;
             }
-
-            String title = postInfo.title;
-            if(!StringUtils.isEmpty(title)){
-                if(!StringUtils.isEmpty(title)){
-                    title = "【" + postInfo.custom_post_cate + "】" + title;
-                }
-                holderOne.tv_title.setText(title);
+            String title= postInfo.title;
+            if(postInfo.custom_post_cate != null && !postInfo.custom_post_cate.isEmpty()){
+                title = "【" + postInfo.custom_post_cate + "】" + title;
+            }else if(postInfo.post_cate_title != null && !postInfo.post_cate_title.isEmpty()){
+                title = "【" + postInfo.post_cate_title + "】" + title;
             }
+            holderOne.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(postInfo.user_name)){
                 holderOne.tv_user_name.setText(postInfo.user_name);
@@ -401,13 +423,13 @@ public class MyCollectActivity extends BaseActivity {
                 return;
             }
 
-            String title = postInfo.title;
-            if(!StringUtils.isEmpty(title)){
-                if(!StringUtils.isEmpty(title)){
-                    title = "【" + postInfo.custom_post_cate + "】" + title;
-                }
-                holderTwo.tv_title.setText(title);
+            String title= postInfo.title;
+            if(postInfo.custom_post_cate != null && !postInfo.custom_post_cate.isEmpty()){
+                title = "【" + postInfo.custom_post_cate + "】" + title;
+            }else if(postInfo.post_cate_title != null && !postInfo.post_cate_title.isEmpty()){
+                title = "【" + postInfo.post_cate_title + "】" + title;
             }
+            holderTwo.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(postInfo.user_name)){
                 holderTwo.tv_user_name.setText(postInfo.user_name);
@@ -456,13 +478,13 @@ public class MyCollectActivity extends BaseActivity {
                 return;
             }
 
-            String title = postInfo.title;
-            if(!StringUtils.isEmpty(title)){
-                if(!StringUtils.isEmpty(title)){
-                    title = "【" + postInfo.custom_post_cate + "】" + title;
-                }
-                holder.tv_title.setText(title);
+            String title= postInfo.title;
+            if(postInfo.custom_post_cate != null && !postInfo.custom_post_cate.isEmpty()){
+                title = "【" + postInfo.custom_post_cate + "】" + title;
+            }else if(postInfo.post_cate_title != null && !postInfo.post_cate_title.isEmpty()){
+                title = "【" + postInfo.post_cate_title + "】" + title;
             }
+            holder.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(postInfo.user_name)){
                 holder.tv_user_name.setText(postInfo.user_name);
@@ -538,9 +560,9 @@ public class MyCollectActivity extends BaseActivity {
                 startActivity(new Intent(mContext, LoginActivity.class));
                 return;
             }
-            if(((Login)Hawk.get("LoginModel")).uid == data.post_id){
+            /*if(((Login)Hawk.get("LoginModel")).uid == data.post_id){
                 return;
-            }
+            }*/
             LoadingDialog.showLoading(mContext);
             Login login = Hawk.get("LoginModel");
             OkhttpUtils.with()

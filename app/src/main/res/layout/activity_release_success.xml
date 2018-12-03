@@ -3,28 +3,37 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#fff"
+    android:background="#f7f7f7"
     >
     <include layout="@layout/title_bar" />
 
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="68dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/publish"
-        android:layout_marginTop="39dp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="发布成功"
-        android:textSize="20sp"
-        android:textColor="#2196f3"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
-        />
+        android:orientation="vertical"
+        android:background="#ffffff">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="68dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/publish"
+            android:layout_marginTop="39dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="发布成功"
+            android:textSize="20sp"
+            android:textColor="#2196f3"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp"
+            />
+
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -33,6 +42,7 @@
         />
 
     <TextView
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="39dp"
         android:gravity="center"
@@ -43,16 +53,22 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:background="#f7f7f7"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
-        android:text="您今天还有3次发帖机会；若发红包贴则不限次数。"
+        android:text="发帖守则：
+1.勿发布重复信息、违法信息、垃圾信息、与本地关联不大的信息；
+2.太硬的商业信息请使用红包推广；
+3.违反以上的，平台会限制你的权限，甚至拉黑；
+4.欢迎发布便民信息、优惠信息、有意义的信息；
+5.以上守则是为了保证平台的干净、意义，谢谢大家的支持，还望大家向亲朋好友推荐下本APP哟!"
         android:textSize="12sp"
         android:textColor="#c4c4c4"
         />
 
     <ImageView
+        android:visibility="gone"
         android:layout_width="120dp"
         android:layout_height="68dp"
         android:layout_gravity="center_horizontal"
@@ -61,6 +77,7 @@
         />
 
     <TextView
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

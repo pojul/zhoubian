@@ -86,10 +86,10 @@ public class VermicelliListActivity extends BaseActivity {
                 .addParams("listRows", "10")
                 .addParams("page", page + "")
                 .execute(new AbsJsonCallBack<FansModel, Fans>() {
-
-
                     @Override
                     public void onSuccess(Fans body) {
+                        refreshLayout.finishLoadmore();
+                        refreshLayout.finishRefresh();
                         if(body.list == null ){
                             ToastUtils.showShort("网络异常,请稍后重试" );
                             return;
@@ -105,6 +105,8 @@ public class VermicelliListActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
+                        refreshLayout.finishLoadmore();
+                        refreshLayout.finishRefresh();
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 

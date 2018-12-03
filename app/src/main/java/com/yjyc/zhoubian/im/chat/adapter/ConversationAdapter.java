@@ -12,11 +12,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.im.entity.Conversation;
+import com.yjyc.zhoubian.model.LastSiteMsg;
+import com.yjyc.zhoubian.model.UnreadSiteMsgNum;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
+import com.yjyc.zhoubian.ui.activity.OfficialMsgActivity;
 import com.yjyc.zhoubian.utils.DateUtil;
 
 import org.w3c.dom.Text;
@@ -45,6 +49,38 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Conversation conversation = datas.get(position);
+        if(conversation.getFrom().equals("-1")){
+            bindOfficialConversion(holder, position);
+        }else{
+            bindNormalConversion(holder, position);
+        }
+    }
+
+    private void bindOfficialConversion(MyViewHolder holder, int position) {
+        LastSiteMsg lastSiteMsg = Hawk.get("LastSiteMsg");
+        Glide.with(mContext).load(R.mipmap.icon_round).into(holder.photo);
+        if(lastSiteMsg != null && lastSiteMsg.getUnReadNum() > 0){
+            holder.un_red_num.setVisibility(View.VISIBLE);
+            holder.un_red_num.setText(("" + lastSiteMsg.getUnReadNum()));
+        }else{
+            holder.un_red_num.setVisibility(View.GONE);
+        }
+        holder.nick_name.setText("官方消息");
+        if(lastSiteMsg != null){
+            holder.time.setText(DateUtil.getTimemess(lastSiteMsg.getLastTime()));
+        }
+        if(lastSiteMsg != null && lastSiteMsg.getLastBody() != null){
+            holder.autograph.setText(lastSiteMsg.getLastBody());
+        }
+        holder.root_rl.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, OfficialMsgActivity.class);
+            mContext.startActivity(intent);
+        });
+        holder.not_disturb.setVisibility(View.GONE);
+    }
+
+    private void bindNormalConversion(MyViewHolder holder, int position){
+        Conversation conversation = datas.get(position);
         if(conversation.getFriend() != null && conversation.getFriend().head_url_img != null){
             Glide.with(mContext).load((conversation.getFriend().head_url_img)).into(holder.photo);
         }else{
@@ -64,7 +100,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         holder.autograph.setText(conversation.getLastMessage());
         holder.time.setText(DateUtil.getTimemess(conversation.getLastTimeMilli()));
         if(conversation.isNotTroubled()){
-            holder.not_disturb.setVisibility(View.GONE);
+            holder.not_disturb.setVisibility(View.VISIBLE);
         }else{
             holder.not_disturb.setVisibility(View.VISIBLE);
         }
@@ -78,12 +114,40 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             intent.putExtra("uid",  conversation.getFrom() + "");
             mContext.startActivity(intent);
         });
+        holder.not_disturb.setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
         return (datas==null?0:datas.size());
     }
+
+
+    public void updateOfficialMsg(UnreadSiteMsgNum body) {
+        if(body.number <= 0){
+            return;
+        }
+        synchronized (datas){
+            LastSiteMsg lastSiteMsg = new LastSiteMsg();
+            if(body.new_msg != null){
+                lastSiteMsg.setLastBody(body.new_msg);
+            }
+            lastSiteMsg.setUnReadNum(body.number);
+            lastSiteMsg.setLastTime(System.currentTimeMillis());
+            Hawk.put("LastSiteMsg", lastSiteMsg);
+            notifyOfficialMsg();
+        }
+    }
+
+    public void notifyOfficialMsg() {
+        for (int i = 0; i < datas.size(); i++) {
+            if(datas.get(i).getFrom().equals("-1")){
+                notifyItemChanged(i);
+                return;
+            }
+        }
+    }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 

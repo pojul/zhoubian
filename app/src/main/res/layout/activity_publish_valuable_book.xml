@@ -81,6 +81,7 @@
                 />
 
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -120,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#080808"
-                android:text="请输入帖子标题"
+                android:text="请输入标题"
                 android:textSize="14sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
@@ -136,7 +137,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@drawable/fff_3_stroke_1bg"
-                android:hint="突出你需求或服务的重点（4-30字）"
                 android:textSize="12sp"
                 android:singleLine="true"
                 android:maxLength="30"
@@ -148,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#080808"
-                android:text="请输入帖子详情"
+                android:text="请输入详情"
                 android:textSize="14sp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"

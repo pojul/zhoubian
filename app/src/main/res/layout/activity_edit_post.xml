@@ -24,8 +24,8 @@
 
     </RelativeLayout>
     <ScrollView
-        android:id="@+id/root_sv"
         android:visibility="gone"
+        android:id="@+id/root_sv"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -541,6 +541,7 @@
                 android:singleLine="true"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
+                android:maxLength="15"
                 />
 
             <LinearLayout
@@ -726,7 +727,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     />
 
                 <LinearLayout
@@ -1279,6 +1280,7 @@
                     android:paddingLeft="9dp"
                     android:paddingRight="9dp"
                     android:layout_marginTop="23dp"
+                    android:maxLength="20"
                     android:gravity="center_vertical"
                     />
 

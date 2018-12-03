@@ -74,7 +74,6 @@ public class BlackListActivity extends BaseActivity {
                 .execute(new AbsJsonCallBack<BlackUserListModel, List<BlackUser>>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        showToast(errorMsg);
                         LoadingDialog.closeLoading();
                     }
 

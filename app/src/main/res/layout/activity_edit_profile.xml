@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="#f7f7f7">
+
     <include layout="@layout/title_bar" />
 
     <ScrollView
@@ -82,6 +83,8 @@
                     android:hint="请输入用户名"
                     android:textSize="12sp"
                     android:background="@null"
+                    android:singleLine="true"
+                    android:maxLength="10"
                     />
             </LinearLayout>
 
@@ -237,7 +240,7 @@
                 android:layout_height="103dp"
                 android:background="@drawable/fff_3_stroke_1bg"
                 android:textSize="12sp"
-                android:maxLength="8"
+                android:maxLength="100"
                 android:paddingLeft="9dp"
                 android:paddingRight="9dp"
                 android:paddingTop="8dp"

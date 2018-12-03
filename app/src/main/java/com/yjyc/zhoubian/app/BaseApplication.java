@@ -3,8 +3,13 @@ package com.yjyc.zhoubian.app;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,15 +17,26 @@ import com.baidu.location.BDLocation;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
+import com.maning.librarycrashmonitor.utils.MNotifyUtil;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.yjyc.zhoubian.Dao.MySQLiteHelper;
+import com.yjyc.zhoubian.MainActivitys;
+import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.im.ECMIm;
 import com.yjyc.zhoubian.im.entity.ChatMessage;
 import com.yjyc.zhoubian.im.entity.Conversation;
+import com.yjyc.zhoubian.model.GetPostDetail;
 import com.yjyc.zhoubian.model.Login;
+import com.yjyc.zhoubian.model.SearchPosts;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.utils.Constant;
+import com.yjyc.zhoubian.utils.FileUtil;
+import com.yjyc.zhoubian.utils.NotificationUtil;
 import com.yjyc.zhoubian.utils.SPUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
@@ -34,7 +50,9 @@ import com.yuntongxun.ecsdk.im.group.ECGroupNoticeMessage;
 import com.yuqian.mncommonlibrary.MBaseManager;
 import com.yuqian.mncommonlibrary.utils.LogUtil;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,9 +62,16 @@ import java.util.List;
  */
 public class BaseApplication extends Application {
 
+    public static int SCREEN_WIDTH;
+    public static int SCREEN_HEIGHT;
     private static Handler mHandler;
     public List<Activity> mActivityList = new ArrayList<>();
     public static BaseApplication application;
+    public static List<SearchPosts.SearchPost> viewedPost;
+    public static MainActivitys mainActivitys;
+    public boolean hasInitMains;
+
+    public static BDLocation myLocation;
 
     public BDLocation getLocation() {
         return location;
@@ -97,6 +122,7 @@ public class BaseApplication extends Application {
         mHandler = new Handler();
         SDKInitializer.initialize(this);
         SPUtil.Instance(getApplicationContext());
+        MySQLiteHelper.Instance(getApplicationContext());
         //自4.3.0起，百度地图SDK所有接口均支持百度坐标和国测局坐标，用此方法设置您使用的坐标类型.
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
@@ -104,6 +130,25 @@ public class BaseApplication extends Application {
         MBaseManager.init(this, "---logtag---", true);
         registerToWX();
         ECMIm.Instance(getApplicationContext());
+        viewedPost = Hawk.get("viewedPost");
+        if(viewedPost == null){
+            viewedPost = new ArrayList<>();
+        }
+        Collections.reverse(viewedPost);
+
+        FileDownloader.init(getApplicationContext());
+    }
+
+    public void addViewedPost(SearchPosts.SearchPost post){
+        synchronized (viewedPost){
+            for (int i = 0; i < viewedPost.size(); i++) {
+                if(viewedPost.get(i).id == post.id){
+                    return;
+                }
+            }
+            viewedPost.add(0, post);
+            Hawk.put("viewedPost", viewedPost);
+        }
     }
 
     private void registerToWX() {
@@ -166,6 +211,9 @@ public class BaseApplication extends Application {
         });
 
         ECDevice.setOnChatReceiveListener(new OnChatReceiveListener() {
+
+            int offLineCount = 0;
+
             @Override
             public void OnReceivedMessage(ECMessage ecMessage) {
                 //toast("OnReceivedMessage");
@@ -194,6 +242,7 @@ public class BaseApplication extends Application {
             @Override
             public void onOfflineMessageCount(int i) {
                 //toast("onOfflineMessageCount");
+                offLineCount = i;
                 LogUtil.e("onOfflineMessageCount: " + i);
             }
 
@@ -201,21 +250,23 @@ public class BaseApplication extends Application {
             public int onGetOfflineMessage() {
                 //toast("onGetOfflineMessage");
                 LogUtil.e("onGetOfflineMessage");
-                return 0;
+                return ECDevice.SYNC_OFFLINE_MSG_ALL;
             }
 
             @Override
             public void onReceiveOfflineMessage(List<ECMessage> list) {
                 //toast("onReceiveOfflineMessage");
-                LogUtil.e("onReceiveOfflineMessage------>" + new Gson().toJson(list));
+                //LogUtil.e("onReceiveOfflineMessage------>" + new Gson().toJson(list));
                 /*for (int i = 0; i < IReceiveMessages.size(); i++) {
                     IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
                     if(iReceiveMessage != null){
                         iReceiveMessage.onReceiveOfflineMessage(list);
                     }
                 }*/
-                for (int i = 0; i < list.size(); i++) {
-                    ECMIm.getInstance().onReceiveMessage(list.get(i));
+                synchronized (ECMIm.getInstance().conversations){
+                    for (int i = 0; i < list.size(); i++) {
+                        ECMIm.getInstance().onReceiveMessage(list.get(i));
+                    }
                 }
             }
 
@@ -302,6 +353,94 @@ public class BaseApplication extends Application {
         if(params.validate()) {
             ECDevice.login(params);
         }
+    }
+
+    public void loginOutIm(){
+        ECDevice.logout(() -> {
+        });
+    }
+
+    public void loginOut(){
+        Hawk.delete("LoginModel");
+        Hawk.delete("userInfo");
+        BaseApplication.getIntstance().loginOutIm();
+    }
+
+    public void downloadNewApk(String url){
+        File floder = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"zhoubian");
+        if(!floder.exists()){
+            floder.mkdirs();
+        }
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+"zhoubian"+File.separator+ FileUtil.getFileName(url);
+        File file = new File(filePath);
+        if(file.exists()){
+            file.delete();
+        }
+        FileDownloader.getImpl().create(url)
+                .setPath(filePath)
+                .setForceReDownload(true)
+                .setListener(new FileDownloadListener() {
+                    //等待
+                    @Override
+                    protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        //progressDialog.show();
+                        NotificationUtil.notifyDownLoad(getApplicationContext(), 0);
+                        Toast.makeText(BaseApplication.this, "更新包已加入后台下载列表", Toast.LENGTH_SHORT).show();
+                        LogUtil.e("pending");
+                    }
+
+                    //下载进度回调
+                    @Override
+                    protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        //progressDialog.setProgress((soFarBytes * 100 / totalBytes));
+                        int progress = (soFarBytes * 100 / totalBytes);
+                        NotificationUtil.notifyDownLoad(getApplicationContext(), progress);
+                        LogUtil.e("progress: " + progress);
+                    }
+
+                    //完成下载
+                    @Override
+                    protected void completed(BaseDownloadTask task) {
+                        NotificationUtil.notifyCancelDownLoad(getApplicationContext());
+                        /*Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                        startActivity(intent);*/
+                        File apkFile = new File(filePath);
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            Uri contentUri = FileProvider.getUriForFile(
+                                    getApplicationContext()
+                                    , "com.yjyc.zhoubian.fileprovider"
+                                    , apkFile);
+                            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+                        } else {
+                            intent.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive");
+                        }
+                        startActivity(intent);
+                        LogUtil.e("completed");
+                    }
+
+                    //暂停
+                    @Override
+                    protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                        LogUtil.e("paused");
+                    }
+
+                    //下载出错
+                    @Override
+                    protected void error(BaseDownloadTask task, Throwable e) {
+                        LogUtil.e("error" + e.getMessage());
+                        NotificationUtil.notifyCancelDownLoad(getApplicationContext());
+                    }
+
+                    //已存在相同下载
+                    @Override
+                    protected void warn(BaseDownloadTask task) {
+                        LogUtil.e("warn");
+                    }
+                }).start();
     }
 
     private void toast(String msg){

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <RelativeLayout
+        android:id="@+id/mess_left_pan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/friend_photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12sp"
+            android:layout_marginRight="5dp"
+            android:padding="3dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/test_me"
+            app:riv_corner_radius="23.5dp"
+            app:riv_oval="true"
+            app:riv_tile_mode="clamp"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/friend_nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_toRightOf="@+id/friend_photo"
+            android:text="周杰伦"
+            android:textColor="#787878"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/friend_nick_name"
+            android:layout_toRightOf="@+id/friend_photo">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/friend_pic"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="6dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/bg"
+                app:riv_oval="false"
+                android:scaleType="fitCenter"
+                app:riv_tile_mode="clamp"
+                app:riv_corner_radius="5dp"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                />
+
+            <ProgressBar
+                android:id="@+id/friend_progress"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/dialog_loading"
+                android:indeterminateOnly="true"
+                android:paddingBottom="3dp"
+                android:paddingTop="5dp" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/friend_send_fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_toRightOf="@+id/friend_pic"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="3dp"
+                android:textColor="@color/red"
+                android:text="发送失败"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/mess_right_pan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/photo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12sp"
+            android:layout_marginRight="5dp"
+            android:padding="3dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/test_me"
+            app:riv_corner_radius="23.5dp"
+            app:riv_oval="true"
+            app:riv_tile_mode="clamp"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/nick_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_toLeftOf="@+id/photo"
+            android:text="周杰伦"
+            android:textColor="#787878"
+            android:textSize="14sp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nick_name"
+            android:layout_toLeftOf="@+id/photo">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/send_fail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_toLeftOf="@+id/pic"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/red"
+                    android:text="发送失败"/>
+
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/pic"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginRight="6dp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/bg"
+                    app:riv_oval="false"
+                    android:scaleType="fitCenter"
+                    app:riv_tile_mode="clamp"
+                    app:riv_corner_radius="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:padding="3dp"
+                    android:clickable="true"
+                    />
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/dialog_loading"
+                android:indeterminateOnly="true"
+                android:paddingBottom="3dp"
+                android:paddingTop="5dp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

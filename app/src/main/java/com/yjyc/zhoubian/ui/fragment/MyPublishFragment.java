@@ -20,6 +20,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.model.EmptyEntity;
 import com.yjyc.zhoubian.model.EmptyEntityModel;
@@ -85,9 +86,7 @@ public class MyPublishFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_publish, container, false);
-
         unbinder = ButterKnife.bind(this, view);
-
 
         initViews();
         initDate();
@@ -160,12 +159,9 @@ public class MyPublishFragment extends BaseFragment {
 
     MyAdapter myAdapter;
     private void initDate(){
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
-
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setAdapter(myAdapter);
-
     }
 
     public  class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemClickListener{
@@ -366,9 +362,14 @@ public class MyPublishFragment extends BaseFragment {
             }else{
                 holderOne.operate_ll.setVisibility(View.GONE);
             }
-            if(!StringUtils.isEmpty(up.title)){
-                holderOne.tv_title.setText(up.title);
+
+            String title= up.title;
+            if(up.custom_post_cate != null && !up.custom_post_cate.isEmpty()){
+                title = "【" + up.custom_post_cate + "】" + title;
+            }else if(up.post_cate_title != null && !up.post_cate_title.isEmpty()){
+                title = "【" + up.post_cate_title + "】" + title;
             }
+            holderOne.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(up.user_name)){
                 holderOne.tv_user_name.setText(up.user_name);
@@ -418,9 +419,13 @@ public class MyPublishFragment extends BaseFragment {
             }else{
                 holderTwo.operate_ll.setVisibility(View.GONE);
             }
-            if(!StringUtils.isEmpty(up.title)){
-                holderTwo.tv_title.setText(up.title);
+            String title= up.title;
+            if(up.custom_post_cate != null && !up.custom_post_cate.isEmpty()){
+                title = "【" + up.custom_post_cate + "】" + title;
+            }else if(up.post_cate_title != null && !up.post_cate_title.isEmpty()){
+                title = "【" + up.post_cate_title + "】" + title;
             }
+            holderTwo.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(up.user_name)){
                 holderTwo.tv_user_name.setText(up.user_name);
@@ -477,9 +482,13 @@ public class MyPublishFragment extends BaseFragment {
             }else{
                 holder.operate_ll.setVisibility(View.GONE);
             }
-            if(!StringUtils.isEmpty(up.title)){
-                holder.tv_title.setText(up.title);
+            String title= up.title;
+            if(up.custom_post_cate != null && !up.custom_post_cate.isEmpty()){
+                title = "【" + up.custom_post_cate + "】" + title;
+            }else if(up.post_cate_title != null && !up.post_cate_title.isEmpty()){
+                title = "【" + up.post_cate_title + "】" + title;
             }
+            holder.tv_title.setText(title);
 
             if(!StringUtils.isEmpty(up.user_name)){
                 holder.tv_user_name.setText(up.user_name);

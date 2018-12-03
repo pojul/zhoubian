@@ -21,4 +21,10 @@ public class UserInfo implements Serializable{
     public int age;
     public String head_url;
     public String phone;
+    public String user_view_time;
+    public String register_time;
+    public String system_msg;
+    public int red_num;
+    public int post_red_num;
+    public int grad_red_num;
 }

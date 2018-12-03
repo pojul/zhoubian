@@ -26,7 +26,6 @@
             android:layout_height="match_parent"
             android:background="#fff"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             />
@@ -37,6 +36,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:clickable="true"
             >
             <ImageView
@@ -63,7 +66,6 @@
             android:layout_height="28dp"
             android:orientation="horizontal"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/fff_3bg"
             android:id="@+id/ll_search"
             >
@@ -96,9 +98,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="9dp"
-            android:layout_marginRight="15dp"
+            android:paddingRight="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:id="@+id/ll_hobby_setting"
+            android:clickable="true"
             >
             <ImageView
                 android:layout_width="18dp"
@@ -125,7 +130,7 @@
         android:layout_height="30dp"
         android:background="#ffffff"
         app:tabMode="scrollable"
-        app:tabMaxWidth="50dp"
+        app:tabMaxWidth="52dp"
         app:tabTextColor="#ff343434"
         app:tabIndicatorColor="#00000000"
         app:tabPadding="0dp"

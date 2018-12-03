@@ -202,7 +202,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }else{
             Glide.with(mContext).load(R.drawable.test_me).into(holderOne.headUrl);
         }
-        if(showRedPackageMsg && reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
+        if(reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
             holderOne.grabRedPackageMsg.setText(reply.grab_red_package_msg);
             holderOne.grabRedPackageMsg.setVisibility(View.VISIBLE);
         }else{
@@ -251,6 +251,9 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             thumbupReply(reply, position);
         });
+        if(reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
+            holderOne.delete.setVisibility(View.GONE);
+        }
     }
 
     private void bindTypeTwo(MyViewHolderTwo holderTwo, int position) {
@@ -478,11 +481,12 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         synchronized (replys){
             replys.addAll(tempReplys);
-            if(hasMore){
+            notifyDataSetChanged();
+            /*if(hasMore){
                 notifyItemRangeInserted((getItemCount() - 1), tempReplys.size());
             }else{
                 notifyItemRangeInserted(getItemCount(), tempReplys.size());
-            }
+            }*/
         }
     }
 

@@ -19,6 +19,7 @@ public class PickPicView extends RecyclerView{
 
     private List<LocalMedia> picList = new ArrayList<>();
     private PickPicAdapter adapter;
+    private int maxSize = 10;
 
     public PickPicView(Context context) {
         super(context);
@@ -39,7 +40,7 @@ public class PickPicView extends RecyclerView{
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
         setLayoutManager(layoutManager);
         setNestedScrollingEnabled(false);
-        adapter = new PickPicAdapter(getContext(), picList, 5);
+        adapter = new PickPicAdapter(getContext(), picList, maxSize);
         setAdapter(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new PicTouchCallBack(adapter));
         itemTouchHelper.attachToRecyclerView(this);

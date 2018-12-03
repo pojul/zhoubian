@@ -21,6 +21,8 @@ import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.model.EmptyEntity;
 import com.yjyc.zhoubian.model.EmptyEntityModel;
+import com.yjyc.zhoubian.model.InfoPost;
+import com.yjyc.zhoubian.model.InfoPostModel;
 import com.yjyc.zhoubian.model.JsonBean;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.LoginModel;
@@ -53,6 +55,8 @@ public class InvestCooperateActivity extends BaseActivity {
     EditText remark;
     @BindView(R.id.submit)
     TextView submit;
+    @BindView(R.id.text)
+    TextView text;
 
     private OptionsPickerView cityOptions;
     private ArrayList<JsonBean> jsonBean;
@@ -66,7 +70,7 @@ public class InvestCooperateActivity extends BaseActivity {
         setContentView(R.layout.activity_invest_cooperate);
         ButterKnife.bind(this);
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
-        initTitleBar("招商合作", v -> onBackPressed());
+        initTitleBar("建议、申诉、招商", v -> onBackPressed());
 
         login = Hawk.get("LoginModel");
         if(login == null){
@@ -77,6 +81,7 @@ public class InvestCooperateActivity extends BaseActivity {
 
         initJsonData();
         showCityPicker();
+        reqData();
     }
 
 
@@ -93,7 +98,7 @@ public class InvestCooperateActivity extends BaseActivity {
     }
 
     private void submit() {
-        if(name.getText().toString().isEmpty()){
+        /*if(name.getText().toString().isEmpty()){
             showToast("姓名不能为空");
             return;
         }
@@ -108,16 +113,16 @@ public class InvestCooperateActivity extends BaseActivity {
         if(tv_city.getText().toString().isEmpty()){
             showToast("请选择所在地区");
             return;
-        }
+        }*/
         if(remark.getText().toString().isEmpty()){
-            showToast("其他信息不能为空");
+            showToast("详细信息不能为空");
             return;
         }
-        String nameStr = name.getText().toString();
+        /*String nameStr = name.getText().toString();
         String phoneStr = phone.getText().toString();
         String companyNameStr = company_name.getText().toString();
         String provinces = tv_city.getText().toString().split("  ")[0];
-        String city = tv_city.getText().toString().split("  ")[1];
+        String city = tv_city.getText().toString().split("  ")[1];*/
         String remarkStr = remark.getText().toString();
         LoadingDialog.showLoading(this);
         OkhttpUtils.with()
@@ -125,11 +130,11 @@ public class InvestCooperateActivity extends BaseActivity {
                 .url(HttpUrl.INFOPOST)
                 .addParams("uid", login.uid + "")
                 .addParams("token", login.token)
-                .addParams("nickname", nameStr)
+               /* .addParams("nickname", nameStr)
                 .addParams("phone", phoneStr)
                 .addParams("provinces", provinces)
                 .addParams("city", city)
-                .addParams("company_name", companyNameStr)
+                .addParams("company_name", companyNameStr)*/
                 .addParams("remark", remarkStr)
                 .execute(new AbsJsonCallBack<EmptyEntityModel, EmptyEntity>() {
                     @Override
@@ -142,6 +147,26 @@ public class InvestCooperateActivity extends BaseActivity {
                     public void onSuccess(EmptyEntity body) {
                         showToast("发布成功");
                         finish();
+                    }
+                });
+    }
+
+    private void reqData(){
+        OkhttpUtils.with()
+                .get()
+                .url(HttpUrl.INFOPOST)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token)
+                .execute(new AbsJsonCallBack<InfoPostModel, InfoPost>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                    }
+
+                    @Override
+                    public void onSuccess(InfoPost body) {
+                        if(body != null && body.sys_content != null){
+                            text.setText(body.sys_content);
+                        }
                     }
                 });
     }

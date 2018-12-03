@@ -543,7 +543,7 @@ public class EditPostDraftActivity extends BaseActivity {
     @OnClick(R.id.tv_price10)
     public void tv_price10() {
         setTvBackground2(R.id.tv_price10);
-        price_unit = "元/折";
+        price_unit = "折";
     }
 
     @OnClick(R.id.tv_red1)

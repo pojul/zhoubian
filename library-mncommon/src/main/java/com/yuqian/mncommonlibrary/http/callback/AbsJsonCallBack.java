@@ -1,5 +1,7 @@
 package com.yuqian.mncommonlibrary.http.callback;
 
+import android.util.Log;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpHead;
@@ -18,7 +20,8 @@ public abstract class AbsJsonCallBack<T, J> extends AbsStringCallback {
     @Override
     public void onSuccess(String responseStr) {
         try {
-            LogUtil.e(responseStr);
+            //LogUtil.e(responseStr);
+            Log.e("AbsJsonCallBack", "onSuccess: " + responseStr);
             Gson gson = new Gson();
             HttpResponse<T, J> response = (HttpResponse<T, J>) gson.fromJson(responseStr, getClasses());
             HttpHead head = response.getHeader();

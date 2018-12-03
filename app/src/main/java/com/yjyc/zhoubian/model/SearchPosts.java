@@ -14,6 +14,7 @@ public class SearchPosts {
         public int user_id;
         public int post_cate_id;
         public String custom_post_cate;
+        public String post_cate_title;
         public String title;
         public String body;
         public String lon;
@@ -26,6 +27,7 @@ public class SearchPosts {
         public String phone;
         public int whether_open;
         public String price;
+        public String price_unit;
         public String key_word;
         public int red_package_rule;
         public int red_package_number;

@@ -24,6 +24,7 @@
             app:riv_tile_mode="clamp"
             app:riv_corner_radius="17dp"
             android:layout_gravity="center_vertical"
+            android:clickable="true"
             />
 
         <TextView
@@ -58,6 +59,7 @@
             app:riv_corner_radius="17dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="14dp"
+            android:clickable="true"
             />
 
         <TextView

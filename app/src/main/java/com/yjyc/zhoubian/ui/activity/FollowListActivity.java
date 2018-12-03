@@ -70,12 +70,7 @@ public class FollowListActivity extends BaseActivity {
         options = new RequestOptions()
                 .centerCrop();
         BarUtils.setStatusBarColor(this, getResources().getColor(R.color.main_bg));
-        initTitleBar("关注列表", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        initTitleBar("关注列表", v -> onBackPressed());
         myAdapter = new MyAdapter();
 
         followUsers();
@@ -91,10 +86,10 @@ public class FollowListActivity extends BaseActivity {
                 .addParams("listRows", "10")
                 .addParams("page", page + "")
                 .execute(new AbsJsonCallBack<FollowUsersModel, FollowUsers>() {
-
-
                     @Override
                     public void onSuccess(FollowUsers body) {
+                        refreshLayout.finishLoadmore();
+                        refreshLayout.finishRefresh();
                         if(body.list == null ){
                             ToastUtils.showShort("网络异常,请稍后重试" );
                             return;
@@ -110,6 +105,8 @@ public class FollowListActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
+                        refreshLayout.finishLoadmore();
+                        refreshLayout.finishRefresh();
                         ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 

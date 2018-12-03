@@ -99,9 +99,9 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/not_trouble"
                     android:layout_marginTop="5dp"
-                    android:layout_gravity="center"/>
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="right"/>
             </LinearLayout>
-
 
             <View
                 android:layout_below="@+id/autograph"
@@ -112,7 +112,6 @@
                 android:background="#cfcfcf"/>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

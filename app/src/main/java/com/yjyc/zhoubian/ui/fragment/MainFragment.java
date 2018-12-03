@@ -20,6 +20,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.baidu.location.BDLocation;
 import com.orhanobut.hawk.Hawk;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -130,6 +132,7 @@ public class MainFragment extends Fragment{
                 Bundle bundle = new Bundle();
                 bundle.putInt("PostId", postId);
                 ((MainActivitys)getActivity()).startActivityAni(PostDetailsActivity.class, bundle);
+                BaseApplication.getIntstance().addViewedPost(myAdapter.getSearchPost(position));
             }
 
             @Override
@@ -157,6 +160,10 @@ public class MainFragment extends Fragment{
     }
 
     private void reqPostList(){
+        if(!hasInit || !isVisible()){
+            return;
+        }
+        LogUtil.e( " hasInit:" + hasInit + "; createId: " + cateId + "; visiable: " + getUserVisibleHint());
         int reqpage = 1;
         if(loadPostFlag != 1){
             reqpage = currentPage + 1;
@@ -167,6 +174,10 @@ public class MainFragment extends Fragment{
                 .url(HttpUrl.POSTS)
                 .addParams("page", ("" + reqpage))
                 .addParams("listRows", ("" + listRows));
+        if(BaseApplication.myLocation != null){
+            okhttpUtils.addParams("lat", "" + BaseApplication.myLocation.getLatitude());
+            okhttpUtils.addParams("lon", "" + BaseApplication.myLocation.getLongitude());
+        }
         if(login == null && cateId == -4){
             return;
         }
@@ -193,20 +204,24 @@ public class MainFragment extends Fragment{
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
                         showShortToast(errorMsg);
-                        refreshLayout.finishLoadmore();
-                        refreshLayout.finishRefresh();
+                        if(refreshLayout != null){
+                            refreshLayout.finishLoadmore();
+                            refreshLayout.finishRefresh();
+                        }
                     }
                     @Override
                     public void onSuccess(SearchPosts body) {
                         if(loadPostFlag <= 1 || nextDownCount <= 1){
                             LoadingDialog.closeLoading();
                         }
-                        refreshLayout.finishLoadmore();
-                        refreshLayout.finishRefresh();
+                        if(refreshLayout != null){
+                            refreshLayout.finishLoadmore();
+                            refreshLayout.finishRefresh();
+                        }
                         if(body == null || body.list == null || body.list.size() <= 0){
                             LoadingDialog.closeLoading();
                             if(loadPostFlag == 0){
-                                showShortToast("没有更多了");
+                                //showShortToast("没有更多了");
                             }
                             if(loadPostFlag > 1){
                                 showShortToast("已经到底了");
@@ -254,6 +269,8 @@ public class MainFragment extends Fragment{
             loadPostFlag = 2;
         }else if(downturnNum == 30){
             loadPostFlag = 3;
+        }else if(downturnNum == 40){
+            loadPostFlag = 4;
         }else if (downturnNum == 50){
             loadPostFlag = 5;
         }

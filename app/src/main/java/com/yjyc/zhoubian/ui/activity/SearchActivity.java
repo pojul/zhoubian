@@ -8,9 +8,11 @@ import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +34,8 @@ import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.adapter.CardAdapter;
 import com.yjyc.zhoubian.adapter.SearchAdapter;
+import com.yjyc.zhoubian.app.BaseApplication;
+import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.PostCate;
 import com.yjyc.zhoubian.model.RedEnvelopeSetting;
 import com.yjyc.zhoubian.model.SearchPostModel;
@@ -39,6 +43,7 @@ import com.yjyc.zhoubian.model.SearchPosts;
 import com.yjyc.zhoubian.model.Searchs;
 import com.yjyc.zhoubian.model.UserGroups;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
+import com.yjyc.zhoubian.ui.view.SwipeBackLayout;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import com.yuqian.mncommonlibrary.refresh.header.MaterialHeader;
@@ -87,17 +92,17 @@ public class SearchActivity extends BaseActivity {
 
     private Context mContext;
 
-    private PopupWindow createTimePop;
+    /*private PopupWindow createTimePop;
     private RecyclerView createTimeRecyclerview;
-    private SearchAdapter createTimeAdapter;
+    private SearchAdapter createTimeAdapter;*/
 
-    private PopupWindow distancePop;
-    private RecyclerView distanceRecyclerview;
-    private SearchAdapter distanceAdapter;
+    //private PopupWindow distancePop;
+    //private RecyclerView distanceRecyclerview;
+    //private SearchAdapter distanceAdapter;
 
-    private PopupWindow pricePop;
+    /*private PopupWindow pricePop;
     private RecyclerView pricePopRecyclerview;
-    private SearchAdapter priceAdapter;
+    private SearchAdapter priceAdapter;*/
 
     private PopupWindow screenPop;
 
@@ -119,6 +124,9 @@ public class SearchActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SwipeBackLayout layout = (SwipeBackLayout) LayoutInflater.from(this).inflate(
+                R.layout.swipe_back_layout, null);
+        layout.attachToActivity(this);
         setContentView(R.layout.activity_search);
         mContext = this;
         ButterKnife.bind(this);
@@ -144,16 +152,29 @@ public class SearchActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt("PostId", postId);
                 startActivityAni(PostDetailsActivity.class, bundle);
+                BaseApplication.getIntstance().addViewedPost(myAdapter.getSearchPost(position));
             }
 
             @Override
             public void onLongClick(int position) {
-
             }
 
             @Override
             public void onDeleteClick(ImageView iv_delete, boolean isDown, int[] position) {
             }
+        });
+
+        et_keyWord.setOnKeyListener((v, keyCode, event) -> {
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                ((InputMethodManager) mContext.getSystemService(INPUT_METHOD_SERVICE))
+                        .hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                String inputContent = et_keyWord.getText().toString().trim();
+                if (inputContent.isEmpty()) {
+                } else {
+                    searchPost();
+                }
+            }
+            return false;
         });
     }
 
@@ -391,7 +412,7 @@ public class SearchActivity extends BaseActivity {
                 });
             }
 
-            MultipleTextViewGroup mt_address = contentView.findViewById(R.id.mt_address);
+            /*MultipleTextViewGroup mt_address = contentView.findViewById(R.id.mt_address);
             List<String> dataList4 = new ArrayList<String>();
 
             dataList4.add("当前");
@@ -399,7 +420,7 @@ public class SearchActivity extends BaseActivity {
             dataList4.add("B");
             dataList4.add("C");
 
-            mt_address.setTextViews(dataList4);
+            mt_address.setTextViews(dataList4);*/
 
             mt_type = contentView.findViewById(R.id.mt_type);
             List<String> dataList5 = new ArrayList<String>();
@@ -457,9 +478,9 @@ public class SearchActivity extends BaseActivity {
         screenPop.showAsDropDown(rg);
     }
 
-    ArrayList<RedEnvelopeSetting> pricedatas = new ArrayList<>();
+    //ArrayList<RedEnvelopeSetting> pricedatas = new ArrayList<>();
     private void showPricePop() {
-        View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
+       /* View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
         if(pricePopRecyclerview ==  null){
             pricePopRecyclerview = contentView.findViewById(R.id.recyclerview);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);//纵向线性布局
@@ -472,19 +493,19 @@ public class SearchActivity extends BaseActivity {
 
             priceAdapter.setOnItemClickListener(new com.yjyc.zhoubian.adapter.OnItemClickListener() {
                 @Override
-                public void onClick(int position) {
+                public void onClick(int position) {*/
                     setChecked();
                     tag = 4;
-                    order = pricedatas.get(position).title;
-                    pricedatas.get(position).isChecked = 1;
+                    order = "由低到高";
+                    /*pricedatas.get(position).isChecked = 1;
                     priceAdapter.notifyDataSetChanged();
-                    pricePop.dismiss();
+                    pricePop.dismiss();*/
                     if(!ProgressDialog.isShowing()){
                         ProgressDialog.showDialog(SearchActivity.this);
                     }
                     page = 1;
                     searchPost();
-                }
+               /* }
 
                 @Override
                 public void onLongClick(int position) {
@@ -507,7 +528,7 @@ public class SearchActivity extends BaseActivity {
 
         pricePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onDismiss() {
+            public void onDismiss() {*/
                 for (int i = 1; i <= rg.getChildCount(); i++){
                     if(tag == i){
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(true);
@@ -515,15 +536,15 @@ public class SearchActivity extends BaseActivity {
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(false);
                     }
                 }
-            }
+           /* }
         });
 
         //显示PopupWindow
-        pricePop.showAsDropDown(rg);
+        pricePop.showAsDropDown(rg);*/
     }
 
     private void setChecked() {
-        for (RedEnvelopeSetting red : pricedatas){
+        /*for (RedEnvelopeSetting red : pricedatas){
             red.isChecked = 2;
         }
 
@@ -533,12 +554,12 @@ public class SearchActivity extends BaseActivity {
 
         for (RedEnvelopeSetting red : timedatas){
             red.isChecked = 2;
-        }
+        }*/
     }
 
-    final ArrayList<RedEnvelopeSetting> timedatas = new ArrayList<>();
+    //final ArrayList<RedEnvelopeSetting> timedatas = new ArrayList<>();
     private void showCreateTimePop() {
-        View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
+        /*View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
         if(createTimeRecyclerview ==  null){
             createTimeRecyclerview = contentView.findViewById(R.id.recyclerview);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);//纵向线性布局
@@ -551,19 +572,19 @@ public class SearchActivity extends BaseActivity {
 
             createTimeAdapter.setOnItemClickListener(new com.yjyc.zhoubian.adapter.OnItemClickListener() {
                 @Override
-                public void onClick(int position) {
+                public void onClick(int position) {*/
                     setChecked();
                     tag = 3;
-                    order = timedatas.get(position).title;
-                    timedatas.get(position).isChecked = 1;
-                    createTimeAdapter.notifyDataSetChanged();
-                    createTimePop.dismiss();
+                    order = "时间由现在到以前";
+                    //timedatas.get(position).isChecked = 1;
+                    /*createTimeAdapter.notifyDataSetChanged();
+                    createTimePop.dismiss();*/
                     if(!ProgressDialog.isShowing()){
                         ProgressDialog.showDialog(SearchActivity.this);
                     }
                     page = 1;
                     searchPost();
-                }
+                /*}
 
                 @Override
                 public void onLongClick(int position) {
@@ -582,11 +603,11 @@ public class SearchActivity extends BaseActivity {
             createTimePop = new PopupWindow(contentView,
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
             createTimePop.setContentView(contentView);
-        }
+        }*/
 
-        createTimePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        /*createTimePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onDismiss() {
+            public void onDismiss() {*/
                 for (int i = 1; i <= rg.getChildCount(); i++){
                     if(tag == i){
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(true);
@@ -594,15 +615,15 @@ public class SearchActivity extends BaseActivity {
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(false);
                     }
                 }
-            }
+           /* }
         });
 
         //显示PopupWindow
-        createTimePop.showAsDropDown(rg);
+        createTimePop.showAsDropDown(rg);*/
     }
-    ArrayList<RedEnvelopeSetting> distancedatas = new ArrayList<>();
+    //ArrayList<RedEnvelopeSetting> distancedatas = new ArrayList<>();
     private void showDistancePop() {
-        View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
+       /* View contentView = LayoutInflater.from(SearchActivity.this).inflate(R.layout.searchpopuplayout, null);
         if(distanceRecyclerview ==  null){
             distanceRecyclerview = contentView.findViewById(R.id.recyclerview);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);//纵向线性布局
@@ -616,19 +637,19 @@ public class SearchActivity extends BaseActivity {
 
             distanceAdapter.setOnItemClickListener(new com.yjyc.zhoubian.adapter.OnItemClickListener() {
                 @Override
-                public void onClick(int position) {
+                public void onClick(int position) {*/
                     setChecked();
                     tag = 2;
-                    order = distancedatas.get(position).title;
-                    distancedatas.get(position).isChecked = 1;
-                    distanceAdapter.notifyDataSetChanged();
-                    distancePop.dismiss();
+                    order = "由近到远";//distancedatas.get(position).title;
+                    //distancedatas.get(position).isChecked = 1;
+                    //distanceAdapter.notifyDataSetChanged();
+                    //distancePop.dismiss();
                     if(!ProgressDialog.isShowing()){
                         ProgressDialog.showDialog(SearchActivity.this);
                     }
                     page = 1;
                     searchPost();
-                }
+                /*}
 
                 @Override
                 public void onLongClick(int position) {
@@ -642,16 +663,16 @@ public class SearchActivity extends BaseActivity {
             });
         }else {
             distanceAdapter.notifyDataSetChanged();
-        }
-        if(distancePop == null){
+        }*/
+        /*if(distancePop == null){
             distancePop = new PopupWindow(contentView,
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, true);
             distancePop.setContentView(contentView);
-        }
+        }*/
 
-        distancePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        /*distancePop.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
-            public void onDismiss() {
+            public void onDismiss() {*/
                 for (int i = 1; i <= rg.getChildCount(); i++){
                     if(tag == i){
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(true);
@@ -659,11 +680,11 @@ public class SearchActivity extends BaseActivity {
                         ((RadioButton)rg.getChildAt(i - 1)).setChecked(false);
                     }
                 }
-            }
+            /*}
         });
 
         //显示PopupWindow
-        distancePop.showAsDropDown(rg);
+        distancePop.showAsDropDown(rg);*/
     }
 
     private void searchPost() {
@@ -693,6 +714,15 @@ public class SearchActivity extends BaseActivity {
             params.put("dayTime", dayTime == -1 ? "" : dayTime + "");
             params.put("userGroup", userGroupsId == -1 ? "" : userGroupsId + "");
             params.put("postCateId", post_cate_id == -1 ? "" : post_cate_id + "");
+        }
+        if(BaseApplication.myLocation != null){
+            params.put("lat", "" + BaseApplication.myLocation.getLatitude());
+            params.put("lon", "" + BaseApplication.myLocation.getLongitude());
+        }
+        Login login = Hawk.get("LoginModel");
+        if(login != null){
+            params.put("uid", ("" + login.uid));
+            params.put("token", ("" + login.token));
         }
         OkhttpUtils.with()
                 .post()

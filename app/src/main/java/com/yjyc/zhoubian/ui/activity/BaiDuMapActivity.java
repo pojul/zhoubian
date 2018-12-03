@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -18,11 +19,14 @@ import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
@@ -101,6 +105,10 @@ public class BaiDuMapActivity extends Activity implements SensorEventListener,On
         mLocClient.setLocOption(option);
         mLocClient.start();
 
+        if(BaseApplication.getIntstance().getLocation() != null){
+            zoonToMyLocation();
+        }
+
         /**
          * 地图状态发生变化
          */
@@ -124,17 +132,31 @@ public class BaiDuMapActivity extends Activity implements SensorEventListener,On
         });
     }
 
+    private void zoonToMyLocation() {
+        LatLng latLng = new LatLng(BaseApplication.getIntstance().getLocation().getLatitude(),
+                BaseApplication.getIntstance().getLocation().getLongitude());
+        MapStatus mMapStatus = new MapStatus.Builder()
+                .target(latLng)
+                .zoom(mBaiduMap.getMaxZoomLevel() - 3)
+                .build();
+        MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+        mBaiduMap.setMapStatus(mMapStatusUpdate);
+    }
+
     @OnClick(R.id.tv_next)
     public void tv_next(){
         ProgressDialog.showDialog(mContext);
         GeoCoder mSearch = null;
         mSearch = GeoCoder.newInstance();
         mSearch.setOnGetGeoCodeResultListener(this);
+        if(mSearch== null || latLng == null){
+            ProgressDialog.dismiss();
+            Toast.makeText(mContext, "请移动地图选择位置", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mSearch.reverseGeoCode(new ReverseGeoCodeOption()
                 .location(latLng));
     }
-
-
 
     @Override
     public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {

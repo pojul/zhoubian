@@ -40,6 +40,7 @@ public class PickPicAdapter extends RecyclerView.Adapter<PickPicAdapter.MyViewHo
     private ItemTouchHelper itemTouchHelper;
     private int maxSize = 10;
 
+
     public PickPicAdapter(Context mContext, List<LocalMedia> datas, int maxSize) {
         this.mContext = mContext;
         this.datas = datas;
@@ -62,7 +63,7 @@ public class PickPicAdapter extends RecyclerView.Adapter<PickPicAdapter.MyViewHo
         }else{
             LocalMedia pic = datas.get(position);
             holder.delete.setVisibility(View.VISIBLE);
-            holder.tv.setVisibility(View.VISIBLE);
+            holder.tv.setVisibility(View.GONE);
             holder.pic.setVisibility(View.VISIBLE);
             holder.picAdd.setVisibility(View.GONE);
             String path = pic.getPath();

@@ -62,16 +62,21 @@ import com.yjyc.zhoubian.model.RedEnvelopeDistanceModel;
 import com.yjyc.zhoubian.model.RedEnvelopeSetting;
 import com.yjyc.zhoubian.model.RedEnvelopeSettingModel;
 import com.yjyc.zhoubian.model.UploadModel;
+import com.yjyc.zhoubian.model.UserGroupInfo;
 import com.yjyc.zhoubian.model.UserGroupModel;
 import com.yjyc.zhoubian.model.UserGroups;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
+import com.yjyc.zhoubian.model.UserPostNum;
+import com.yjyc.zhoubian.model.UserPostNumModel;
 import com.yjyc.zhoubian.ui.activity.BaiDuMapActivity;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
+import com.yjyc.zhoubian.ui.activity.RechargeActivity;
 import com.yjyc.zhoubian.ui.activity.ReleaseSuccessActivity;
 import com.yjyc.zhoubian.ui.dialog.ProgressDialog;
 import com.yjyc.zhoubian.ui.view.pickpicview.PickPicView;
 import com.yjyc.zhoubian.utils.ArrayUtil;
+import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yjyc.zhoubian.utils.PermissionUtils;
 import com.yjyc.zhoubian.utils.UploadFileUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
@@ -254,6 +259,10 @@ public class PublishFragment extends Fragment{
             main_rl.setOnMultipleTVItemClickListener((view, i) -> {
                 PostCate.Data pc = pcs.get(i);
                 if(pc.getIsChecked() == 1){
+                    main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                    ((TextView)main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.color080808));
+                    pcs.get(i).setIsChecked(2);
+                    post_cate_id = -1;
                 }else {
                     main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                     ((TextView)main_rl.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
@@ -290,6 +299,11 @@ public class PublishFragment extends Fragment{
                 public void onMultipleTVItemClick(View view, int i) {
                     RedEnvelopeSetting pc = redEnvelopeSettings.get(i);
                     if(pc.isChecked == 1){
+                        main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView)main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.color080808));
+                        redEnvelopeSettings.get(i).isChecked = 2;
+                        red_package_money = -1;
+                        tv_red_package_money.setText(0 + "元");
                     }else {
                         main_rl3.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                         ((TextView)main_rl3.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
@@ -332,6 +346,10 @@ public class PublishFragment extends Fragment{
                 public void onMultipleTVItemClick(View view, int i) {
                     RedEnvelopeDistance pc = redEnvelopeDistances.get(i);
                     if(pc.isChecked == 1){
+                        main_rl4.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                        ((TextView)main_rl4.getChildAt(i)).setTextColor(getResources().getColor(R.color.color080808));
+                        redEnvelopeDistances.get(i).isChecked = 2;
+                        rob_red_package_range = -1;
                     }else {
                         main_rl4.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                         ((TextView)main_rl4.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
@@ -345,7 +363,6 @@ public class PublishFragment extends Fragment{
                             ((TextView)main_rl4.getChildAt(j)).setTextColor(getResources().getColor(R.color.color080808));
                             redEnvelopeDistances.get(j).isChecked = 2;
                         }
-
                         rob_red_package_range = pc.id;
                     }
                 }
@@ -355,6 +372,12 @@ public class PublishFragment extends Fragment{
         }
 
         if(Hawk.contains("userGroups")){
+            UserGroupInfo userGroupInfo = Hawk.get("UserGroupInfo");
+            if(userGroupInfo != null){
+                user_group_id = userGroupInfo.user_group_id;
+                user_name = userGroupInfo.user_name;
+                et_user_name.setText("" + user_name);
+            }
             userGroups = Hawk.get("userGroups");
 
             List<String> dataList = new ArrayList<String>();
@@ -366,6 +389,10 @@ public class PublishFragment extends Fragment{
             main_rl2.setOnMultipleTVItemClickListener((view, i) -> {
                 UserGroups.UserGroup pc = userGroups.get(i);
                 if(pc.isChecked == 1){
+                    main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.fff_3_stroke_1bg));
+                    ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.color080808));
+                    userGroups.get(i).isChecked = 2;
+                    user_group_id = -1;
                 }else {
                     main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
                     ((TextView)main_rl2.getChildAt(i)).setTextColor(getResources().getColor(R.color.white));
@@ -381,6 +408,13 @@ public class PublishFragment extends Fragment{
                     }
 
                     user_group_id = userGroups.get(i).id;
+                }
+            });
+            main_rl2.post(()->{
+                for (int i = 0; i < userGroups.size(); i++) {
+                    if(userGroups.get(i).id == user_group_id){
+                        main_rl2.getChildAt(i).performClick();
+                    }
                 }
             });
         }else {
@@ -431,6 +465,12 @@ public class PublishFragment extends Fragment{
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.tv_price1)
+    public void tv_price1() {
+        setTvBackground2(R.id.tv_price1);
+        price_unit = "元";
     }
 
     @OnClick(R.id.tv_price2)
@@ -484,7 +524,7 @@ public class PublishFragment extends Fragment{
     @OnClick(R.id.tv_price10)
     public void tv_price10(){
         setTvBackground2(R.id.tv_price10);
-        price_unit = "元/折";
+        price_unit = "折";
     }
 
     @OnClick(R.id.tv_red1)
@@ -679,6 +719,34 @@ public class PublishFragment extends Fragment{
         uploadPics();
     }
 
+    /*public void reqUserPostNum(){
+        Login login = Hawk.get("LoginModel");
+        if(login == null){
+            return;
+        }
+        LoadingDialog.showLoading(getActivity());
+        OkhttpUtils.with()
+                .post()
+                .url(HttpUrl.userPostNum)
+                .addParams("uid", login.uid + "")
+                .addParams("token", login.token + "")
+                .execute(new AbsJsonCallBack<UserPostNumModel, UserPostNum>() {
+                    @Override
+                    public void onFailure(String errorCode, String errorMsg) {
+                        LoadingDialog.closeLoading();
+                        Toast.makeText(getActivity(), "上传失败", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(UserPostNum body) {
+                        LoadingDialog.closeLoading();
+                        if(body == null || body.user_post_num <= 0){
+                            Toast.makeText(getActivity(), "今日发帖次数已达上限", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }*/
+
     private void uploadPics() {
         ProgressDialog.showDialog(getActivity());
         List<String> pics = pickPicView.getPics();
@@ -774,6 +842,7 @@ public class PublishFragment extends Fragment{
         if(red_package_money > 0){
             if(StringUtils.isEmpty(getPostMsg.single_red_money) || red_package_money > Double.parseDouble(getPostMsg.user_balance)){
                 ToastUtils.showShort("您的余额不足");
+                getContext().startActivity(new Intent(getActivity(), RechargeActivity.class));
                 return false;
             }
 
@@ -839,6 +908,10 @@ public class PublishFragment extends Fragment{
 
                     @Override
                     public void onSuccess(Login body) {
+                        UserGroupInfo userGroupInfo = new UserGroupInfo();
+                        userGroupInfo.user_group_id = user_group_id;
+                        userGroupInfo.user_name = user_name;
+                        Hawk.put("UserGroupInfo", userGroupInfo);
                         MainActivitys activity = (MainActivitys)getActivity();
                         activity.reLoadFragView();
                         startActivity(new Intent(getActivity(), ReleaseSuccessActivity.class));
@@ -903,6 +976,10 @@ public class PublishFragment extends Fragment{
                     @Override
                     public void onSuccess(Login body) {
                         LoadingDialog.closeLoading();
+                        UserGroupInfo userGroupInfo = new UserGroupInfo();
+                        userGroupInfo.user_group_id = user_group_id;
+                        userGroupInfo.user_name = user_name;
+                        Hawk.put("UserGroupInfo", userGroupInfo);
                         MainActivitys activity = (MainActivitys)getActivity();
                         activity.reLoadFragView();
                         Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();

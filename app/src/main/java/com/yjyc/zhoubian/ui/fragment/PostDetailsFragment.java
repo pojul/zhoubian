@@ -143,18 +143,23 @@ public class PostDetailsFragment extends BaseFragment {
     TextView redPasswdTv;
     @BindView(R.id.red_package_password)
     TextView redPackagePassword;
+    @BindView(R.id.rob_red_package)
+    ImageView robRedPackage;
     @BindView(R.id.rob_red_package_note)
     TextView robRedPackageNote;
     @BindView(R.id.rea_package_left)
     TextView reaPackageLeft;
     @BindView(R.id.comment_num)
     TextView commentNum;
+    @BindView(R.id.red_money)
+    TextView red_money;
+    @BindView(R.id.show_red_package_msgtv)
+    TextView show_red_package_msgtv;
     @BindView(R.id.image_ll)
     LinearLayout image_ll;
     @BindView(R.id.show_red_package_msg)
     CheckBox showRedPackageMsg;
 
-    //MyAdapter myAdapter;
     PostReplyAdapter replyAdapter;
     InterestPostAdapter myAdapter2;
 
@@ -164,6 +169,7 @@ public class PostDetailsFragment extends BaseFragment {
     private static final int INIT = 328;
     private List<ReplyPostList.ReplyPost> replys = new ArrayList<>();
     private UserInfo userInfo;
+    private List<SearchPosts.SearchPost> datas = new ArrayList<>();
 
 
     public PostDetailsFragment(PostDetailsActivity activity, int postId) {
@@ -184,7 +190,7 @@ public class PostDetailsFragment extends BaseFragment {
 
     private void initViews() {
         replyAdapter = new PostReplyAdapter(getActivity(), replys);
-        myAdapter2 = new InterestPostAdapter(new ArrayList<>(), getActivity());
+        myAdapter2 = new InterestPostAdapter(datas, getActivity());
         recyclerView.setNestedScrollingEnabled(false);
 
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());//纵向线性布局
@@ -263,8 +269,15 @@ public class PostDetailsFragment extends BaseFragment {
         recyclerView.setAdapter(replyAdapter);
 
         title.setText(postDetail.title);
-        nickName.setText(postDetail.user_name);
-        phone.setText(postDetail.phone);
+        //nickName.setText(postDetail.user_name);
+        if(postDetail.nickname != null && !postDetail.nickname.isEmpty()){
+            nickName.setText(postDetail.nickname);
+        }else{
+            nickName.setText("佚名");
+        }
+
+        phone.setText("（" + postDetail.phone.substring(0, 3)+ "****" +
+                postDetail.phone.substring(7, postDetail.phone.length()) + "）");
         if(postDetail.head_url != null && !postDetail.head_url.isEmpty()){
             Glide.with(this).load((HttpUrl.BASE_URL + postDetail.head_url)).into(userPhoto);
         }
@@ -285,17 +298,16 @@ public class PostDetailsFragment extends BaseFragment {
             ivCollect.setSelected(true);
             tvCollect.setSelected(true);
         }
-        BDLocation location = BaseApplication.getIntstance().getLocation();
-        if(location == null){
+        if(BaseApplication.myLocation == null){
             distance.setText("获取位置失败");
         }else{
-            double ddistance = DistanceUtil.getDistance(new LatLng(postDetail.lat, postDetail.lon), new LatLng(location.getLatitude(), location.getLongitude()));
+            double ddistance = DistanceUtil.getDistance(new LatLng(postDetail.lat, postDetail.lon), new LatLng(BaseApplication.myLocation.getLatitude(), BaseApplication.myLocation.getLongitude()));
             String distanceStr = MyDistanceUtil.getDisttanceStr(ddistance);
             distance.setText("距离" + distanceStr);
         }
 
         StringBuffer baseInfoStr = new StringBuffer();
-        if(Hawk.contains("userGroups")){
+        /*if(Hawk.contains("userGroups")){
             ArrayList<UserGroups.UserGroup> userGroups = Hawk.get("userGroups");
             for (int i = 0; i < userGroups.size(); i++) {
                 UserGroups.UserGroup userGroup = userGroups.get(i);
@@ -306,7 +318,13 @@ public class PostDetailsFragment extends BaseFragment {
                     break;
                 }
             }
+        }*/
+        if(postDetail.user_group_id != null && !postDetail.user_group_id.isEmpty()){
+            baseInfoStr.append("【");
+            baseInfoStr.append(postDetail.user_group_id);
+            baseInfoStr.append("】");
         }
+
         baseInfoStr.append(postDetail.user_name);
         baseInfoStr.append("发布于");
         baseInfoStr.append(DateUtil.getPostDetailDate(postDetail.create_time));
@@ -337,8 +355,23 @@ public class PostDetailsFragment extends BaseFragment {
         }else{
             keyWord.setVisibility(View.GONE);
         }
-        if(postDetail.red_package_money > 0){
+        if(postDetail.red_package_rule > 0){
             redPackageLl.setVisibility(View.VISIBLE);
+            /*showRedPackageMsg.setVisibility(View.VISIBLE);
+            show_red_package_msgtv.setVisibility(View.VISIBLE);*/
+            if(postDetail.red_package_rule >= 2){
+                robRedPackage.setFocusable(false);
+                robRedPackage.setFocusableInTouchMode(false);
+                robRedPackage.setClickable(false);
+            }
+            if(postDetail.has_grab_status){
+                robRedPackage.setFocusable(false);
+                robRedPackage.setFocusableInTouchMode(false);
+                robRedPackage.setClickable(false);
+                robRedPackage.setSelected(true);
+                red_money.setVisibility(View.VISIBLE);
+                red_money.setText("已抢" + postDetail.single_red_money + "元");
+            }
             if(postDetail.red_package_password != null && !postDetail.red_package_password.isEmpty()){
                 redPasswdTv.setVisibility(View.VISIBLE);
                 redPackagePassword.setVisibility(View.VISIBLE);
@@ -425,6 +458,12 @@ public class PostDetailsFragment extends BaseFragment {
         if (str != null && !str.isEmpty()) {
             okHttpUtils.addParams("red_package_password", str);
         }
+        if(BaseApplication.myLocation != null){
+            okHttpUtils.addParams("lon", "" +BaseApplication.myLocation.getLongitude());
+            okHttpUtils.addParams("lat", "" + BaseApplication.myLocation.getLatitude());
+            okHttpUtils.addParams("city", "" + BaseApplication.myLocation.getCity());
+            okHttpUtils.addParams("province", "" + BaseApplication.myLocation.getProvince());
+        }
         okHttpUtils.execute(new AbsJsonCallBack<GrabRedEnvelopeModel, GrabRedEnvelope>() {
             @Override
             public void onFailure(String errorCode, String errorMsg) {
@@ -439,8 +478,13 @@ public class PostDetailsFragment extends BaseFragment {
                 postDetail.grad_red_package_number++;
                 reaPackageLeft.setText(("已抢" + postDetail.grad_red_package_number + "份，剩余"
                         + (postDetail.red_package_number - postDetail.grad_red_package_number) + "份"));
-
-                if (str != null && !str.isEmpty()) {
+                robRedPackage.setFocusable(false);
+                robRedPackage.setFocusableInTouchMode(false);
+                robRedPackage.setClickable(false);
+                robRedPackage.setSelected(true);
+                red_money.setVisibility(View.VISIBLE);
+                red_money.setText("已抢" + body.money + "元");
+                //if (str != null && !str.isEmpty()) {
                     ReplyPostList.ReplyPost replyPost = new ReplyPostList().new ReplyPost();
                     replyPost._level = 1;
                     replyPost.id = Integer.parseInt(body.id);
@@ -450,8 +494,9 @@ public class PostDetailsFragment extends BaseFragment {
                     replyPost.interval_time = "刚刚";
                     replyPost.article_id = postDetail.id;
                     replyPost.uid = login.uid;
+                    replyPost.grab_red_package_msg = str;
                     replyAdapter.addOneLevelData(replyPost);
-                }
+               //}
             }
         });
     }

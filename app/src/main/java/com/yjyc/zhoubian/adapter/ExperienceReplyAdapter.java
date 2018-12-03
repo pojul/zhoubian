@@ -489,8 +489,8 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void addOneLevelData(ReplyPostList.ReplyPost reply){
         synchronized (replys){
-            replys.add(reply);
-            notifyItemInserted(replys.size());
+            replys.add(0, reply);
+            notifyItemInserted(0);
             notifyItemRangeChanged(0, replys.size());
         }
     }

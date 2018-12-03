@@ -35,6 +35,7 @@
 
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -118,7 +119,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:text="说明：您可自定义帖子细分类别，如周末兼职、二手手机等，限8字以内。"
+                android:text="说明：您可自定义帖子细分类别，如周末兼职、二手手机等，限8字以内。首页标题前的【xxx】就是自定义分类哦！"
                 android:textSize="12sp"
                 android:textColor="#c4c4c4"
                 />
@@ -563,6 +564,7 @@
                 android:textSize="12sp"
                 android:singleLine="true"
                 android:gravity="center_vertical"
+                android:maxLength="15"
                 android:paddingLeft="10dp"
                 />
 
@@ -749,7 +751,7 @@
                     android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     />
 
                 <LinearLayout
@@ -1266,7 +1268,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="往帖子里塞红包后，红包标志会吸引用户点进来抢红包，红包帖的排序也会靠前（红包未抢完前，不可删除，只可编辑，红包抢完后可以删除）"
+                        android:text="往帖子里塞红包后，红包标志会吸引用户点进来抢红包，红包帖的排序也会靠前"
                         android:textSize="12sp"
                         android:textColor="#c4c4c4"
                         android:lineSpacingExtra="5dp"
@@ -1302,6 +1304,7 @@
                     android:paddingLeft="9dp"
                     android:paddingRight="9dp"
                     android:layout_marginTop="23dp"
+                    android:maxLength="20"
                     android:gravity="center_vertical"
                     />
 

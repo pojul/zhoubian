@@ -24,7 +24,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:id="@+id/body_ll"
-                android:visibility="gone"
                 >
                 <TextView
                     android:id="@+id/title"
@@ -106,6 +105,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -143,11 +143,11 @@
                     android:layout_marginRight="15dp"
                     >
                     <TextView
-                        android:visibility="invisible"
+                        android:id="@+id/create_time"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="【个人】陈先生发布于5月22日  17:21"
+                        android:text="发布于5月22日  17:21"
                         android:textSize="11sp"
                         android:textColor="#6d6d6d"
                         android:gravity="bottom"
@@ -335,6 +335,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:visibility="gone"
             android:id="@+id/collect_rl"
             android:layout_width="0dp"
             android:layout_height="match_parent"

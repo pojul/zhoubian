@@ -2,21 +2,26 @@ package com.yjyc.zhoubian.im;
 
 import android.content.Context;
 import android.os.Vibrator;
+import android.view.View;
 
 import com.orhanobut.hawk.Hawk;
+import com.yjyc.zhoubian.Dao.ChatMessageDao;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.im.chat.ui.ChatActivity;
 import com.yjyc.zhoubian.im.entity.ChatMessage;
 import com.yjyc.zhoubian.im.entity.Conversation;
+import com.yjyc.zhoubian.model.LastSiteMsg;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
 import com.yjyc.zhoubian.utils.DateUtil;
 import com.yuntongxun.ecsdk.ECMessage;
+import com.yuntongxun.ecsdk.im.ECImageMessageBody;
 import com.yuntongxun.ecsdk.im.ECTextMessageBody;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,9 +40,17 @@ public class ECMIm {
     private ECMIm(Context context) {
         this.mContext = context;
         conversations = Hawk.get("conversations");
-        if(conversations == null){
+        if (conversations == null) {
             conversations = new ArrayList<>();
-            Hawk.put("conversations", conversations);
+            Conversation conversation = new Conversation();
+            conversation.setFrom("-1");
+            conversation.setLastTimeMilli(System.currentTimeMillis());
+            conversation.setLastChatTime(DateUtil.converterDate(System.currentTimeMillis()));
+            conversation.setLastMessage("");
+            conversations.add(conversation);
+            synchronized (conversations) {
+                Hawk.put("conversations", conversations);
+            }
         }
     }
 
@@ -65,6 +78,11 @@ public class ECMIm {
             chatRoomMessages = new ArrayList<>();
             messages.put(ecMessage.getForm(), chatRoomMessages);
         }
+        if(ecMessage.getType() == ECMessage.Type.IMAGE){
+            ECImageMessageBody picMessageBody = (ECImageMessageBody) ecMessage.getBody();
+            picMessageBody.setHDImageURL(picMessageBody.getRemoteUrl());
+        }
+        new ChatMessageDao().insertMessage(new ChatMessage(ecMessage));
         if(chatActivity != null && chatActivity.messageListAdapter != null
                 && ecMessage.getForm().equals(("" + chatActivity.friendId))){
             chatActivity.messageListAdapter.addMessage(ecMessage);
@@ -74,6 +92,7 @@ public class ECMIm {
             vibrator.vibrate(new long[]{100, 200, 100, 200}, -1);
         }
         checkNewConversation(ecMessage);
+        updateHomeUnread();
     }
 
     public void addMessage(List<ChatMessage> messages, ECMessage ecMessage){
@@ -109,7 +128,11 @@ public class ECMIm {
         }
         Conversation conversation = getConversation(from);
         if(conversation == null){
-            reqUserInfo(from, ecMessage);
+            conversation = new Conversation();
+            conversation.setFrom(from);
+            ECMIm.getInstance().conversations.add(conversation);
+            Hawk.put("conversations", ECMIm.getInstance().conversations);
+            reqUserInfo(from, ecMessage, conversation);
         }else{
             updateConversation(conversation, ecMessage);
         }
@@ -125,14 +148,27 @@ public class ECMIm {
                         mainActivitys.conversationFragment.conversationAdapter.notifyDataSetChanged();
                     }
                     Hawk.put("conversations", conversations);
-                    return;
                 }
             }
         }
+        updateHomeUnread();
+    }
+
+    public void clearOfficialUndead(){
+        synchronized (conversations){
+            LastSiteMsg lastSiteMsg = Hawk.get("LastSiteMsg");
+            if(lastSiteMsg != null){
+                lastSiteMsg.setUnReadNum(0);
+                Hawk.put("LastSiteMsg", lastSiteMsg);
+                if(mainActivitys != null && mainActivitys.conversationFragment!= null && mainActivitys.conversationFragment.conversationAdapter != null){
+                    mainActivitys.conversationFragment.conversationAdapter.notifyOfficialMsg();
+                }
+            }
+        }
+        updateHomeUnread();
     }
 
     private void updateConversation(Conversation conversation, ECMessage ecMessage) {
-        conversation.setUnReadMessage(conversation.getUnReadMessage() + 1);
         String time = DateUtil.converterDate(ecMessage.getMsgTime());
         conversation.setLastChatTime(time.substring(0, time.lastIndexOf(" ")));
         if(ecMessage.getType() == ECMessage.Type.TXT){
@@ -195,11 +231,45 @@ public class ECMIm {
             if(mainActivitys != null && mainActivitys.conversationFragment!= null && mainActivitys.conversationFragment.conversationAdapter != null){
                 mainActivitys.conversationFragment.conversationAdapter.notifyDataSetChanged();
             }
+            Hawk.put("conversations", conversations);
         }
-        Hawk.put("conversations", conversations);
     }
 
-    public void reqUserInfo(String from, ECMessage ecMessage) {
+    private void createConversation(UserInfo friend, String from, ECMessage ecMessage, Conversation conversation) {
+        String time = DateUtil.converterDate(ecMessage.getMsgTime());
+        conversation.setLastChatTime(time.substring(0, time.lastIndexOf(" ")));
+        if(ecMessage.getType() == ECMessage.Type.TXT){
+            ECTextMessageBody textMessageBody = (ECTextMessageBody) ecMessage.getBody();
+            conversation.setLastMessage(textMessageBody.getMessage());
+        }else if(ecMessage.getType() == ECMessage.Type.IMAGE){
+            conversation.setLastMessage("图片");
+        }else if(ecMessage.getType() == ECMessage.Type.VOICE){
+            conversation.setLastMessage("语音");
+        }else if(ecMessage.getType() == ECMessage.Type.FILE){
+            conversation.setLastMessage("文件");
+        }else if(ecMessage.getType() == ECMessage.Type.LOCATION){
+            conversation.setLastMessage("位置");
+        }else{
+            conversation.setLastMessage("");
+        }
+        conversation.setFriend(friend);
+        conversation.setFrom(from);
+        if(chatActivity != null && chatActivity.messageListAdapter != null
+                && conversation.getFrom().equals(("" + chatActivity.friendId))){
+            conversation.setUnReadMessage(0);
+        }else{
+            conversation.setUnReadMessage(conversation.getUnReadMessage() + 1);
+        }
+        conversation.setNotTroubled(false);
+        conversation.setLastTimeMilli(ecMessage.getMsgTime());
+        synchronized (conversations){
+            if(mainActivitys != null && mainActivitys.conversationFragment!= null && mainActivitys.conversationFragment.conversationAdapter != null){
+                mainActivitys.conversationFragment.conversationAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    public void reqUserInfo(String from, ECMessage ecMessage, Conversation conversation) {
         OkhttpUtils.with()
                 .post()
                 .url(HttpUrl.USERINFO)
@@ -207,24 +277,47 @@ public class ECMIm {
                 .execute(new AbsJsonCallBack<UserInfoModel, UserInfo>() {
                     @Override
                     public void onSuccess(UserInfo body) {
-                        createConversation(body, from, ecMessage);
+                        createConversation(body, from, ecMessage, conversation);
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        createConversation(new UserInfo(), from, ecMessage);
+                        createConversation(new UserInfo(), from, ecMessage, conversation);
                     }
                 });
     }
 
     public Conversation getConversation(String from){
-        for (int i = 0; i < conversations.size(); i++) {
-            Conversation conversation = conversations.get(i);
-            if(conversation.getFrom().equals(from)){
-                return conversation;
+        synchronized (conversations){
+            for (int i = 0; i < conversations.size(); i++) {
+                Conversation conversation = conversations.get(i);
+                if(conversation.getFrom().equals(from)){
+                    return conversation;
+                }
+            }
+            return null;
+        }
+    }
+
+    public void updateHomeUnread() {
+        int totalUnreadNum = 0;
+        synchronized (conversations){
+            for (int i = 0; i < conversations.size(); i++) {
+                Conversation conversation = conversations.get(i);
+                if(conversation != null){
+                    totalUnreadNum = totalUnreadNum + conversation.getUnReadMessage();
+                }
+            }
+            LastSiteMsg lastSiteMsg = Hawk.get("LastSiteMsg");
+            if(lastSiteMsg != null){
+                totalUnreadNum = totalUnreadNum + lastSiteMsg.getUnReadNum();
+            }
+            if(totalUnreadNum > 0 && mainActivitys != null){
+                mainActivitys.unread_msg.setVisibility(View.VISIBLE);
+            }else{
+                mainActivitys.unread_msg.setVisibility(View.GONE);
             }
         }
-        return null;
     }
 
     public void registerChatActivity(ChatActivity chatActivity){

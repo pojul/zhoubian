@@ -57,6 +57,7 @@ public class ValuableBookFragment extends Fragment{
     private ExperienceAdapter adapter;
     private List<ExperienceList.Experience> experiences = new ArrayList<>();
     private int loadPostFlag = 1;
+    public boolean init;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +81,7 @@ public class ValuableBookFragment extends Fragment{
 
         //设置 Footer 为 经典样式
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
+        refreshLayout.autoLoadmore();
         refreshLayout.setOnLoadmoreListener(refreshlayout -> {
             loadPostFlag = 0;
             reqExperience(false);
@@ -122,10 +124,15 @@ public class ValuableBookFragment extends Fragment{
                         LoadingDialog.closeLoading();
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadmore();
-                        if(loadPostFlag == 1){
+                        adapter.addDatas(body.list);
+                        if(page == 1){
+                            new Handler(Looper.getMainLooper()).postDelayed(()->{
+                                recyclerview.smoothScrollToPosition(0);
+                            }, 600);
+                        }
+                        if(loadPostFlag == 0){
                             page = page + 1;
                         }
-                        adapter.addDatas(body.list);
                     }
                 });
     }

@@ -22,7 +22,7 @@
                 android:layout_width="30sp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="6dp"
                 android:clickable="true"
                 android:padding="7dp"
                 android:scaleType="fitCenter"
@@ -42,6 +42,7 @@
                 android:textSize="18sp" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/menu"
                 android:layout_width="22dp"
                 android:layout_height="21dp"
@@ -54,13 +55,15 @@
         </RelativeLayout>
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:background="#dddddd">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/message_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="#f7f7f7">
             </android.support.v7.widget.RecyclerView>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
     </LinearLayout>
@@ -77,22 +80,21 @@
         android:paddingTop="9dp"
         android:paddingBottom="9dp">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/voice_hold"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:padding="6dp"
             android:src="@drawable/selector_chat_voice"
             android:clickable="true"
-            android:layout_marginLeft="2dp"/>
+            android:layout_marginLeft="2dp"/>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="6dp"
-            android:layout_toRightOf="@+id/voice_hold"
-            android:layout_toLeftOf="@+id/emoji">
+            android:layout_toLeftOf="@+id/more_message_rl">
 
             <EditText
                 android:id="@+id/input_et"
@@ -101,7 +103,7 @@
                 android:textSize="12sp"
                 android:hint="请输入你的消息"
                 android:textColorHint="#cccccc"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="8dp"
                 android:paddingLeft="5dp"
                 android:textColor="#787878"
                 android:background="@drawable/corner_border_et"/>
@@ -120,34 +122,46 @@
                 />
         </RelativeLayout>
 
-        <ImageView
+        <!--<Button
+            android:id="@+id/send"
+            android:layout_width="50dp"
+            android:layout_height="26dp"
+            android:background="@drawable/selector_mess_send"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentRight="true"
+            android:text="发送"/>-->
+
+        <!--<ImageView
             android:id="@+id/emoji"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:padding="6dp"
             android:src="@drawable/emoji"
-            android:layout_toLeftOf="@+id/more_message_rl" />
+            android:layout_toLeftOf="@+id/more_message_rl" />-->
 
         <RelativeLayout
             android:id="@+id/more_message_rl"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="2dp"
+            android:layout_marginRight="6dp"
             android:clickable="true">
             <ImageView
                 android:id="@+id/more_message"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:padding="6dp"
+                android:layout_width="31dp"
+                android:layout_height="31dp"
+                android:padding="3dp"
                 android:src="@drawable/more_message"
                 android:clickable="true"/>
 
             <Button
                 android:visibility="gone"
                 android:id="@+id/send"
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
+                android:layout_width="45dp"
+                android:layout_height="26dp"
                 android:background="@drawable/selector_mess_send"
                 android:textSize="12sp"
                 android:textColor="#FFFFFF"

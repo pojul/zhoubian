@@ -22,6 +22,7 @@ public class PostCollectionLists {
         public String user_name;
         public String title;
         public String custom_post_cate;
+        public String post_cate_title;
         public List<String> pic;
         public String lon;
         public String lat;

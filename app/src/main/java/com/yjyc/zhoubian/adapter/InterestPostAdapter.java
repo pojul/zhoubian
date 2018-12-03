@@ -2,9 +2,14 @@ package com.yjyc.zhoubian.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.v4.widget.PopupWindowCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +30,14 @@ import com.orhanobut.logger.Logger;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.PullUserBlack;
 import com.yjyc.zhoubian.model.PullUserBlackModel;
 import com.yjyc.zhoubian.model.SearchPosts;
+import com.yjyc.zhoubian.ui.activity.BaseActivity;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
+import com.yjyc.zhoubian.ui.activity.MyFootprintActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
 import com.yjyc.zhoubian.ui.activity.SearchActivity;
@@ -46,7 +54,7 @@ import java.util.List;
  */
 
 public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private ArrayList<SearchPosts.SearchPost> datas = new ArrayList<>();
+    private List<SearchPosts.SearchPost> datas = new ArrayList<>();
     private Context mContext;
     private OnItemClickListener mOnItemClickListener;
     public static final int TYPE_ONE = 0;
@@ -56,7 +64,7 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
     private PopupWindow popWindow;
     private int offsetX;
     private int offsetY;
-    public InterestPostAdapter(ArrayList<SearchPosts.SearchPost> datas, Context mCcontext) {
+    public InterestPostAdapter(List<SearchPosts.SearchPost> datas, Context mCcontext) {
         this.datas = datas;
         this.mContext = mCcontext;
         options = new RequestOptions()
@@ -182,6 +190,22 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else if (holder instanceof MyViewHolderThree) {
             bindTypeThree((MyViewHolderThree) holder, position);
         }
+
+        holder.itemView.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("PostId", datas.get(position).id);
+            ((BaseActivity)mContext).startActivityAni(PostDetailsActivity.class, bundle);
+        });
+
+        if( mOnItemClickListener!= null){
+            holder. itemView.setOnLongClickListener( new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mOnItemClickListener.onLongClick(position);
+                    return false;
+                }
+            });
+        }
     }
 
     private void bindTypeOne(final MyViewHolderOne holderOne, int itemPosition) {
@@ -199,8 +223,27 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
             showPopWindow(holderOne.iv_delete, isDown, position, itemPosition);
         });
         SearchPosts.SearchPost sp = datas.get(itemPosition);
-        if(!StringUtils.isEmpty(sp.title)){
-            holderOne.tv_title.setText(sp.title);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holderOne.tv_title.setText(spannableString);
+        }else{
+            holderOne.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){
@@ -278,6 +321,8 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((SearchActivity)mContext).rl_bg.setVisibility(View.GONE);
             }else if(mContext instanceof PostDetailsActivity){
                 ((PostDetailsActivity)mContext).rl_bg.setVisibility(View.GONE);
+            }else if(mContext instanceof MyFootprintActivity){
+                ((MyFootprintActivity)mContext).rl_bg.setVisibility(View.GONE);
             }
         });
 
@@ -295,6 +340,8 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
             ((SearchActivity)mContext).rl_bg.setVisibility(View.VISIBLE);
         }else if(mContext instanceof PostDetailsActivity){
             ((PostDetailsActivity)mContext).rl_bg.setVisibility(View.VISIBLE);
+        }else if(mContext instanceof MyFootprintActivity){
+            ((MyFootprintActivity)mContext).rl_bg.setVisibility(View.VISIBLE);
         }
     }
 
@@ -359,8 +406,27 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
         SearchPosts.SearchPost sp = datas.get(itemPosition );
-        if(!StringUtils.isEmpty(sp.title)){
-            holderTwo.tv_title.setText(sp.title);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holderTwo.tv_title.setText(spannableString);
+        }else{
+            holderTwo.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){
@@ -412,8 +478,27 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
         });
 
         SearchPosts.SearchPost sp = datas.get(itemPosition);
-        if(!StringUtils.isEmpty(sp.title)){
-            holder.tv_title.setText(sp.title);
+        String title= sp.title;
+        if(sp.custom_post_cate != null && !sp.custom_post_cate.isEmpty()){
+            title = "【" + sp.custom_post_cate + "】" + title;
+        }else if(sp.post_cate_title != null && !sp.post_cate_title.isEmpty()){
+            title = "【" + sp.post_cate_title + "】" + title;
+        }
+        String price = "";
+        if(sp.price != null && !sp.price.isEmpty()){
+            price = " ¥" + sp.price + "";
+        }
+        if(sp.price_unit != null && !sp.price_unit.isEmpty()){
+            price = price + "" + sp.price_unit;
+        }
+        if(!price.isEmpty()){
+            title = title + " " + price;
+            SpannableString spannableString = new SpannableString(title);
+            spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#d53c3c")),
+                    (title.length() - price.length()), title.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            holder.tv_title.setText(spannableString);
+        }else{
+            holder.tv_title.setText(title);
         }
 
         if(!StringUtils.isEmpty(sp.user_name)){

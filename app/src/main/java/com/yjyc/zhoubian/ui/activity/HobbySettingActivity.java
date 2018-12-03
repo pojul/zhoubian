@@ -87,7 +87,7 @@ public class HobbySettingActivity extends BaseActivity {
                             for (String str : strs){
                                 ids.add(str);
                             }
-                            for (int i = 0; i < pcs1.size() - 1; i++){
+                            for (int i = 0; i < pcs1.size(); i++){
                                     if(ids.contains(pcs1.get(i).getId() + "")){
                                         pcs1.get(i).setIsChecked(1);
                                         main_rl.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
@@ -102,7 +102,7 @@ public class HobbySettingActivity extends BaseActivity {
                             for (String str : strs){
                                 ids.add(str);
                             }
-                            for (int i = 0; i < pcs2.size() - 1; i++){
+                            for (int i = 0; i < pcs2.size(); i++){
                                 if(ids.contains(pcs2.get(i).getId() + "")){
                                     pcs2.get(i).setIsChecked(1);
                                     main_rl2.getChildAt(i).setBackground(getResources().getDrawable(R.drawable.d53c3c_3bg));
@@ -230,10 +230,10 @@ public class HobbySettingActivity extends BaseActivity {
                 sb2.append(pc.getId()).append(",");
             }
         }
-        if(!tag){
+        /*if(!tag){
             ToastUtils.showShort("请选择爱好帖子的类别");
             return;
-        }
+        }*/
         String hobby_post_cate_ids = "";
         if(!StringUtils.isEmpty(sb1.toString())){
             hobby_post_cate_ids = sb1.toString().substring(0, sb1.toString().length() - 1);
@@ -244,8 +244,8 @@ public class HobbySettingActivity extends BaseActivity {
             shield_post_cate_ids = sb2.toString().substring(0, sb2.toString().length() - 1);
         }
 
-        String hobby_post_key_words = "";
-        if(!StringUtils.isEmpty(et1.getText().toString().trim())){
+        String hobby_post_key_words = et1.getText().toString();
+       /* if(!StringUtils.isEmpty(et1.getText().toString().trim())){
             StringBuilder sb = new StringBuilder();
             String[] strs = et1.getText().toString().split(" ");
             for (String str : strs){
@@ -253,10 +253,10 @@ public class HobbySettingActivity extends BaseActivity {
             }
 
             hobby_post_key_words = sb.toString().substring(0, sb.toString().length() - 1);
-        }
+        }*/
 
-        String shield_post_key_words = "";
-        if(!StringUtils.isEmpty(et2.getText().toString().trim())){
+        String shield_post_key_words = et2.getText().toString();
+        /*if(!StringUtils.isEmpty(et2.getText().toString().trim())){
             StringBuilder sb = new StringBuilder();
             String[] strs = et2.getText().toString().split(" ");
             for (String str : strs){
@@ -264,7 +264,7 @@ public class HobbySettingActivity extends BaseActivity {
             }
 
             shield_post_key_words = sb.toString().substring(0, sb.toString().length() - 1);
-        }
+        }*/
         Login loginModel = Hawk.get("LoginModel");
         OkhttpUtils.with()
                 .post()
