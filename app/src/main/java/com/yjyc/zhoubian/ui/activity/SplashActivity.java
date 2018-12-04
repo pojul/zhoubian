@@ -45,7 +45,7 @@ public class SplashActivity extends BaseActivity implements CustomTimeDown.OnTim
     }
 
     private void getPic(){
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPIC)
                 .execute(new AbsJsonCallBack<GetPicModel, GetPic>() {

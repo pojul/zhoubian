@@ -157,7 +157,6 @@ public class MainActivitys extends AppCompatActivity {
         userGroup();
         updateUserTime();
 
-
         PermissionUtils.checkLocationPermission(MainActivitys.this, new PermissionUtils.PermissionCallBack() {
             @Override
             public void onGranted() {
@@ -186,7 +185,7 @@ public class MainActivitys extends AppCompatActivity {
 
     private void reqVersionInfo() {
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.UPDATEAPP)
                 /*.addParams("uid", ("" + login.uid))
@@ -428,7 +427,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void distance() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.DISTANCE)
                 .execute(new AbsJsonCallBack<SearchModel, Searchs>() {
@@ -456,7 +455,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void searchTimeForDay() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.SEARCHTIMEFORDAY)
                 .execute(new AbsJsonCallBack<SearchModel, Searchs>() {
@@ -484,7 +483,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void userGroup() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.USERGROUP)
                 .execute(new AbsJsonCallBack<UserGroupModel, UserGroups>() {
@@ -515,7 +514,7 @@ public class MainActivitys extends AppCompatActivity {
         if(login == null){
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.UPDATEUSERTIME)
                 .addParams("uid", login.uid + "")
@@ -535,7 +534,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void getRedEnvelopeDistance() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPEDISTANCE)
                 .execute(new AbsJsonCallBack<RedEnvelopeDistanceModel, RedEnvelopeDistance[]>() {
@@ -563,7 +562,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void getRedEnvelopeSetting() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPESETTING)
                 .execute(new AbsJsonCallBack<RedEnvelopeSettingModel, RedEnvelopeSetting[]>() {
@@ -591,7 +590,7 @@ public class MainActivitys extends AppCompatActivity {
     }
 
     private void postCate() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate>() {

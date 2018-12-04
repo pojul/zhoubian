@@ -151,16 +151,6 @@
                         android:layout_marginTop="25dp"
                         />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#565656"
-                        android:text="(关键词之间请一定用空格隔开)"
-                        android:textSize="12sp"
-                        android:layout_marginRight="15dp"
-                        android:layout_marginTop="24dp"
-                        />
-
                 </LinearLayout>
 
                 <net.masonliu.multipletextview.library.MultipleTextViewGroup
@@ -183,16 +173,32 @@
                     app:columnNum="5"
                     app:overspread="false" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#080808"
-                    android:text="请输入您的屏蔽关键词"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginTop="30dp"
-                    />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#080808"
+                        android:text="请输入您的屏蔽关键词"
+                        android:textSize="14sp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="30dp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#565656"
+                        android:text="(关键词之间请一定用空格隔开)"
+                        android:textSize="12sp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginTop="30dp"
+                        />
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/et2"

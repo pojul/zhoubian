@@ -152,7 +152,7 @@ public class EvaluateActivity extends BaseActivity {
 
     private void submitData(List<String> pics) {
         String picStrs = getUploadPics(pics);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.EVALUATIONEXPOSE)
                 .addParams("uid", login.uid + "")

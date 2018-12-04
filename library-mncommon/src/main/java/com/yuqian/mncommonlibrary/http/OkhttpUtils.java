@@ -81,15 +81,15 @@ public class OkhttpUtils {
     /**
      * okHttpClient
      */
-    private static OkHttpClient okHttpClient;
+    private OkHttpClient okHttpClient;
     /**
      * 请求的集合
      */
-    private static HashMap<String, Call> mCallHashMap = new HashMap<>();
+    private HashMap<String, Call> mCallHashMap = new HashMap<>();
     /**
      * OkhttpUtils对象
      */
-    private static OkhttpUtils okhttpUtils;
+    private OkhttpUtils okhttpUtils;
     /**
      * GET请求标记
      */
@@ -112,7 +112,7 @@ public class OkhttpUtils {
      */
     private OkhttpRequestModel okhttpRequestModel;
 
-    private OkhttpUtils() {
+    public OkhttpUtils() {
         okhttpRequestModel = new OkhttpRequestModel();
     }
 
@@ -121,8 +121,10 @@ public class OkhttpUtils {
      *
      * @return
      */
-    public static OkhttpUtils with() {
-        okhttpUtils = new OkhttpUtils();
+    public OkhttpUtils with() {
+        /*okhttpUtils = new OkhttpUtils();
+        return okhttpUtils;*/
+        okhttpUtils = this;
         return okhttpUtils;
     }
 
@@ -531,8 +533,8 @@ public class OkhttpUtils {
      *
      * @param okhttpBuilder
      */
-    public static void setOkhttpBuilder(OkHttpClient.Builder okhttpBuilder) {
-        OkhttpUtils.okHttpClient = ProgressManager.getInstance().with(okhttpBuilder).build();
+    public void setOkhttpBuilder(OkHttpClient.Builder okhttpBuilder) {
+        okHttpClient = ProgressManager.getInstance().with(okhttpBuilder).build();
     }
 
     /**
@@ -540,7 +542,7 @@ public class OkhttpUtils {
      *
      * @return
      */
-    public static OkHttpClient getOkhttpClient() {
+    public OkHttpClient getOkhttpClient() {
         if (okHttpClient == null) {
             OkHttpClient.Builder builder = getOkhttpDefaultBuilder();
             okHttpClient = ProgressManager.getInstance().with(builder).build();
@@ -606,7 +608,7 @@ public class OkhttpUtils {
      *
      * @param tag
      */
-    public static void cancle(Object tag) {
+    public void cancle(Object tag) {
         try {
             if (mCallHashMap != null && mCallHashMap.size() > 0) {
                 //获取KEY的集合
@@ -633,7 +635,7 @@ public class OkhttpUtils {
     /**
      * 取消所有请求
      */
-    public static void cancleAll() {
+    public void cancleAll() {
         try {
             if (mCallHashMap != null && mCallHashMap.size() > 0) {
                 //获取KEY的集合

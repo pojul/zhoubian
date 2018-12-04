@@ -320,7 +320,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.LIKE)
                 .addParams("uid", ("" + login.uid))
@@ -349,7 +349,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.DELETEEXPERIENCEREPLY)
                 .addParams("uid", ("" + login.uid))
@@ -389,7 +389,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             Login login = Hawk.get("LoginModel");
             UserInfo userInfo = Hawk.get("userInfo");
             LoadingDialog.showLoading(mContext);
-            OkhttpUtils.with()
+            new OkhttpUtils().with()
                     .post()
                     .url(HttpUrl.REPLYEXPERIENCE)
                     .addParams("uid", ("" + login.uid))
@@ -489,9 +489,10 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void addOneLevelData(ReplyPostList.ReplyPost reply){
         synchronized (replys){
-            replys.add(0, reply);
-            notifyItemInserted(0);
-            notifyItemRangeChanged(0, replys.size());
+            replys.add(reply);
+            notifyDataSetChanged();
+            /*notifyItemInserted(0);
+            notifyItemRangeChanged(0, replys.size());*/
         }
     }
 

@@ -424,7 +424,7 @@ public class PublishFragment extends Fragment{
     }
 
     private void getPostMsg() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPOSTMSG)
                 .addParams("uid", loginModel.uid + "")
@@ -569,7 +569,7 @@ public class PublishFragment extends Fragment{
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(getActivity());
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTCODE)
                 .addParams("phone", et_phone.getText().toString())
@@ -900,7 +900,7 @@ public class PublishFragment extends Fragment{
             map.put("red_package_password", et_red_package_password.getText().toString().trim());
             map.put("rob_red_package_range", rob_red_package_range + "");
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERPOST)
                 .params(map)
@@ -967,7 +967,7 @@ public class PublishFragment extends Fragment{
             map.put("rob_red_package_range", rob_red_package_range + "");
         }
         LoadingDialog.showLoading(getActivity());
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTSAVEDRAFT)
                 .params(map)
@@ -1098,7 +1098,7 @@ public class PublishFragment extends Fragment{
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(getActivity());
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate>() {
@@ -1128,7 +1128,7 @@ public class PublishFragment extends Fragment{
     }
 
     private void getRedEnvelopeSetting() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPESETTING)
                 .execute(new AbsJsonCallBack<RedEnvelopeSettingModel, RedEnvelopeSetting[]>() {
@@ -1156,7 +1156,7 @@ public class PublishFragment extends Fragment{
     }
 
     private void userGroup() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.USERGROUP)
                 .execute(new AbsJsonCallBack<UserGroupModel, UserGroups>() {
@@ -1183,7 +1183,7 @@ public class PublishFragment extends Fragment{
     }
 
     private void getRedEnvelopeDistance() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPEDISTANCE)
                 .execute(new AbsJsonCallBack<RedEnvelopeDistanceModel, RedEnvelopeDistance[]>() {

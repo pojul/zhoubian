@@ -69,6 +69,7 @@ public abstract class AbsOkhttpCallback<T extends Object> implements Callback {
                     errorMsg = HttpErrorConstants.ERR_SOCKETTIMEOUTEXCEPTION_ERROR;
                 } else {
                     //其他网络异常
+                    Log.e("AbsOkhttpCallback", "onFailure 72");
                     errorMsg = HttpErrorConstants.ERR_NETEXCEPTION_ERROR;
                 }
                 onFail(errorCode, errorMsg);
@@ -79,6 +80,7 @@ public abstract class AbsOkhttpCallback<T extends Object> implements Callback {
 
     @Override
     public void onResponse(Call call, final Response response) throws IOException {
+        Log.e("AbsOkhttpCallback", "onResponse: 83 response: " + response);
         try {
             if (200 == response.code()) {
                 String body = response.body().string();
@@ -124,6 +126,7 @@ public abstract class AbsOkhttpCallback<T extends Object> implements Callback {
                     @Override
                     public void run() {
                         //解析异常
+                        Log.e("AbsOkhttpCallback", "onResponse 128");
                         onFail(response.code() + "", HttpErrorConstants.ERR_NETEXCEPTION_ERROR);
                     }
                 });

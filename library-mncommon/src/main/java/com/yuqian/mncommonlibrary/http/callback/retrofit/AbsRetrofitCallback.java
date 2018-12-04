@@ -1,6 +1,8 @@
 package com.yuqian.mncommonlibrary.http.callback.retrofit;
 
 
+import android.util.Log;
+
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
 
 import java.net.ConnectException;
@@ -75,6 +77,7 @@ public abstract class AbsRetrofitCallback<M> implements Callback<M> {
             errorMsg = HttpErrorConstants.ERR_SOCKETTIMEOUTEXCEPTION_ERROR;
         } else {
             //其他网络异常
+            Log.e("AbsRetrofitCallback", "onFailure 80");
             errorMsg = HttpErrorConstants.ERR_NETEXCEPTION_ERROR;
         }
         onFailure(errorCode, errorMsg);

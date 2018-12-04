@@ -109,7 +109,7 @@ public class RechargeRecordActivity extends BaseActivity {
         if(showDialog){
             LoadingDialog.showLoading(this);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.RECHARGELOG)
                 .addParams("uid", ("" + login.uid))

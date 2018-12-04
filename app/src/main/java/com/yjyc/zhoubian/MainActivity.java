@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         String signature = Md5Util.GetMD5Code(sb.toString());
         map.put("signature", signature);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .postForm()
                 .url("http://xxxx:1406/cardealersys/app/login")
                 .addParams("username", "123")
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startPost() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(mPostUrl)
                 .addParams("channel", "android")
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startGet() {
-        OkhttpUtils
+        new OkhttpUtils()
                 .with()
                 .get()
                 .url(mGetUrl)
@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startDownload() {
-        OkhttpUtils
+        new OkhttpUtils()
                 .with()
                 .download()
                 .url(mDownloadUrl)
@@ -292,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void startUpload() {
-        OkhttpUtils
+        new OkhttpUtils()
                 .with()
                 .upload()
                 .addFilePath(Environment.getExternalStorageDirectory() + "/test.jpg")

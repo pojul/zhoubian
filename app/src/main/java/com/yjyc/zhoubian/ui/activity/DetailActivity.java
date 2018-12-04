@@ -118,7 +118,7 @@ public class DetailActivity extends BaseActivity {
     private void balanceDetails(String type, String time) {
 
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.BALANCEDETAILS)
                 .addParams("uid", loginModel.uid + "")

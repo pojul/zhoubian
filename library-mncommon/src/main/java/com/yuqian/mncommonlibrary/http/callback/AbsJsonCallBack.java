@@ -2,12 +2,10 @@ package com.yuqian.mncommonlibrary.http.callback;
 
 import android.util.Log;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.Gson;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpHead;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpResponse;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
-import com.yuqian.mncommonlibrary.utils.LogUtil;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

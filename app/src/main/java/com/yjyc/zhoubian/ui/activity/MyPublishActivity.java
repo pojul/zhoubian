@@ -180,7 +180,7 @@ public class MyPublishActivity extends BaseActivity {
         if(login == null || (login.uid + "").equals(uid)){
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.CHECKEVALUATIONEXPOSE)
                 .addParams("uid", (login.uid + ""))
@@ -199,7 +199,7 @@ public class MyPublishActivity extends BaseActivity {
     }
 
     private void userInfo() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", uid)

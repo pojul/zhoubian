@@ -102,10 +102,11 @@ public class PublishValuableBookActivity extends BaseActivity {
         if(Hawk.get("LoginModel") == null){
             showToast("请先登陆");
             startActivity(new Intent(this, LoginActivity.class));
+            LoadingDialog.closeLoading();
             return;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.EXPERIENCECATE)
                 .execute(new AbsJsonCallBack<ExperienceCateModel, List<ExperienceCate>>() {
@@ -183,7 +184,7 @@ public class PublishValuableBookActivity extends BaseActivity {
         int cateId = getCateId(cates.getSelectTags().get(0));
         String customCateStr = "" + customCate.getText().toString();
         String picStrs = getUploadPics(pics);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.EXPERIENCESAVE)
                 .addParams("uid", login.uid + "")

@@ -76,7 +76,7 @@ public class OfficialMsgActivity extends BaseActivity {
     }
 
     private void loadMsgs() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.SITEMSG)
                 .addParams("uid", login.uid + "")

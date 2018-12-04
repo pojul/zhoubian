@@ -125,7 +125,7 @@ public class InvestCooperateActivity extends BaseActivity {
         String city = tv_city.getText().toString().split("  ")[1];*/
         String remarkStr = remark.getText().toString();
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.INFOPOST)
                 .addParams("uid", login.uid + "")
@@ -152,7 +152,7 @@ public class InvestCooperateActivity extends BaseActivity {
     }
 
     private void reqData(){
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.INFOPOST)
                 .addParams("uid", login.uid + "")

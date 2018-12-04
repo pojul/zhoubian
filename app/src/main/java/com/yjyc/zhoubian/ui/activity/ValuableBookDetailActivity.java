@@ -139,7 +139,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
 
     private void reqData() {
         LoadingDialog.showLoading(this);
-        OkhttpUtils okHttpUtils = OkhttpUtils.with()
+        OkhttpUtils okHttpUtils = new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.EXPERIENCEDETAIL + id);
         if(login != null){
@@ -252,7 +252,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
         }
         LoadingDialog.showLoading(this);
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.CANCELFOLLOW)
                 .addParams("follow_user_id", ("" + experienceDetail.detail.uid))
@@ -284,7 +284,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
         }
         LoadingDialog.showLoading(this);
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.FOLLOW)
                 .addParams("follow_user_id", ("" + experienceDetail.detail.uid))
@@ -315,7 +315,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
         Login login = Hawk.get("LoginModel");
         UserInfo userInfo = Hawk.get("userInfo");
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REPLYEXPERIENCE)
                 .addParams("uid", ("" + login.uid))
@@ -355,7 +355,7 @@ public class ValuableBookDetailActivity extends BaseActivity {
             uid = loginModel.uid;
             token = loginModel.token;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REPLYEXPERIENCELIST)
                 .addParams("uid", ("" + uid))

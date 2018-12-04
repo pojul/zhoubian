@@ -153,7 +153,7 @@ public class DraftsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.DELETEPOSTDRAFT)
                 .addParams("uid", ("" + login.uid))

@@ -218,12 +218,6 @@ public class BaseApplication extends Application {
             public void OnReceivedMessage(ECMessage ecMessage) {
                 //toast("OnReceivedMessage");
                 LogUtil.e("OnReceivedMessage");
-                /*for (int i = 0; i < IReceiveMessages.size(); i++) {
-                    IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
-                    if(iReceiveMessage != null){
-                        iReceiveMessage.OnReceivedMessage(ecMessage);
-                    }
-                }*/
                 ECMIm.getInstance().onReceiveMessage(ecMessage);
             }
 
@@ -257,12 +251,6 @@ public class BaseApplication extends Application {
             public void onReceiveOfflineMessage(List<ECMessage> list) {
                 //toast("onReceiveOfflineMessage");
                 //LogUtil.e("onReceiveOfflineMessage------>" + new Gson().toJson(list));
-                /*for (int i = 0; i < IReceiveMessages.size(); i++) {
-                    IReceiveMessage iReceiveMessage = IReceiveMessages.get(i);
-                    if(iReceiveMessage != null){
-                        iReceiveMessage.onReceiveOfflineMessage(list);
-                    }
-                }*/
                 synchronized (ECMIm.getInstance().conversations){
                     for (int i = 0; i < list.size(); i++) {
                         ECMIm.getInstance().onReceiveMessage(list.get(i));

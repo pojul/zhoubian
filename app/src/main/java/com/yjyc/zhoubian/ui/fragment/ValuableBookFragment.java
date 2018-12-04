@@ -95,17 +95,16 @@ public class ValuableBookFragment extends Fragment{
     }
 
     private void reqExperience(boolean showDialog) {
-
         int tempPage = 1;
         if(loadPostFlag == 0){
             tempPage = page + 1;
         }else if(loadPostFlag == 1){
             page = 1;
         }
-        if(showDialog){
+        /*if(showDialog){
             LoadingDialog.showLoading(getActivity());
-        }
-        OkhttpUtils.with()
+        }*/
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.EXPERIENCELIST)
                 .addParams("page", ("" + tempPage))
@@ -113,7 +112,7 @@ public class ValuableBookFragment extends Fragment{
                 .execute(new AbsJsonCallBack<ExperienceListModel, ExperienceList>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        LoadingDialog.closeLoading();
+                        //LoadingDialog.closeLoading();
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadmore();
                         Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
@@ -121,7 +120,7 @@ public class ValuableBookFragment extends Fragment{
 
                     @Override
                     public void onSuccess(ExperienceList body) {
-                        LoadingDialog.closeLoading();
+                        //LoadingDialog.closeLoading();
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadmore();
                         adapter.addDatas(body.list);

@@ -122,7 +122,7 @@ public class MyCollectActivity extends BaseActivity {
             myAdapter.clearDatas();
         }
 
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTCOLLECTIONLISTS)
                 .addParams("uid", loginModel.uid + "")
@@ -565,7 +565,7 @@ public class MyCollectActivity extends BaseActivity {
             }*/
             LoadingDialog.showLoading(mContext);
             Login login = Hawk.get("LoginModel");
-            OkhttpUtils.with()
+            new OkhttpUtils().with()
                     .post()
                     .url(HttpUrl.CANCELPOSTCOLLECTION)
                     .addParams("uid", ("" + login.uid))

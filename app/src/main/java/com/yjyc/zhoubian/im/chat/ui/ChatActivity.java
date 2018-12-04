@@ -167,7 +167,7 @@ public class ChatActivity extends BaseActivity {
 
     private void reqInInBlackList() {
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETCHATSTATE)
                 .addParams("uid", login.uid + "")
@@ -194,7 +194,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void reqFriendInfo(String friendId) {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", friendId + "")

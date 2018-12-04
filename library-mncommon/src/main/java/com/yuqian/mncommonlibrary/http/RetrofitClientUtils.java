@@ -24,7 +24,7 @@ public class RetrofitClientUtils {
                     .baseUrl(API_SERVER_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(OkhttpUtils.getOkhttpClient())
+                    .client(new OkhttpUtils().getOkhttpClient())
                     .build();
         }
         return mRetrofit;
@@ -39,7 +39,7 @@ public class RetrofitClientUtils {
                     .baseUrl(API_SERVER_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(OkhttpUtils.getOkhttpClient())
+                    .client(new OkhttpUtils().getOkhttpClient())
                     .build();
         }
         return mRetrofitString;

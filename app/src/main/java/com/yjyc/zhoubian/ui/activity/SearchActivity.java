@@ -724,7 +724,7 @@ public class SearchActivity extends BaseActivity {
             params.put("uid", ("" + login.uid));
             params.put("token", ("" + login.token));
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.SEARCHPOST)
                 .params(params)

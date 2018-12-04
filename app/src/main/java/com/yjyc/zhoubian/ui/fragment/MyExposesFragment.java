@@ -115,7 +115,7 @@ public class MyExposesFragment extends BaseFragment {
         }else{
             reqpage = page + 1;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.ACCEPTEVALUATIONEXPOSE)
                 .addParams("uid", activity.uid)

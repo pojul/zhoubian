@@ -412,7 +412,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.PULLUSERBLACK)
                 .addParams("uid", ("" + loginModel.uid))

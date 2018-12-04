@@ -107,7 +107,7 @@ public class MyPublishFragment extends BaseFragment {
     }
 
     public void userPostList() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERPOSTLIST)
                 .addParams("uid", uid)
@@ -584,7 +584,7 @@ public class MyPublishFragment extends BaseFragment {
             return;
         }
         LoadingDialog.showLoading(getActivity());
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REFRESHPOST)
                 .addParams("uid", login.uid + "")
@@ -612,7 +612,7 @@ public class MyPublishFragment extends BaseFragment {
         if(login == null || !(login.uid + "").equals(uid)){
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.DELETEPOST)
                 .addParams("uid", login.uid + "")

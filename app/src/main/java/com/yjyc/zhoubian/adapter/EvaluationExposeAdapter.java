@@ -359,7 +359,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.DELETEVALUATIONEXPOSE)
                 .addParams("uid", ("" + login.uid))
@@ -390,7 +390,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         DialogUtil.getInstance().showCommentDialog(mContext, ((MyPublishActivity)mContext).root_ll, 2, evaluationExpose.user_reply.body);
         DialogUtil.getInstance().setDialogClick(str -> {
             LoadingDialog.showLoading(mContext);
-            OkhttpUtils.with()
+            new OkhttpUtils().with()
                     .post()
                     .url(HttpUrl.UPDATEVALUATIONEXPOSE)
                     .addParams("uid", ("" + login.uid))
@@ -423,7 +423,7 @@ public class EvaluationExposeAdapter extends RecyclerView.Adapter<RecyclerView.V
         DialogUtil.getInstance().showCommentDialog(mContext, ((MyPublishActivity)mContext).root_ll, 2, null);
         DialogUtil.getInstance().setDialogClick(str -> {
             LoadingDialog.showLoading(mContext);
-            OkhttpUtils.with()
+            new OkhttpUtils().with()
                     .post()
                     .url(HttpUrl.REPLYEVALUATIONEXPOSE)
                     .addParams("uid", ("" + login.uid))

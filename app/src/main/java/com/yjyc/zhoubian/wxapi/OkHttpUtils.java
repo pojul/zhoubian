@@ -2,6 +2,7 @@ package com.yjyc.zhoubian.wxapi;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
@@ -68,6 +69,7 @@ public class OkHttpUtils {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                Log.e("OkHttpUtils", "onResponse: 72 response: " + response);
                 try {
                     String str = response.body().string();
                     if (callback.mType == String.class) {

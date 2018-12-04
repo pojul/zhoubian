@@ -224,7 +224,7 @@ public class EditProfileActivity extends BaseActivity {
 
     private void userInfo() {
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", loginModel.uid + "")
@@ -490,7 +490,7 @@ public class EditProfileActivity extends BaseActivity {
         userInfo.sign = et_sign.getText().toString();
         userInfo.head_url_img = head_url;
         userInfo.birthday = tv_birthday.getText().toString();
-                OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFOUPDATE)
                 .addParams("uid", loginModel.uid + "")

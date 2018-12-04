@@ -270,7 +270,7 @@ public class ECMIm {
     }
 
     public void reqUserInfo(String from, ECMessage ecMessage, Conversation conversation) {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", from)

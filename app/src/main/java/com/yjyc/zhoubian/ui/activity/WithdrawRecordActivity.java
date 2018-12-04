@@ -97,7 +97,7 @@ public class WithdrawRecordActivity extends BaseActivity {
         if(showDialog){
             LoadingDialog.showLoading(this);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.WITHDRAWLOG)
                 .addParams("uid", ("" + login.uid))

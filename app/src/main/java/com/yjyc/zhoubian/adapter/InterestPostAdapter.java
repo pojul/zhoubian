@@ -356,7 +356,7 @@ public  class InterestPostAdapter extends RecyclerView.Adapter<RecyclerView.View
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.PULLUSERBLACK)
                 .addParams("uid", ("" + loginModel.uid))

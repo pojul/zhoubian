@@ -71,7 +71,7 @@ public class HobbySettingActivity extends BaseActivity {
             ProgressDialog.showDialog(mContext);
         }
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .addParams("uid", loginModel.uid + "")
                 .addParams("token", loginModel.token)
@@ -266,7 +266,7 @@ public class HobbySettingActivity extends BaseActivity {
             shield_post_key_words = sb.toString().substring(0, sb.toString().length() - 1);
         }*/
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.HOBBYSETTING)
                 .addParams("uid", loginModel.uid + "")

@@ -78,7 +78,7 @@ public class VermicelliListActivity extends BaseActivity {
 
     private void fans() {
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.FANS)
                 .addParams("uid", loginModel.uid + "")

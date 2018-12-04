@@ -119,7 +119,7 @@ public class MainsFragment extends Fragment {
 
     private void reqPostCates() {
         LoadingDialog.showLoading(getActivity());
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate>() {
@@ -182,7 +182,7 @@ public class MainsFragment extends Fragment {
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(getActivity());
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate[]>() {

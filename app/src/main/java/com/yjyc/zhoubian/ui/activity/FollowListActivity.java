@@ -78,7 +78,7 @@ public class FollowListActivity extends BaseActivity {
 
     private void followUsers() {
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.FOLLOWUSERS)
                 .addParams("uid", loginModel.uid + "")
@@ -246,7 +246,7 @@ public class FollowListActivity extends BaseActivity {
 
     private void cancelFollow(int follow_user_id, final int position) {
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.CANCELFOLLOW)
                 .addParams("uid", loginModel.uid + "")

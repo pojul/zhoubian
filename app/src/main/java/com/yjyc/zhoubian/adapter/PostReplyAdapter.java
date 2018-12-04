@@ -30,6 +30,7 @@ import com.yjyc.zhoubian.model.ReplyPostList;
 import com.yjyc.zhoubian.model.ReplyPostModel;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.ui.activity.LoginActivity;
+import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.fragment.PostDetailsFragment;
 import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
@@ -254,6 +255,11 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if(reply.grab_red_package_msg != null && !reply.grab_red_package_msg.isEmpty()){
             holderOne.delete.setVisibility(View.GONE);
         }
+        holderOne.headUrl.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid",  reply.uid + "");
+            mContext.startActivity(intent);
+        });
     }
 
     private void bindTypeTwo(MyViewHolderTwo holderTwo, int position) {
@@ -321,6 +327,11 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             thumbupReply(reply, position);
         });
+        holderTwo.headUrl.setOnClickListener(v->{
+            Intent intent = new Intent(mContext, MyPublishActivity.class);
+            intent.putExtra("uid",  reply.uid + "");
+            mContext.startActivity(intent);
+        });
     }
 
     private void thumbupReply(ReplyPostList.ReplyPost reply, int position) {
@@ -331,7 +342,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTLIKE)
                 .addParams("uid", ("" + login.uid))
@@ -360,7 +371,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return;
         }
         LoadingDialog.showLoading(mContext);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.DELETEREPLY)
                 .addParams("uid", ("" + login.uid))
@@ -400,7 +411,7 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             Login login = Hawk.get("LoginModel");
             UserInfo userInfo = Hawk.get("userInfo");
             LoadingDialog.showLoading(mContext);
-            OkhttpUtils.with()
+            new OkhttpUtils().with()
                     .post()
                     .url(HttpUrl.REPLYPOST)
                     .addParams("uid", ("" + login.uid))
@@ -501,9 +512,10 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void addOneLevelData(ReplyPostList.ReplyPost reply){
         synchronized (replys){
-            replys.add(0, reply);
-            notifyItemInserted(0);
-            notifyItemRangeChanged(0, replys.size());
+            replys.add(reply);
+            notifyDataSetChanged();
+            /*notifyItemInserted(0);
+            notifyItemRangeChanged(0, replys.size());*/
         }
     }
 

@@ -1,5 +1,7 @@
 package com.yuqian.mncommonlibrary.http.callback.retrofit;
 
+import android.util.Log;
+
 import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
 import com.yuqian.mncommonlibrary.http.callback.AbsStringCallback;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
@@ -63,6 +65,7 @@ public class RetrofitStringCallback implements Callback<String> {
             errorMsg = HttpErrorConstants.ERR_SOCKETTIMEOUTEXCEPTION_ERROR;
         } else {
             //其他网络异常
+            Log.e("RetrofitStringCallback", "onFailure 68");
             errorMsg = HttpErrorConstants.ERR_NETEXCEPTION_ERROR;
         }
         callbackListener.onFailure(errorCode, errorMsg);

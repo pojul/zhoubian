@@ -112,7 +112,7 @@ public class MyEvaluationFragment extends BaseFragment {
         }else{
             reqpage = page + 1;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GIVEEVALUATIONEXPOSE)
                 .addParams("uid", activity.uid)

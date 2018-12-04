@@ -3,8 +3,10 @@ package com.yuqian.mncommonlibrary.http.callback.okhttp;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 
+import com.google.gson.Gson;
 import com.yuqian.mncommonlibrary.http.callback.BaseCallback;
 import com.yuqian.mncommonlibrary.http.callback.AbsStringCallback;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
@@ -67,6 +69,7 @@ public class OkhttpCallback implements Callback {
                     errorMsg = HttpErrorConstants.ERR_SOCKETTIMEOUTEXCEPTION_ERROR;
                 } else {
                     //其他网络异常
+                    Log.e("OkhttpCallback", "onFailure 71");
                     errorMsg = HttpErrorConstants.ERR_NETEXCEPTION_ERROR;
                 }
                 mCallbackListener.onFailure(errorCode, errorMsg);
@@ -76,23 +79,50 @@ public class OkhttpCallback implements Callback {
     }
 
     @Override
-    public void onResponse(Call call, final Response response) throws IOException {
-        mUITransHandler.post(new Runnable() {
+    public void onResponse(Call call, Response response) throws IOException {
+        int responseCode = response.code();
+        String responseStr = response.body().string();
+        Log.e("OkhttpCallback", "onResponse: 98" + responseStr);
+        new Handler(Looper.getMainLooper()).post(()->{
+            if (200 == responseCode) {
+                if (mCallbackListener instanceof AbsOkhttpByteCallback) {
+                    ((AbsStringCallback) mCallbackListener).onFailure(10001 + "", "not support Callback");
+                    mCallbackListener.onFinish();
+                } else if (mCallbackListener instanceof AbsStringCallback) {
+                    if (TextUtils.isEmpty(responseStr)) {
+                        mCallbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
+                        mCallbackListener.onFinish();
+                        return;
+                    }
+                    ((AbsStringCallback) mCallbackListener).onSuccess(responseStr);
+                    mCallbackListener.onFinish();
+                }
+            } else {
+                mCallbackListener.onFailure(response.code() + "", response.message());
+                mCallbackListener.onFinish();
+            }
+        });
+        /*mUITransHandler.post(new Runnable() {
             @Override
             public void run() {
                 try {
+                    Log.e("OkhttpCallback", "code: " + response.code());
                     if (200 == response.code()) {
                         if (mCallbackListener instanceof AbsOkhttpByteCallback) {
                             //byte类型
                             final byte[] responseBytes = response.body().bytes();
                             if (responseBytes == null || responseBytes.length == 0) {
+                                Log.e("OkhttpCallback", "onResponse: 92");
                                 mCallbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
                                 return;
                             }
                             ((AbsOkhttpByteCallback) mCallbackListener).onSuccess(responseBytes);
                         } else if (mCallbackListener instanceof AbsStringCallback) {
+                            Log.e("OkhttpCallback", "onResponse: 98 response: " + response);
+                            Log.e("OkhttpCallback", "onResponse: 98" + new Gson().toJson(response));
                             //字符串类型
-                            final String responseStr = response.body().string();
+                            String responseStr = response.body().string();
+                            Log.e("OkhttpCallback", "onResponse: 98 body: " + responseStr);
                             if (TextUtils.isEmpty(responseStr)) {
                                 mCallbackListener.onFailure(HttpErrorConstants.ERR_HTTPRESPONSE_ERROR_CODE, HttpErrorConstants.ERR_HTTPRESPONSE_ERROR);
                                 return;
@@ -105,13 +135,15 @@ public class OkhttpCallback implements Callback {
                     }
                 } catch (Exception e) {
                     //发生异常
+                    Log.e("OkhttpCallback", "onFailure 110 e: " + new Gson().toJson(e));
+                    e.printStackTrace();
                     mCallbackListener.onFailure(HttpErrorConstants.ERR_NETEXCEPTION_ERROR_CODE, HttpErrorConstants.ERR_NETEXCEPTION_ERROR);
                 } finally {
                     //完成
                     mCallbackListener.onFinish();
                 }
             }
-        });
+        });*/
     }
 
 }

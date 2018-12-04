@@ -177,7 +177,8 @@
                 android:textColor="#080808"
                 android:textColorHint="#c4c4c4"
                 android:layout_width="match_parent"
-                android:layout_height="152dp"
+                android:layout_height="wrap_content"
+                android:minHeight="152dp"
                 android:background="@drawable/fff_3_stroke_1bg"
                 android:hint="描述一下你的需求或服务。
 

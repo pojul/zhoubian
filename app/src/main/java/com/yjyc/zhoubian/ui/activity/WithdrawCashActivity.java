@@ -127,7 +127,7 @@ public class WithdrawCashActivity extends BaseActivity {
             return;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.WITHDRAWAPPLY)
                 .addParams("uid", login.uid + "")
@@ -151,7 +151,7 @@ public class WithdrawCashActivity extends BaseActivity {
     }
 
     private void getPostMsg() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPOSTMSG)
                 .addParams("uid", login.uid + "")
@@ -177,7 +177,7 @@ public class WithdrawCashActivity extends BaseActivity {
 
     private void getWxInfo(){
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERWXINFO)
                 .addParams("uid", login.uid + "")

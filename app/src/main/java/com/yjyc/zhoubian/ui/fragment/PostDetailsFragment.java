@@ -217,7 +217,7 @@ public class PostDetailsFragment extends BaseFragment {
         LoadingDialog.showLoading(getActivity());
         /**需去掉身份验证**/
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils okhttpUtils = OkhttpUtils.with()
+        OkhttpUtils okhttpUtils = new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTDETAIL)
                 .addParams("id", ("" + postId));
@@ -413,6 +413,12 @@ public class PostDetailsFragment extends BaseFragment {
                 });
                 break;
             case R.id.call:
+                Login login = Hawk.get("LoginModel");
+                if(login == null){
+                    Toast.makeText(activity, "请先登录", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 call();
                 break;
             case R.id.chat:
@@ -429,7 +435,7 @@ public class PostDetailsFragment extends BaseFragment {
                 if((postDetail.grad_red_package_number >= postDetail.red_package_number) || postDetail.red_package_number <= 0){
                     return;
                 }
-                Login login = Hawk.get("LoginModel");
+                login = Hawk.get("LoginModel");
                 if(login == null){
                     Toast.makeText(activity, "请先登录", Toast.LENGTH_SHORT).show();
                     return;
@@ -449,7 +455,7 @@ public class PostDetailsFragment extends BaseFragment {
 
     private void gradRedPackage(String str, Login login) {
         LoadingDialog.showLoading(getActivity());
-        OkhttpUtils okHttpUtils = OkhttpUtils.with()
+        OkhttpUtils okHttpUtils = new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GRABREDENVELOPE)
                 .addParams("uid", ("" + login.uid))
@@ -517,7 +523,7 @@ public class PostDetailsFragment extends BaseFragment {
         Login login = Hawk.get("LoginModel");
         userInfo = Hawk.get("userInfo");
         LoadingDialog.showLoading(getActivity());
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REPLYPOST)
                 .addParams("uid", ("" + login.uid))
@@ -551,7 +557,7 @@ public class PostDetailsFragment extends BaseFragment {
 
     private void reqReplyLists() {
         Login loginModel = Hawk.get("LoginModel");
-        OkhttpUtils  okhttpUtils = OkhttpUtils.with()
+        OkhttpUtils  okhttpUtils = new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REPLYPOSTLIST)
                 .addParams("post_id", ("" + postDetail.id));
@@ -583,7 +589,7 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void reqInterestedPosts() {
-        OkhttpUtils okHttpUtils = OkhttpUtils.with()
+        OkhttpUtils okHttpUtils = new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.INTERESTEDPOSTS);
         Login loginModel = Hawk.get("LoginModel");
@@ -619,7 +625,7 @@ public class PostDetailsFragment extends BaseFragment {
         }
         LoadingDialog.showLoading(getActivity());
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.CANCELFOLLOW)
                 .addParams("follow_user_id", ("" + postDetail.user_id))
@@ -651,7 +657,7 @@ public class PostDetailsFragment extends BaseFragment {
         }
         LoadingDialog.showLoading(getActivity());
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.FOLLOW)
                 .addParams("follow_user_id", ("" + postDetail.user_id))
@@ -684,7 +690,7 @@ public class PostDetailsFragment extends BaseFragment {
         }
         LoadingDialog.showLoading(getActivity());
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTCOLLECTION)
                 .addParams("post_id", ("" + postDetail.id))
@@ -718,7 +724,7 @@ public class PostDetailsFragment extends BaseFragment {
         }
         LoadingDialog.showLoading(getActivity());
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.CANCELPOSTCOLLECTION)
                 .addParams("uid", ("" + login.uid))

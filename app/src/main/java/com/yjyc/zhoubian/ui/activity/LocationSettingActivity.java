@@ -164,7 +164,7 @@ public class LocationSettingActivity extends BaseActivity {
     private void reqLocPosition() {
         LoadingDialog.showLoading(this);
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERPOSITION)
                 .addParams("uid", ("" + login.uid))
@@ -251,7 +251,7 @@ public class LocationSettingActivity extends BaseActivity {
 
     public void clearPosition(int id){
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REMOVEPOSITION)
                 .addParams("uid", ("" + login.uid))
@@ -362,7 +362,7 @@ public class LocationSettingActivity extends BaseActivity {
 
     private void openDefaultPosition(int id){
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.OPENDEFAULTPOSITION)
                 .addParams("uid", ("" + login.uid))
@@ -400,7 +400,7 @@ public class LocationSettingActivity extends BaseActivity {
 
     private void shutDefaultPosition(int id){
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.SHUTDEFAULTPOSITION)
                 .addParams("uid", ("" + login.uid))
@@ -455,7 +455,7 @@ public class LocationSettingActivity extends BaseActivity {
             return;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETUSERPOSITION)
                 .addParams("uid", ("" + login.uid))

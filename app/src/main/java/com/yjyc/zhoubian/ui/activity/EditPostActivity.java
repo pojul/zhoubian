@@ -346,7 +346,7 @@ public class EditPostActivity extends BaseActivity {
             ProgressDialog.dismiss();
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPOSTDETAIL)
                 .addParams("uid", login.uid + "")
@@ -464,7 +464,7 @@ public class EditPostActivity extends BaseActivity {
         if (!ProgressDialog.isShowing()) {
             ProgressDialog.showDialog(this);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPOSTMSG)
                 .addParams("uid", loginModel.uid + "")
@@ -586,7 +586,7 @@ public class EditPostActivity extends BaseActivity {
         if (!ProgressDialog.isShowing()) {
             ProgressDialog.showDialog(this);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTCODE)
                 .addParams("phone", et_phone.getText().toString())
@@ -846,7 +846,7 @@ public class EditPostActivity extends BaseActivity {
             map.put("red_package_password", et_red_package_password.getText().toString().trim());
             map.put("rob_red_package_range", rob_red_package_range + "");
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.EDITPOST)
                 .params(map)
@@ -972,7 +972,7 @@ public class EditPostActivity extends BaseActivity {
     }
 
     private void postCate() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTCATE)
                 .execute(new AbsJsonCallBack<PostCateModel, PostCate>() {
@@ -995,7 +995,7 @@ public class EditPostActivity extends BaseActivity {
     }
 
     private void getRedEnvelopeSetting() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPESETTING)
                 .execute(new AbsJsonCallBack<RedEnvelopeSettingModel, RedEnvelopeSetting[]>() {
@@ -1018,7 +1018,7 @@ public class EditPostActivity extends BaseActivity {
     }
 
     private void userGroup() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.USERGROUP)
                 .execute(new AbsJsonCallBack<UserGroupModel, UserGroups>() {
@@ -1040,7 +1040,7 @@ public class EditPostActivity extends BaseActivity {
     }
 
     private void getRedEnvelopeDistance() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETREDENVELOPEDISTANCE)
                 .execute(new AbsJsonCallBack<RedEnvelopeDistanceModel, RedEnvelopeDistance[]>() {

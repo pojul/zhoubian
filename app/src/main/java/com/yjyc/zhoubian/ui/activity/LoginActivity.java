@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity {
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(mContext);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.LOGIN)
                 .addParams("phone", et_phone.getText().toString())
@@ -143,7 +143,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void reqUserInfo(Login loginModel){
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", loginModel.uid + "")
@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity {
         if(login == null){
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.UPDATEUSERTIME)
                 .execute(new AbsJsonCallBack<UpdateUserTimeModel, UpdateUserTime>() {
@@ -199,7 +199,7 @@ public class LoginActivity extends BaseActivity {
         if(!ProgressDialog.isShowing()){
             ProgressDialog.showDialog(mContext);
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.LOGINCODE)
                 .addParams("phone", et_phone.getText().toString())

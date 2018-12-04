@@ -136,7 +136,7 @@ public class RechargeActivity extends BaseActivity {
     }
 
     private void getPostMsg() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.GETPOSTMSG)
                 .addParams("uid", login.uid + "")
@@ -182,7 +182,7 @@ public class RechargeActivity extends BaseActivity {
 
     private void reqRechargeSetting() {
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.GETRECHARGESETTING)
                 .execute(new AbsJsonCallBack<GetRechargeSettingModel, List<GetRechargeSetting>>() {
@@ -288,12 +288,12 @@ public class RechargeActivity extends BaseActivity {
             return;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils okhttpUtils = OkhttpUtils.with()
+        OkhttpUtils okhttpUtils = new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERRECHARGE)
                 .addParams("uid", ("" + login.uid))
                 .addParams("token", login.token)
-                .addParams("money", ("" + 0.01));
+                .addParams("money", ("" + recharge));
         if(payByAli.isChecked()){
             okhttpUtils.addParams("pay_type", ("" + 2));
             okhttpUtils.execute(new AbsJsonCallBack<AliRechargeModel, AliRecharge>() {

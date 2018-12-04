@@ -100,7 +100,7 @@ public class MeFragment extends Fragment{
     }
 
     private void userInfo() {
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", loginModel.uid + "")

@@ -139,7 +139,7 @@ public class ReportActivity extends BaseActivity {
 
     private void report(List<String> pics) {
         String picStrs = getUploadPics(pics);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERREPORT)
                 .addParams("uid", login.uid + "")
@@ -165,7 +165,7 @@ public class ReportActivity extends BaseActivity {
 
     private void reqCates() {
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.REPORTCATE)
                 .execute(new AbsJsonCallBack<ReportCateModel, List<ReportCate>>(){

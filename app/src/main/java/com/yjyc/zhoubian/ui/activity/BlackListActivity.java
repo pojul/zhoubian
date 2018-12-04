@@ -66,7 +66,7 @@ public class BlackListActivity extends BaseActivity {
         }
         LoadingDialog.showLoading(this);
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.BLACKLIST)
                 .addParams("uid", ("" + login.uid))

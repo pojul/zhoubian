@@ -83,7 +83,7 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.MyVi
         }
         LoadingDialog.showLoading(mContext);
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.REMOVEBLACKLIST)
                 .addParams("uid", ("" + login.uid))

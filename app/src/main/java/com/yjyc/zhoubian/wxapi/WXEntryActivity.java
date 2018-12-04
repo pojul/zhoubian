@@ -164,7 +164,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             return;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.BINDWX)
                 .addParams("uid", ("" + login.uid))

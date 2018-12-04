@@ -100,7 +100,7 @@ public class ConversationFragment extends Fragment {
         if(login == null){
             return;
         }
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.SITEMSG)
                 .addParams("uid", login.uid + "")
@@ -129,7 +129,7 @@ public class ConversationFragment extends Fragment {
     }
 
     private void repUserInfo(int uid){
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.USERINFO)
                 .addParams("uid", uid + "")

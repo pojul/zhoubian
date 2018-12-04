@@ -169,7 +169,7 @@ public class MainFragment extends Fragment{
             reqpage = currentPage + 1;
         }
         Login login = Hawk.get("LoginModel");
-        OkhttpUtils okhttpUtils =OkhttpUtils.with()
+        OkhttpUtils okhttpUtils =new OkhttpUtils().with()
                 .get()
                 .url(HttpUrl.POSTS)
                 .addParams("page", ("" + reqpage))

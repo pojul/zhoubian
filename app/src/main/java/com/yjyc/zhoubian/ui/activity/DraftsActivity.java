@@ -99,7 +99,7 @@ public class DraftsActivity extends BaseActivity {
             tempPage = page + 1;
         }
         LoadingDialog.showLoading(this);
-        OkhttpUtils.with()
+        new OkhttpUtils().with()
                 .post()
                 .url(HttpUrl.POSTDRAFT)
                 .addParams("uid", ("" + login.uid))
