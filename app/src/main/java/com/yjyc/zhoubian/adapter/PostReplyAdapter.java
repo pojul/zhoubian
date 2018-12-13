@@ -491,7 +491,10 @@ public class PostReplyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
         synchronized (replys){
+            //int position = replys.size();
             replys.addAll(tempReplys);
+            /*notifyItemRangeInserted(position, tempReplys.size());
+            notifyItemRangeChanged(0, replys.size());*/
             notifyDataSetChanged();
             /*if(hasMore){
                 notifyItemRangeInserted((getItemCount() - 1), tempReplys.size());

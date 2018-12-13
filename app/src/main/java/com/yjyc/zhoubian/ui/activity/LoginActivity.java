@@ -47,6 +47,8 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.tv_code)
     TextView tv_code;
+    @BindView(R.id.user_agreement)
+    TextView user_agreement;
 
     private Context mContext;
     @Override
@@ -71,6 +73,11 @@ public class LoginActivity extends BaseActivity {
     @OnClick(R.id.tv_finish)
     public void tv_finish(){
         finish();
+    }
+
+    @OnClick(R.id.user_agreement)
+    public void user_agreement(){
+        startActivityAni(UserAgreemenActivity.class, null);
     }
 
     @OnClick(R.id.tv_code)

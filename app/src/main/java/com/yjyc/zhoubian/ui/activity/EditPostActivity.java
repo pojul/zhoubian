@@ -356,14 +356,14 @@ public class EditPostActivity extends BaseActivity {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ProgressDialog.dismiss();
-                        Toast.makeText(EditPostActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(errorMsg);
                     }
 
                     @Override
                     public void onSuccess(GetPostDetail body) {
                         ProgressDialog.dismiss();
                         if(body == null){
-                            Toast.makeText(EditPostActivity.this, "数据错误", Toast.LENGTH_SHORT).show();
+                            com.yuqian.mncommonlibrary.utils.ToastUtils.show("数据错误");
                             finish();
                             return;
                         }
@@ -707,7 +707,7 @@ public class EditPostActivity extends BaseActivity {
             @Override
             public void error(String msg) {
                 ProgressDialog.dismiss();
-                Toast.makeText(EditPostActivity.this, msg, Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show(msg);
             }
         });
     }

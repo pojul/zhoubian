@@ -25,6 +25,7 @@ public class MBaseManager {
 
     @SuppressLint("StaticFieldLeak")
     private static Application sApplication;
+    public static Class loginClass;
 
     public static Application getApplication() {
         return sApplication;
@@ -37,7 +38,7 @@ public class MBaseManager {
      * @param LogTag      日志Tag
      * @param isDebug     是不是Debug模式
      */
-    public static void init(Application application, String LogTag, boolean isDebug) {
+    public static void init(Application application, String LogTag, boolean isDebug, Class cls) {
         sApplication = application;
         /*日志初始化*/
 //        initLog(LogTag, isDebug);
@@ -49,6 +50,7 @@ public class MBaseManager {
 //        initCrashLog(isDebug);
         /*刷新初始化*/
 //        initRefresh();
+        loginClass = cls;
     }
 
     private static void initRefresh() {

@@ -4,18 +4,27 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.Gravity;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
+import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -24,6 +33,7 @@ import com.maning.librarycrashmonitor.utils.MNotifyUtil;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.Dao.MySQLiteHelper;
 import com.yjyc.zhoubian.MainActivitys;
 import com.yjyc.zhoubian.R;
@@ -34,9 +44,11 @@ import com.yjyc.zhoubian.model.GetPostDetail;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.SearchPosts;
 import com.yjyc.zhoubian.model.UserInfo;
+import com.yjyc.zhoubian.ui.activity.LoginActivity;
 import com.yjyc.zhoubian.utils.Constant;
 import com.yjyc.zhoubian.utils.FileUtil;
 import com.yjyc.zhoubian.utils.NotificationUtil;
+import com.yjyc.zhoubian.utils.PermissionUtils;
 import com.yjyc.zhoubian.utils.SPUtil;
 import com.yuntongxun.ecsdk.ECDevice;
 import com.yuntongxun.ecsdk.ECError;
@@ -70,6 +82,8 @@ public class BaseApplication extends Application {
     public static List<SearchPosts.SearchPost> viewedPost;
     public static MainActivitys mainActivitys;
     public boolean hasInitMains;
+    public LocationClient mLocationClient = null;
+    public BDLocationListener myListener = new MyLocationListener();
 
     public static BDLocation myLocation;
 
@@ -127,7 +141,7 @@ public class BaseApplication extends Application {
         //包括BD09LL和GCJ02两种坐标，默认是BD09LL坐标。
         SDKInitializer.setCoordType(CoordType.BD09LL);
         //初始化
-        MBaseManager.init(this, "---logtag---", true);
+        MBaseManager.init(this, "---logtag---", true, LoginActivity.class);
         registerToWX();
         ECMIm.Instance(getApplicationContext());
         viewedPost = Hawk.get("viewedPost");
@@ -137,6 +151,79 @@ public class BaseApplication extends Application {
         Collections.reverse(viewedPost);
 
         FileDownloader.init(getApplicationContext());
+
+        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
+        ToastUtils.setBgColor(Color.BLACK);
+        ToastUtils.setMsgColor(Color.WHITE);
+        reqPersimission();
+
+    }
+
+    private void reqPersimission(){
+        PermissionUtils.checkLocationPermission(getApplicationContext(), new PermissionUtils.PermissionCallBack() {
+            @Override
+            public void onGranted() {
+                startLocate();
+            }
+
+            @Override
+            public void onDenied() {
+                new MaterialDialog.Builder(getApplicationContext())
+                        .title("提示")
+                        .content("当前权限被拒绝导致功能不能正常使用，请到设置界面修改定位和存储权限允许访问")
+                        .positiveText("去设置")
+                        .negativeText("取消")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                AndPermission.permissionSetting(getApplicationContext())
+                                        .execute();
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+
+    /**
+     * 定位
+     */
+    private void startLocate() {
+        mLocationClient = new LocationClient(getApplicationContext());     //声明LocationClient类
+        mLocationClient.registerLocationListener(myListener);    //注册监听函数
+        LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving
+        );//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
+        option.setCoorType("bd09ll");//可选，默认gcj02，设置返回的定位结果坐标系
+        int span = 1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
+        option.setIsNeedLocationDescribe(true);//可选，默认false，设置是否需要位置语义化结果，可以在BDLocation.getLocationDescribe里得到，结果类似于“在北京天安门附近”
+        option.setIsNeedLocationPoiList(true);//可选，默认false，设置是否需要POI结果，可以在BDLocation.getPoiList里得到
+        option.setIgnoreKillProcess(false);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.SetIgnoreCacheException(false);//可选，默认false，设置是否收集CRASH信息，默认收集
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+        mLocationClient.setLocOption(option);
+        //开启定位
+        mLocationClient.start();
+    }
+
+    private class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if(location != null){
+                BaseApplication.getIntstance().setLocation(location);
+                BaseApplication.getIntstance().setAddress(location.getAddrStr());
+                BaseApplication.getIntstance().setProvince(location.getProvince());
+                BaseApplication.getIntstance().setCity(location.getCity());
+
+                BaseApplication.myLocation = location;
+            }
+        }
     }
 
     public void addViewedPost(SearchPosts.SearchPost post){
@@ -166,6 +253,7 @@ public class BaseApplication extends Application {
                     // SDK已经初始化成功
                     initIMListener();
                     Log.i("","初始化SDK成功");
+                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("INIT成功");
                     Login login = Hawk.get("LoginModel");
                     if(login != null){
                         loginIm(login);
@@ -175,6 +263,7 @@ public class BaseApplication extends Application {
                 public void onError(Exception exception) {
                     //在初始化错误的方法中打印错误原因
                     Log.i("","初始化SDK失败"+exception.getMessage());
+                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("INIT失败" + exception.getMessage());
                 }
             });}
     }
@@ -191,16 +280,20 @@ public class BaseApplication extends Application {
 
             @Override
             public void onConnectState(ECDevice.ECConnectState state, ECError error) {
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show("INIT失败" + state + "");
                 if(state == ECDevice.ECConnectState.CONNECT_FAILED ){
                     if(error.errorCode == SdkErrorCode.SDK_KICKED_OFF) {
                         LogUtil.e("==帐号异地登陆");
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("帐号异地登陆");
                     }else{
                         LogUtil.e("==其他登录失败,错误码："+ error.errorCode);
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("其他登录失败" + error.errorCode);
                     }
                     return ;
                 }else if(state == ECDevice.ECConnectState.CONNECT_SUCCESS) {
                     SPUtil.getInstance().putInt(SPUtil.FIRST_LOGIN_IM, 1);
                     LogUtil.e("==登陆成功");
+                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("登陆成功");
                     if(Hawk.get("LoginModel") != null && Hawk.get("userInfo") != null){
                         Login login = Hawk.get("LoginModel");
                         UserInfo userInfo = Hawk.get("userInfo");
@@ -282,7 +375,6 @@ public class BaseApplication extends Application {
                 LogUtil.e("onSoftVersion");
             }
         });
-
     }
 
     public void setIMUserInfo(Login login, UserInfo userInfo) {
@@ -373,7 +465,7 @@ public class BaseApplication extends Application {
                     protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                         //progressDialog.show();
                         NotificationUtil.notifyDownLoad(getApplicationContext(), 0);
-                        Toast.makeText(BaseApplication.this, "更新包已加入后台下载列表", Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("更新包已加入后台下载列表");
                         LogUtil.e("pending");
                     }
 
@@ -432,7 +524,7 @@ public class BaseApplication extends Application {
     }
 
     private void toast(String msg){
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        com.yuqian.mncommonlibrary.utils.ToastUtils.show(msg);
     }
 
     public static BaseApplication getIntstance() {

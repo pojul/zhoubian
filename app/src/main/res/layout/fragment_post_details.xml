@@ -5,9 +5,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="gone"
     android:background="#fff">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">
@@ -350,7 +351,7 @@
                 android:paddingTop="12dp"
                 android:paddingRight="15dp"
                 android:paddingBottom="12dp"
-                android:text="风险提示：本帖由网友自行发布，周边信息提醒您，网络信息有风险，建议您擦亮眼睛，分辨骗子，凡是先百度搜索下“关键词+骗子”，多看一些案例，会助您分辨骗子哦。因本平台信息所致任何损失，周边信息概不负责。"
+                android:text="风险提示：本帖由网友自行发布，周边信息提醒您，网络信息有风险，建议您擦亮眼睛，分辨骗子，凡事先百度搜索下“关键词+骗子”，多看一些案例，会助您分辨骗子哦。因本平台信息所致任何损失，周边信息概不负责。"
                 android:textColor="#aeaeae"
                 android:textSize="12sp" />
 
@@ -402,8 +403,7 @@
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fff"
-                android:overScrollMode="never" />
+                android:background="#fff"/>
 
             <View
                 android:layout_width="match_parent"
@@ -415,7 +415,7 @@
                 android:layout_height="36dp"
                 android:layout_marginLeft="15dp"
                 android:gravity="center_vertical"
-                android:text="你可能感兴趣的帖子"
+                android:text="最新发布的帖子"
                 android:textColor="@color/main_bg"
                 android:textSize="15sp" />
 
@@ -432,7 +432,7 @@
                 android:background="#fff"
                 android:overScrollMode="never" />
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"

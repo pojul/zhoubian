@@ -93,6 +93,23 @@ public class MyExposesFragment extends BaseFragment {
 
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setAdapter(adapter);
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        if(body.hasNextPages){
+                            page++;
+                            acceptEvaluationExpose();
+                        }else {
+                            ToastUtils.showShort("没有更多");
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override

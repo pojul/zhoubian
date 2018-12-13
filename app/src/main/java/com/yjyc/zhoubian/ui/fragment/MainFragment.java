@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.orhanobut.hawk.Hawk;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.yjyc.zhoubian.HttpUrl;
@@ -40,6 +41,7 @@ import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import com.yuqian.mncommonlibrary.utils.LogUtil;
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class MainFragment extends Fragment{
     @BindView(R.id.recyclerview)
     public RecyclerView recyclerview;
     @BindView(R.id.refreshLayout)
-    public RefreshLayout refreshLayout;
+    public SmartRefreshLayout refreshLayout;
     Unbinder unbinder;
     private MainActivitys mContext;
 
@@ -122,6 +124,10 @@ public class MainFragment extends Fragment{
 
     private void initViews() {
         myAdapter = new CardAdapter(datas, getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
+        recyclerview.setLayoutManager(layoutManager);
+        recyclerview.setAdapter(myAdapter);
+
         myAdapter.setOnItemClickListener(new com.yjyc.zhoubian.adapter.OnItemClickListener() {
             @Override
             public void onClick(int position) {
@@ -145,6 +151,8 @@ public class MainFragment extends Fragment{
             }
         });
 
+        //refreshLayout.setEnableAutoLoadmore(false);
+        refreshLayout.setEnableLoadmore(false);
         //设置 Footer 为 经典样式
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
         refreshLayout.setOnLoadmoreListener(refreshlayout -> {
@@ -156,7 +164,21 @@ public class MainFragment extends Fragment{
             loadPostFlag = 1;
             reqPostList();
         });
-        refreshLayout.autoLoadmore();//自动加载
+
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        loadPostFlag = 0;
+                        reqPostList();
+                    }
+                }
+            }
+        });
+
     }
 
     private void reqPostList(){
@@ -198,11 +220,11 @@ public class MainFragment extends Fragment{
         }else{
             okhttpUtils.addParams("postCateId", ("" + cateId));
         }
-        LoadingDialog.showLoading(getActivity());
+        //LoadingDialog.showLoading(getActivity());
         okhttpUtils.execute(new AbsJsonCallBack<SearchPostModel, SearchPosts>() {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        LoadingDialog.closeLoading();
+                        //LoadingDialog.closeLoading();
                         showShortToast(errorMsg);
                         if(refreshLayout != null){
                             refreshLayout.finishLoadmore();
@@ -212,14 +234,14 @@ public class MainFragment extends Fragment{
                     @Override
                     public void onSuccess(SearchPosts body) {
                         if(loadPostFlag <= 1 || nextDownCount <= 1){
-                            LoadingDialog.closeLoading();
+                            //LoadingDialog.closeLoading();
                         }
                         if(refreshLayout != null){
                             refreshLayout.finishLoadmore();
                             refreshLayout.finishRefresh();
                         }
                         if(body == null || body.list == null || body.list.size() <= 0){
-                            LoadingDialog.closeLoading();
+                            //LoadingDialog.closeLoading();
                             if(loadPostFlag == 0){
                                 //showShortToast("没有更多了");
                             }
@@ -279,14 +301,6 @@ public class MainFragment extends Fragment{
 
     CardAdapter myAdapter;
     private void initDate(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
-
-        recyclerview.setLayoutManager(layoutManager);
-        recyclerview.setAdapter(myAdapter);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-
         reqPostList();
     }
 
@@ -394,7 +408,7 @@ public class MainFragment extends Fragment{
     }
 
     public void showShortToast(String msg){
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        ToastUtils.show(msg);
     }
 
     @Override

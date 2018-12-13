@@ -7,10 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.orhanobut.hawk.Hawk;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -21,6 +25,7 @@ import com.yjyc.zhoubian.R;
 import com.yjyc.zhoubian.model.BalanceDetails;
 import com.yjyc.zhoubian.model.Fans;
 import com.yjyc.zhoubian.model.FansModel;
+import com.yjyc.zhoubian.model.FollowUsers;
 import com.yjyc.zhoubian.model.Login;
 import com.yjyc.zhoubian.model.UserInfo;
 import com.yjyc.zhoubian.model.UserInfoModel;
@@ -91,7 +96,7 @@ public class VermicelliListActivity extends BaseActivity {
                         refreshLayout.finishLoadmore();
                         refreshLayout.finishRefresh();
                         if(body.list == null ){
-                            ToastUtils.showShort("网络异常,请稍后重试" );
+                            showToast("网络异常,请稍后重试" );
                             return;
                         }
                         VermicelliListActivity.this.body = body;
@@ -107,7 +112,7 @@ public class VermicelliListActivity extends BaseActivity {
                     public void onFailure(String errorCode, String errorMsg) {
                         refreshLayout.finishLoadmore();
                         refreshLayout.finishRefresh();
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override
@@ -152,9 +157,17 @@ public class VermicelliListActivity extends BaseActivity {
 
         class ViewHolder extends RecyclerView.ViewHolder{
             View myView;
+            RelativeLayout rl_operate;
+            RoundedImageView iv_head_url;
+            TextView tv_nickname;
+            TextView tv_sign;
             public ViewHolder(View itemView) {
                 super(itemView);
                 myView = itemView;
+                iv_head_url = itemView.findViewById(R.id.iv_head_url);
+                tv_nickname = itemView.findViewById(R.id.tv_nickname);
+                tv_sign = itemView.findViewById(R.id.tv_sign);
+                rl_operate = itemView.findViewById(R.id.rl_operate);
             }
         }
 
@@ -179,7 +192,7 @@ public class VermicelliListActivity extends BaseActivity {
                         onItemClickListener.onClick(position);
                     }
                 });
-                holder. itemView.setOnLongClickListener( new View.OnLongClickListener() {
+                holder.itemView.setOnLongClickListener( new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         onItemClickListener.onLongClick(position);
@@ -187,6 +200,20 @@ public class VermicelliListActivity extends BaseActivity {
                     }
                 });
             }
+            Fans.Data data = datas.get(position);
+            if(data.head_url != null && !StringUtils.isEmpty(data.head_url)){
+                Glide.with(mContext)
+                        .load(data.head_url)
+                        .into(holder.iv_head_url);
+            }
+
+            if(!StringUtils.isEmpty(data.nickname)){
+                holder.tv_nickname.setText(data.nickname);
+            }
+            /*if(!StringUtils.isEmpty(data.sign)){
+                holder.tv_sign.setText(data.sign);
+            }*/
+            holder.rl_operate.setVisibility(View.GONE);
         }
 
         @Override
@@ -238,7 +265,7 @@ public class VermicelliListActivity extends BaseActivity {
                         fans();
                     }else {
                         refreshLayout.finishLoadmore();
-                        ToastUtils.showShort("没有更多");
+                        showToast("没有更多");
                     }
                 }else {
                     refreshLayout.finishLoadmore();

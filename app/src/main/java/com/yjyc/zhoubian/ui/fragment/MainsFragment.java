@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.orhanobut.hawk.Hawk;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.MainActivitys;
@@ -111,7 +112,7 @@ public class MainsFragment extends Fragment {
             mainFragments.add(mainFragment);
         }
         viewPager.setOffscreenPageLimit(1);
-        adapter = new MyAdapter(getFragmentManager());
+        adapter = new MyAdapter(getChildFragmentManager());
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setCurrentItem(2);
@@ -126,7 +127,7 @@ public class MainsFragment extends Fragment {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(errorMsg);
                         LoadingDialog.closeLoading();
                         initData();
                     }

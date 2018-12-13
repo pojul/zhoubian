@@ -172,7 +172,7 @@ public class ReportActivity extends BaseActivity {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(errorMsg);
                     }
                     @Override
                     public void onSuccess(List<ReportCate> body) {

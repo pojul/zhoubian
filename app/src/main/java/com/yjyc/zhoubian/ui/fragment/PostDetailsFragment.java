@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -72,6 +73,7 @@ import com.yjyc.zhoubian.ui.activity.LoginActivity;
 import com.yjyc.zhoubian.ui.activity.MyPublishActivity;
 import com.yjyc.zhoubian.ui.activity.PostDetailsActivity;
 import com.yjyc.zhoubian.ui.activity.ReportActivity;
+import com.yjyc.zhoubian.ui.view.FullyLinearLayoutManager;
 import com.yjyc.zhoubian.utils.DateUtil;
 import com.yjyc.zhoubian.utils.DensityUtil;
 import com.yjyc.zhoubian.utils.DialogUtil;
@@ -82,6 +84,7 @@ import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
 import com.yuqian.mncommonlibrary.utils.LogUtil;
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -189,10 +192,13 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void initViews() {
+        FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getActivity());//纵向线性布局
+        recyclerView.setLayoutManager(layoutManager);
         replyAdapter = new PostReplyAdapter(getActivity(), replys);
-        myAdapter2 = new InterestPostAdapter(datas, getActivity());
+        recyclerView.setAdapter(replyAdapter);
         recyclerView.setNestedScrollingEnabled(false);
 
+        myAdapter2 = new InterestPostAdapter(datas, getActivity());
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity());//纵向线性布局
         recyclerView2.setLayoutManager(layoutManager2);
         recyclerView2.setAdapter(myAdapter2);
@@ -210,11 +216,11 @@ public class PostDetailsFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mHandler.sendEmptyMessageDelayed(INIT, 10);
+        mHandler.sendEmptyMessageDelayed(INIT, 0);
     }
 
     private void getPostDetails() {
-        LoadingDialog.showLoading(getActivity());
+        //LoadingDialog.showLoading(getActivity());
         /**需去掉身份验证**/
         Login loginModel = Hawk.get("LoginModel");
         OkhttpUtils okhttpUtils = new OkhttpUtils().with()
@@ -243,7 +249,7 @@ public class PostDetailsFragment extends BaseFragment {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        LoadingDialog.closeLoading();
+                        //LoadingDialog.closeLoading();
                         showShortToats(errorMsg);
                         //if(errorMsg.equals("抱歉，帖子不存在或已被删除")){
                         getActivity().finish();
@@ -264,10 +270,6 @@ public class PostDetailsFragment extends BaseFragment {
     }
 
     private void initData(){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(replyAdapter);
-
         title.setText(postDetail.title);
         //nickName.setText(postDetail.user_name);
         if(postDetail.nickname != null && !postDetail.nickname.isEmpty()){
@@ -289,7 +291,7 @@ public class PostDetailsFragment extends BaseFragment {
         if(Hawk.get("LoginModel") != null && ((Login)Hawk.get("LoginModel")).uid != postDetail.user_id){
             follow.setVisibility(View.VISIBLE);
         }
-        if(postDetail.is_follow_user){
+        if(!postDetail.is_follow_user){
             follow.setText("关注");
         }else{
             follow.setText("已关注");
@@ -363,6 +365,9 @@ public class PostDetailsFragment extends BaseFragment {
                 robRedPackage.setFocusable(false);
                 robRedPackage.setFocusableInTouchMode(false);
                 robRedPackage.setClickable(false);
+                robRedPackage.setSelected(true);
+                red_money.setVisibility(View.VISIBLE);
+                red_money.setText("红包已抢完");
             }
             if(postDetail.has_grab_status){
                 robRedPackage.setFocusable(false);
@@ -415,7 +420,7 @@ public class PostDetailsFragment extends BaseFragment {
             case R.id.call:
                 Login login = Hawk.get("LoginModel");
                 if(login == null){
-                    Toast.makeText(activity, "请先登录", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("请先登录");
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
@@ -437,7 +442,7 @@ public class PostDetailsFragment extends BaseFragment {
                 }
                 login = Hawk.get("LoginModel");
                 if(login == null){
-                    Toast.makeText(activity, "请先登录", Toast.LENGTH_SHORT).show();
+                    ToastUtils.show("请先登录");
                     return;
                 }
                 userInfo = Hawk.get("userInfo");
@@ -500,7 +505,7 @@ public class PostDetailsFragment extends BaseFragment {
                     replyPost.interval_time = "刚刚";
                     replyPost.article_id = postDetail.id;
                     replyPost.uid = login.uid;
-                    replyPost.grab_red_package_msg = str;
+                    replyPost.grab_red_package_msg = str + " ";
                     replyAdapter.addOneLevelData(replyPost);
                //}
             }
@@ -578,11 +583,11 @@ public class PostDetailsFragment extends BaseFragment {
                             return;
                         }
                         commentNum.setText("评论 · " + body.size());
-                        if(body.size() > 3){
+                        /*if(body.size() > 3){
                             replyAdapter.setHasMore(true);
                         }else{
                             replyAdapter.setHasMore(false);
-                        }
+                        }*/
                         replyAdapter.addRawData(body);
                     }
                 });

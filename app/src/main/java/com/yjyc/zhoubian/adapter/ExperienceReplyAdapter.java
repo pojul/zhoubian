@@ -31,6 +31,7 @@ import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -315,7 +316,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void thumbupReply(ReplyPostList.ReplyPost reply, int position) {
         Login login = Hawk.get("LoginModel");
         if(login == null){
-            Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("请先登录");
             mContext.startActivity(new Intent(mContext, LoginActivity.class));
             return;
         }
@@ -330,7 +331,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(errorMsg);
                     }
 
                     @Override
@@ -359,7 +360,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(errorMsg);
                     }
                     @Override
                     public void onSuccess(DeleteReply body) {
@@ -376,7 +377,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         DialogUtil.getInstance().showCommentDialog(mContext, roolView, 2, null);
         DialogUtil.getInstance().setDialogClick(str -> {
             if(Hawk.get("LoginModel") == null){
-                Toast.makeText(mContext, "请先登陆", Toast.LENGTH_SHORT).show();
+                ToastUtils.show("请先登陆");
                 mContext.startActivity(new Intent(mContext, LoginActivity.class));
                 return;
             }
@@ -401,7 +402,7 @@ public class ExperienceReplyAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     .execute(new AbsJsonCallBack<ReplyPostModel, ReplyPost>(){
                         @Override
                         public void onFailure(String errorCode, String errorMsg) {
-                            Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                            ToastUtils.show(errorMsg);
                             LoadingDialog.closeLoading();
                         }
                         @Override

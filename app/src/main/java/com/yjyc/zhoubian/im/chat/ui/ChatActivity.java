@@ -36,6 +36,7 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yjyc.zhoubian.Dao.ChatMessageDao;
 import com.yjyc.zhoubian.HttpUrl;
 import com.yjyc.zhoubian.R;
+import com.yjyc.zhoubian.app.BaseApplication;
 import com.yjyc.zhoubian.im.ECMIm;
 import com.yjyc.zhoubian.im.chat.adapter.MessageListAdapter;
 import com.yjyc.zhoubian.im.entity.ChatMessage;
@@ -221,7 +222,7 @@ public class ChatActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                         finish();
                     }
                 });
@@ -328,6 +329,8 @@ public class ChatActivity extends BaseActivity {
             checkConversation(msg);
         } catch (Exception e) {
             LogUtil.e("send message fail , e=" + e.getMessage());
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show(e.getMessage());
+            onSendError();
         }
     }
 
@@ -339,11 +342,31 @@ public class ChatActivity extends BaseActivity {
             ECTextMessageBody msgBody = new ECTextMessageBody(str);
             msg.setBody(msgBody);
             ECChatManager manager = ECDevice.getECChatManager();
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show("manager: " + manager + "; msg: " + msg + "; messageSendListener: " + messageSendListener);
             manager.sendMessage(msg, messageSendListener);
             messageListAdapter.addMessage(msg);
             checkConversation(msg);
         } catch (Exception e) {
             LogUtil.e("send message fail , e=" + e.getMessage());
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show(e.getMessage());
+            onSendError();
+        }
+    }
+
+
+
+
+    private void onSendError() {
+        Login login = Hawk.get("LoginModel");
+        if(login == null){
+            startActivity(new Intent(this, LoginActivity.class));
+            showToast("请先登录");
+            return;
+        }
+        if(!ECDevice.isInitialized()){
+            BaseApplication.getIntstance().initImSDK();
+        }else{
+            BaseApplication.getIntstance().loginIm(login);
         }
     }
 

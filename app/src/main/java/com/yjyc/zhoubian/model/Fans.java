@@ -12,12 +12,14 @@ public class Fans {
     public class Data{
         public int id;
         public int uid;
+        public int follow_user_id;
         public int type;
         public String money;
         public String balance;
         public String create_time;
         public String update_time;
         public String delete_time;
-
+        public String nickname;
+        public String head_url;
     }
 }

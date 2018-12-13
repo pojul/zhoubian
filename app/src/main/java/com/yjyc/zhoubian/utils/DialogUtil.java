@@ -79,7 +79,7 @@ public class DialogUtil {
         String finalHint = hint;
         popView.findViewById(R.id.ok).setOnClickListener(v -> {
             if (subReplyText.getText().toString().isEmpty()) {
-                Toast.makeText(context, finalHint + "内容不能为空", Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show(finalHint + "内容不能为空");
                 return;
             }
             if (dialogClick != null) {

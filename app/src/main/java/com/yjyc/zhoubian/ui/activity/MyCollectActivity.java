@@ -73,12 +73,11 @@ public class MyCollectActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if(Hawk.get("LoginModel") == null){
-            Toast.makeText(mContext, "请先登陆", Toast.LENGTH_SHORT).show();
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show("请先登陆");
             startActivity(new Intent(mContext, LoginActivity.class));
             return;
         }
         initView();
-        initDate();
     }
 
     private void initView() {
@@ -91,11 +90,11 @@ public class MyCollectActivity extends BaseActivity {
                 onBackPressed();
             }
         });
+        refreshLayout.setEnableLoadmore(false);
         //设置 Header 为 MaterialHeader
         refreshLayout.setRefreshHeader(new MaterialHeader(this));
         //设置 Footer 为 经典样式
         refreshLayout.setRefreshFooter(new ClassicsFooter(this));
-        refreshLayout.setEnableLoadmore(true);
         refreshLayout.setOnRefreshListener(refreshlayout -> {
             loadDataFlag = 0;
             postCollectionLists();
@@ -110,6 +109,22 @@ public class MyCollectActivity extends BaseActivity {
             ProgressDialog.showDialog(mContext);
         }
         postCollectionLists();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);//纵向线性布局
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        loadDataFlag = 1;
+                        postCollectionLists();
+                    }
+                }
+            }
+        });
     }
 
     private void postCollectionLists() {
@@ -135,7 +150,7 @@ public class MyCollectActivity extends BaseActivity {
                         refreshLayout.finishLoadmore();
                         refreshLayout.finishRefresh();
                         if(body.list == null ){
-                            ToastUtils.showShort("网络异常,请稍后重试" );
+                            showToast("网络异常,请稍后重试" );
                             return;
                         }
                         MyCollectActivity.this.body = body;
@@ -151,7 +166,7 @@ public class MyCollectActivity extends BaseActivity {
                     public void onFailure(String errorCode, String errorMsg) {
                         refreshLayout.finishLoadmore();
                         refreshLayout.finishRefresh();
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override
@@ -159,14 +174,6 @@ public class MyCollectActivity extends BaseActivity {
                         ProgressDialog.dismiss();
                     }
                 });
-    }
-
-    private void initDate(){
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);//纵向线性布局
-
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(myAdapter);
     }
 
     public interface OnItemClickListener{
@@ -589,7 +596,7 @@ public class MyCollectActivity extends BaseActivity {
         }
 
         private void showShortToats(String msg){
-            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show(msg);
         }
 
         public void clearDatas(){

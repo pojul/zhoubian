@@ -162,6 +162,26 @@ public class MyPublishFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setAdapter(myAdapter);
+
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        if(body != null){
+                            if(body.hasNextPages){
+                                page++;
+                                userPostList();
+                            }else {
+                                ToastUtils.showShort("没有更多");
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public  class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemClickListener{
@@ -523,12 +543,20 @@ public class MyPublishFragment extends BaseFragment {
                         .apply(options)
                         .into(holder.iv2);
             }
-
-            if(up.pic.size() > 2 && !StringUtils.isEmpty(up.pic.get(2))){
+            /*if(up.pic.size() > 2 && !StringUtils.isEmpty(up.pic.get(2))){
                 Glide.with(getActivity())
                         .load(up.pic.get(2))
                         .apply(options)
                         .into(holder.iv3);
+            }*/
+            if(up.pic.size() > 2 && !StringUtils.isEmpty(up.pic.get(2))){
+                holder.iv3.setVisibility(View.VISIBLE);
+                Glide.with(getActivity())
+                        .load(up.pic.get(2))
+                        .apply(options)
+                        .into(holder.iv3);
+            }else{
+                holder.iv3.setVisibility(View.INVISIBLE);
             }
 
             holder.tv_delete.setOnClickListener(new View.OnClickListener() {

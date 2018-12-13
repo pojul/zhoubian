@@ -321,14 +321,14 @@ public class MyPublishActivity extends BaseActivity {
             mTabLayout.getTabAt(1).setText("他收到\n的评价");
             mTabLayout.getTabAt(2).setText("他被别\n人揭露");
             mTabLayout.getTabAt(3).setText("他给出\n的评价");
-            mTabLayout.getTabAt(4).setText("他揭露\n的别人");
+            mTabLayout.getTabAt(4).setText("他揭露\n别人");
             mTabLayout.getTabAt(0).select();
         }else{
             mTabLayout.getTabAt(0).setText("我的\n发布");
             mTabLayout.getTabAt(1).setText("我收到\n的评价");
             mTabLayout.getTabAt(2).setText("我被别\n人揭露");
             mTabLayout.getTabAt(3).setText("我给出\n的评价");
-            mTabLayout.getTabAt(4).setText("我揭露\n的别人");
+            mTabLayout.getTabAt(4).setText("我揭露\n别人");
             mTabLayout.getTabAt(0).select();
         }
 
@@ -472,11 +472,11 @@ public class MyPublishActivity extends BaseActivity {
                         myExposesFragment.acceptEvaluationExpose();
                         break;
                 }
-
             }
         });
+        refreshLayout.setEnableLoadmore(false);
         refreshLayout.setOnLoadmoreListener(refreshlayout -> {
-            switch (mViewPager.getCurrentItem()){
+            /*switch (mViewPager.getCurrentItem()){
                 case 0:
                     if(myPublishFragment.body != null){
                         if(myPublishFragment.body.hasNextPages){
@@ -542,7 +542,7 @@ public class MyPublishActivity extends BaseActivity {
                         refreshLayout.finishLoadmore();
                     }
                     break;
-            }
+            }*/
         });
     }
 

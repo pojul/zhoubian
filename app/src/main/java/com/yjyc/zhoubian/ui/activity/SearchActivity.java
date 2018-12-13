@@ -186,6 +186,30 @@ public class SearchActivity extends BaseActivity {
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);//纵向线性布局
         recyclerView2.setLayoutManager(layoutManager2);
         recyclerView2.setAdapter(myAdapter2);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        if(body != null){
+                            if(body.hasNextPages){
+                                page++;
+                                searchPost();
+                            }else {
+                                refreshLayout.finishLoadmore();
+                                ToastUtils.showShort("没有更多");
+                            }
+                        }else {
+                            refreshLayout.finishLoadmore();
+                        }
+                        //模拟网络请求到的数据
+                    }
+                }
+            }
+        });
     }
 
     @OnClick(R.id.btn_left)
@@ -884,6 +908,7 @@ public class SearchActivity extends BaseActivity {
     }
     MyAdapter2 myAdapter2;
     private void setPullRefresher(){
+        refreshLayout.setEnableLoadmore(false);
         //设置 Header 为 MaterialHeader
         refreshLayout.setRefreshHeader(new MaterialHeader(this));
         //设置 Footer 为 经典样式

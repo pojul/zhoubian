@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.blankj.utilcode.util.StringUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.yjyc.zhoubian.HttpUrl;
@@ -79,9 +80,9 @@ public class ValuableBookFragment extends Fragment{
         adapter = new ExperienceAdapter(experiences, getActivity());
         recyclerview.setAdapter(adapter);
 
+        refreshLayout.setEnableLoadmore(false);
         //设置 Footer 为 经典样式
         refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
-        refreshLayout.autoLoadmore();
         refreshLayout.setOnLoadmoreListener(refreshlayout -> {
             loadPostFlag = 0;
             reqExperience(false);
@@ -92,6 +93,19 @@ public class ValuableBookFragment extends Fragment{
             reqExperience(false);
         });
         reqExperience(true);
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        loadPostFlag = 0;
+                        reqExperience(false);
+                    }
+                }
+            }
+        });
     }
 
     private void reqExperience(boolean showDialog) {
@@ -115,7 +129,7 @@ public class ValuableBookFragment extends Fragment{
                         //LoadingDialog.closeLoading();
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadmore();
-                        Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(StringUtils.isEmpty(errorMsg) ? errorMsg : errorMsg);
                     }
 
                     @Override

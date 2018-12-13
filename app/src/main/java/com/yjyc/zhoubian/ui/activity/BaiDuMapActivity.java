@@ -151,7 +151,7 @@ public class BaiDuMapActivity extends Activity implements SensorEventListener,On
         mSearch.setOnGetGeoCodeResultListener(this);
         if(mSearch== null || latLng == null){
             ProgressDialog.dismiss();
-            Toast.makeText(mContext, "请移动地图选择位置", Toast.LENGTH_SHORT).show();
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show("请移动地图选择位置");
             return;
         }
         mSearch.reverseGeoCode(new ReverseGeoCodeOption()

@@ -87,7 +87,8 @@ public class ConversationFragment extends Fragment {
     private void updateConversation() {
         reqOfficalMsg();
         for (int i = 0; i < ECMIm.getInstance().conversations.size(); i++) {
-            if(ECMIm.getInstance().conversations.get(i).getFrom().equals("-1")){
+            if(ECMIm.getInstance().conversations.get(i).getFrom().equals("-1")
+                    || ECMIm.getInstance().conversations.get(i) == null || ECMIm.getInstance().conversations.get(i).getFriend() == null){
                 continue;
             }
             repUserInfo(ECMIm.getInstance().conversations.get(i).getFriend().uid);
@@ -148,7 +149,7 @@ public class ConversationFragment extends Fragment {
     private void setFriendInfo(UserInfo body) {
         for (int i = 0; i < ECMIm.getInstance().conversations.size(); i++) {
             Conversation conversation = ECMIm.getInstance().conversations.get(i);
-            if(conversation.getFriend().uid == body.uid){
+            if(conversation.getFriend() != null && conversation.getFriend().uid == body.uid){
                 conversation.setFriend(body);
                 conversationAdapter.notifyItemChanged(i);
                 synchronized (ECMIm.getInstance().conversations){

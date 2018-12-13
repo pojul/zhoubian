@@ -132,7 +132,7 @@ public class HobbySettingActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override
@@ -280,13 +280,13 @@ public class HobbySettingActivity extends BaseActivity {
 
                     @Override
                     public void onSuccess(UserInfo body) {
-                        ToastUtils.showShort("设置成功");
+                        showToast("设置成功");
                         finish();
                     }
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override

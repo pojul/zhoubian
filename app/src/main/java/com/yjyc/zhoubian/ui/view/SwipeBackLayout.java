@@ -205,7 +205,7 @@ public class SwipeBackLayout extends FrameLayout {
      * 滚动出界面
      */
     private void scrollRight() {
-        final int delta = (viewWidth + mContentView.getScrollX());
+        final int delta = (int) ((viewWidth + mContentView.getScrollX()));
         // 调用startScroll方法来设置一些滚动的参数，我们在computeScroll()方法中调用scrollTo来滚动item
         mScroller.startScroll(mContentView.getScrollX(), 0, -delta + 1, 0,
                 Math.abs(delta));

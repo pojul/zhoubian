@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -103,6 +104,23 @@ public class MyEvaluationFragment extends BaseFragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());//纵向线性布局
         recyclerview.setLayoutManager(layoutManager);
         recyclerview.setAdapter(adapter);
+        recyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                    int lastVisiblePosition = layoutManager.findLastVisibleItemPosition();
+                    if(lastVisiblePosition >= layoutManager.getItemCount() - 1){
+                        if(body.hasNextPages){
+                            page++;
+                            giveEvaluationExpose();
+                        }else {
+                            ToastUtils.showShort("没有更多");
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public void giveEvaluationExpose() {
@@ -125,7 +143,7 @@ public class MyEvaluationFragment extends BaseFragment {
                     @Override
                     public void onSuccess(AcceptEvaluationExposes body) {
                         if(body.list == null ){
-                            ToastUtils.showShort("网络异常,请稍后重试" );
+                            com.yuqian.mncommonlibrary.utils.ToastUtils.show("网络异常,请稍后重试");
                             return;
                         }
                         MyEvaluationFragment.this.body = body;
@@ -140,7 +158,7 @@ public class MyEvaluationFragment extends BaseFragment {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override

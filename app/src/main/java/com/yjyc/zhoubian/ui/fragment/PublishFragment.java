@@ -762,7 +762,7 @@ public class PublishFragment extends Fragment{
             @Override
             public void error(String msg) {
                 ProgressDialog.dismiss();
-                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show(msg);
             }
         });
     }
@@ -982,7 +982,7 @@ public class PublishFragment extends Fragment{
                         Hawk.put("UserGroupInfo", userGroupInfo);
                         MainActivitys activity = (MainActivitys)getActivity();
                         activity.reLoadFragView();
-                        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("保存成功");
                     }
 
                     @Override

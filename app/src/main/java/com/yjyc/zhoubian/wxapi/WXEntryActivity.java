@@ -60,15 +60,15 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 getAccessToken(code);
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED://用户拒绝授权
-                Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                 finish();
                 break;
             case BaseResp.ErrCode.ERR_USER_CANCEL://用户取消
-                Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                 finish();
                 break;
             default:
-                Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                 finish();
                 break;
         }
@@ -96,7 +96,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     access = jsonObject.getString("access_token");
                     openId = jsonObject.getString("openid");
                 } catch (JSONException e) {
-                    Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                    com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                     finish();
                     //e.printStackTrace();
                 }
@@ -130,7 +130,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                             bindWechat(openidStr, nickName);
                         } catch (JSONException e) {
                             //e.printStackTrace();
-                            Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                            com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                             finish();
                         }
                     }
@@ -138,7 +138,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     @Override
                     public void onFailure(Exception e) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                         finish();
                     }
                 };
@@ -148,7 +148,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             @Override
             public void onFailure(Exception e) {
                 LoadingDialog.closeLoading();
-                Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
                 finish();
             }
         };
@@ -159,7 +159,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
         Login login = Hawk.get("LoginModel");
         UserInfo userInfo = Hawk.get("userInfo");
         if(login == null || userInfo == null || openId == null){
-            Toast.makeText(WXEntryActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
+            com.yuqian.mncommonlibrary.utils.ToastUtils.show("登录失败");
             finish();
             return;
         }
@@ -175,13 +175,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(WXEntryActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show(errorMsg);
                         finish();
                     }
                     @Override
                     public void onSuccess(BindWx body) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(WXEntryActivity.this, "绑定成功", Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("绑定成功");
                         WithdrawCashActivity.userWxInfo.is_bind = 1;
                         WithdrawCashActivity.userWxInfo.wx_nickname = nickName;
                         finish();

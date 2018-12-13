@@ -16,7 +16,7 @@
         android:layout_marginBottom="43dp"
         android:background="#ffffff"
         >
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <LinearLayout
@@ -258,7 +258,7 @@
                     android:overScrollMode="never"
                     android:background="#fff" />
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <LinearLayout

@@ -77,6 +77,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             mContext.startActivity(intent);
         });
         holder.not_disturb.setVisibility(View.GONE);
+        holder.autograph.setText("");
     }
 
     private void bindNormalConversion(MyViewHolder holder, int position){

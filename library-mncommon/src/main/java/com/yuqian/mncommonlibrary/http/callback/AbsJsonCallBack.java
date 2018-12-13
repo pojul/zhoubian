@@ -1,11 +1,14 @@
 package com.yuqian.mncommonlibrary.http.callback;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.yuqian.mncommonlibrary.MBaseManager;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpHead;
 import com.yuqian.mncommonlibrary.http.callback.okhttp.HttpResponse;
 import com.yuqian.mncommonlibrary.http.constants.HttpErrorConstants;
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -43,6 +46,13 @@ public abstract class AbsJsonCallBack<T, J> extends AbsStringCallback {
             } else {
                 //失败
                 onFailure(errCode, errMsg);
+                if("token不匹配,非法操作,请重新登录".equals(errMsg)){
+                    if(MBaseManager.getApplication() != null && MBaseManager.loginClass != null){
+                        Intent intent = new Intent(MBaseManager.getApplication(), MBaseManager.loginClass);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MBaseManager.getApplication().startActivity(intent);
+                    }
+                }
                 //登陆过期
             }
             onFinish();

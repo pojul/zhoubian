@@ -44,6 +44,7 @@ import com.yjyc.zhoubian.utils.DialogUtil;
 import com.yuqian.mncommonlibrary.dialog.LoadingDialog;
 import com.yuqian.mncommonlibrary.http.OkhttpUtils;
 import com.yuqian.mncommonlibrary.http.callback.AbsJsonCallBack;
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -403,7 +404,7 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     private void pullBlackUser(int userId) {
         if(!Hawk.contains("LoginModel")){
-            Toast.makeText(mContext, "请先登录", Toast.LENGTH_SHORT).show();
+            ToastUtils.show("请先登陆");
             mContext.startActivity(new Intent(mContext, LoginActivity.class));
             return;
         }
@@ -422,12 +423,12 @@ public  class CardAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                        ToastUtils.show(errorMsg);
                     }
                     @Override
                     public void onSuccess(PullUserBlack body) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(mContext, "作者已被拉黑", Toast.LENGTH_SHORT).show();
+                        ToastUtils.show("作者已被拉黑");
                     }
                 });
     }

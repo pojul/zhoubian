@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.yuqian.mncommonlibrary.utils.ToastUtils;
+
 
 /**
  * Created by Administrator on 2018/8/1/001.
@@ -39,7 +41,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public void showShortToats(String msg){
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+        ToastUtils.show(msg);
     }
 
     protected void onVisible() {        //可见时加载数据

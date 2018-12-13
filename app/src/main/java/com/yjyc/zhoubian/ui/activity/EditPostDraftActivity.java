@@ -345,14 +345,14 @@ public class EditPostDraftActivity extends BaseActivity {
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
                         ProgressDialog.dismiss();
-                        Toast.makeText(EditPostDraftActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("errorMsg");
                     }
 
                     @Override
                     public void onSuccess(PostDraftDetail body) {
                         ProgressDialog.dismiss();
                         if(body == null){
-                            Toast.makeText(EditPostDraftActivity.this, "数据错误", Toast.LENGTH_SHORT).show();
+                            com.yuqian.mncommonlibrary.utils.ToastUtils.show("数据错误");
                             finish();
                             return;
                         }
@@ -577,7 +577,7 @@ public class EditPostDraftActivity extends BaseActivity {
     @OnClick(R.id.tv_code)
     public void tv_code() {
         if (et_phone.getText().toString().length() != 11) {
-            ToastUtils.showShort("请输入11位手机号");
+            showToast("请输入11位手机号");
             return;
         }
 
@@ -604,7 +604,7 @@ public class EditPostDraftActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(String errorCode, String errorMsg) {
-                        ToastUtils.showShort(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
+                        showToast(StringUtils.isEmpty(errorMsg) ? "网络异常,请稍后重试" : errorMsg);
                     }
 
                     @Override
@@ -755,7 +755,7 @@ public class EditPostDraftActivity extends BaseActivity {
             @Override
             public void error(String msg) {
                 ProgressDialog.dismiss();
-                Toast.makeText(EditPostDraftActivity.this, msg, Toast.LENGTH_SHORT).show();
+                com.yuqian.mncommonlibrary.utils.ToastUtils.show(msg);
             }
         });
     }
@@ -965,7 +965,7 @@ public class EditPostDraftActivity extends BaseActivity {
                     @Override
                     public void onSuccess(EmptyEntity body) {
                         LoadingDialog.closeLoading();
-                        Toast.makeText(EditPostDraftActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                        com.yuqian.mncommonlibrary.utils.ToastUtils.show("保存成功");
                         finish();
                     }
 

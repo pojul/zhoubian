@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.BarUtils;
@@ -155,6 +156,7 @@ public class FollowListActivity extends BaseActivity {
             TextView tv_nickname;
             TextView tv_sign;
             Button bt_delete;
+            RelativeLayout rl_operate;
             public ViewHolder(View itemView) {
                 super(itemView);
                 myView = itemView;
@@ -162,6 +164,7 @@ public class FollowListActivity extends BaseActivity {
                 tv_nickname = itemView.findViewById(R.id.tv_nickname);
                 tv_sign = itemView.findViewById(R.id.tv_sign);
                 bt_delete = itemView.findViewById(R.id.bt_delete);
+                rl_operate = itemView.findViewById(R.id.rl_operate);
             }
         }
 
@@ -216,6 +219,7 @@ public class FollowListActivity extends BaseActivity {
                     cancelFollow(data.follow_user_id, position);
                 }
             });
+            holder.rl_operate.setVisibility(View.GONE);
         }
 
         @Override
